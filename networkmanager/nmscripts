@@ -1,0 +1,1 @@
+In /etc/NetworkManager/dispatcher.d you can write scripts that do things when connected to a specific network connection. The key is to pull the UUID from the system-connections folder and use it in a bash if. make sure to use /bin/bash
