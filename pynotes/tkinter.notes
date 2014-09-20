@@ -1,4 +1,4 @@
-Tkinter is stored in the module tkinter
+>Tkinter is stored in the module tkinter
 
 Every widget needs to be packed, but there are options to packing.
 expand=YES, fill=BOTH tells tkinter to stretch in all directions to fill all available space.
@@ -35,3 +35,56 @@ def callback():
     actual_function('arg1')
 
 Back to packing for a second. If set expand=YES, it will cause the widget to take all available space, but it will not stretch the widget to make it appear larger. You have to set fill to tell it to stretch
+
+Enclosing scope tricks. If you want to generate event handlers in a loop, or generate widgets with a call back in the group, you have to be aware that variables in the defined functions will have the last value that was set in the function. 
+
+def makecallback()
+    funcs=[]
+    for c in 'abdefg':
+    	funcs.append(lamda:c)
+    return funcs
+
+makecallback() 
+	      
+for i in funcs:
+    print(i())
+
+#prints 6 gs
+
+Instead we have to manually set the value of the variable, which will be the reference:
+
+def makecallback()
+    funcs=[]
+    for c in 'abcdefg':
+    	funcs.append(lamda d=c: d)
+    return funcs
+
+#iterating through this function will print what you expect.
+
+This behavior is because functions that are not defined until they are called, but the variables they reference that are not defined or assigned in their scope - instead they are set in the enclosing scope, and they will retain the last value they were set to when the enclosed function is called. 
+
+THIS RELIES ON SETTING DEFAULt ARGUMENTS! default arguments are set at creation, not looked up when called. Important distinction to know. 
+
+CLASSES Are  A much better way of setting default parameters.
+
+you can use a widget bind method to handle a variety of callback functions:
+
+widget = button(text='Hello')
+button.pack()
+widget.bind('<mouse1>', somefuncref)
+widget.mainloop()
+
+
+Clicking the widget does the same as the command method, but you can use it for all widgets.
+
+Using Frames: 
+
+frames are an object that can hold several widgets. You can use options in packing, like we have previously seen:
+
+you add objects to a frame as follows
+
+win = Frame()
+win.pack()
+Label(win, text='blah').pack(side=TOP)
+Button(win, text="hi again", command=sumfunc).pack(side=LEFT)
+
