@@ -1,0 +1,7 @@
+There are several top level widgets in tkinter. One use is to keep long lived objects, while another is to open multiple windows on an as needed basis. 
+
+When you click on the x of one top level widget if there are multiple, that window closes. If you run sys.exit or return from the main program loop, you script exits and all windows close. 
+
+I would probably get around this by using a sub process. 
+
+Tk objects are the roots, they have no parents, while Toplevel is like a higher level frame. 
