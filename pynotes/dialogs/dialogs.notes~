@@ -1,0 +1,11 @@
+Two types of dialogs are common, modal and non modal. 
+
+Modal - Block until they return, good for a file dialog, etc.
+
+Nonmodal - Operate without any interaction from their parent, or the Tk() root object. 
+
+Dialogs are implemented with the Toplevel widget. 
+
+see dialog-modal.py 
+
+!!!When you subclass a frame, make sure to call the mainloop(), or nothing will happen at all

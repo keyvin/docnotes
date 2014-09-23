@@ -15,3 +15,9 @@ top.mainloop()
 you can call the destroy method to destroy a specific top level object
 
 See the toplevel script example for how to customize 
+
+Make sure to create the root Tk() window before creating any widgets with the default root. If you aren't careful you can make two root objects, one explicitly, one implicitly. Don't do that
+
+Need to get the example about protocols. 
+
+Look up tkinter protocols if you want to know more. Basically you can intercept high level events. One such event is the protocol event. 
