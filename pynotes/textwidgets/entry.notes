@@ -1,0 +1,29 @@
+The entry widget is perfect for capturing a single area of text
+
+You can tie a variable to the entry widget so that you always have access....
+you can also just use the methods that the entry widget exposes. 
+
+Here are some of the common methods
+
+#inserts at the beginning
+ent.insert(0, 'text')
+
+value = ent.get()
+
+clear values:
+ent.delete(0, END)
+ent.insert(0, 'more text')
+
+This is the same as the above, as once all the text is deleted, END is the same as 0
+ent.delete(0, END)
+ent.insert(END, 'TEXT')
+
+The disabled property keeps it from being used. 
+
+To lay out good input forms, you can use frames to hold the widgets.
+
+Don't forget about the problem with using variables as parameters to functions and lambdas....
+
+To create a bunch of entry widgets programmaticly, see progmake.py in this folder
+
+To get a good grid, you can set a fixed width of the lidgets.
