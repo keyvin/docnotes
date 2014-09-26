@@ -1,0 +1,4 @@
+This is a handy one liner, because otherwise it wouldn't be very pretty. Be aware that dicts are unordered. 
+
+generates a list of the values of a dictionary. Need to play with this...
+vallist=list(dict.values())
