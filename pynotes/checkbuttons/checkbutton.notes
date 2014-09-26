@@ -1,0 +1,15 @@
+Checkbuttons are an input widget thtat allows the user to make multiple selections at once. 
+
+Checkbuttons - multiple choice
+RadioButtons - single choice
+
+To get the state, you should assign a var object. Both widgets support setting the var, and a command (command fires when clicked)
+
+Because there is no getstate associated with checkboxes, you should always set a var
+
+var= IntValue()
+Checkbutton(root, variable=var)
+
+You can then check the value when a callback function happens, or you process some other event
+
+

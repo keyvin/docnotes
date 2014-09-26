@@ -27,3 +27,12 @@ Don't forget about the problem with using variables as parameters to functions a
 To create a bunch of entry widgets programmaticly, see progmake.py in this folder
 
 To get a good grid, you can set a fixed width of the lidgets.
+
+!!!Using Variable objects protects you from values dissapearing with the destroy event...
+
+ent = Entry(root)
+var = StringVar()
+ent.config(textvariable=var)
+
+This is the safest way to attatch variables to an entry, as they will live after the widget is destroyed. This is the best. 
+
