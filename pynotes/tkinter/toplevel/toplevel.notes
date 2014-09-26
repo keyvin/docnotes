@@ -1,0 +1,23 @@
+There are several top level widgets in tkinter. One use is to keep long lived objects, while another is to open multiple windows on an as needed basis. 
+
+When you click on the x of one top level widget if there are multiple, that window closes. If you run sys.exit or return from the main program loop, you script exits and all windows close. 
+
+I would probably get around this by using a sub process. 
+
+Tk objects are the roots, they have no parents, while Toplevel is like a higher level frame. 
+
+You can instantiate a Tk widget by making a Tk object
+
+top = Tk()
+#add some widgets
+top.mainloop()
+
+you can call the destroy method to destroy a specific top level object
+
+See the toplevel script example for how to customize 
+
+Make sure to create the root Tk() window before creating any widgets with the default root. If you aren't careful you can make two root objects, one explicitly, one implicitly. Don't do that
+
+Need to get the example about protocols. 
+
+Look up tkinter protocols if you want to know more. Basically you can intercept high level events. One such event is the protocol event. 

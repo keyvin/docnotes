@@ -1,0 +1,7 @@
+Scales, also known as sliders allow the user to pick from a range of values. 
+
+They support variables as already seen, and also support the command for a callback on change. 
+
+Scales support a get and set method, like entry widgets. 
+
+See xample

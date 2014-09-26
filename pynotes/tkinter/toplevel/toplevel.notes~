@@ -1,0 +1,1 @@
+There are several top level widgets in tkinter. One use is to keep long lived objects, while another is to open multiple windows on an as needed basis. 

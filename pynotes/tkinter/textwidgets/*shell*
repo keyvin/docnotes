@@ -1,0 +1,329 @@
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ cd ..
+keyvin@Desktop:~/docnotes/pynotes$ ls
+binding  customizing  dialogs  eventbinding  packing  packingoptions  subclassingframe.notes  textwidgets  tkinter.notes  toplevel
+keyvin@Desktop:~/docnotes/pynotes$ cd toplevel/
+keyvin@Desktop:~/docnotes/pynotes/toplevel$ ls
+toplevel2.py  toplevel.notes  toplevel.notes~
+keyvin@Desktop:~/docnotes/pynotes/toplevel$ cd ..
+keyvin@Desktop:~/docnotes/pynotes$ cd dialogs/
+keyvin@Desktop:~/docnotes/pynotes/dialogs$ ls
+dialogdemo.py  dialogdemo.py~  dialoglist.py  dialog-modal.py  dialogs.notes  dialogs.notes~  listofdialogs.py  __pycache__  quitter.py  quitter.py~
+keyvin@Desktop:~/docnotes/pynotes/dialogs$ cp quitter.py ../textwidgets/
+keyvin@Desktop:~/docnotes/pynotes/dialogs$ cd ..
+keyvin@Desktop:~/docnotes/pynotes$ cd textwidgets/
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ ls
+entry.notes  entry.py  message.notes  quitter.py
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ pythin3 entry.py 
+No command 'pythin3' found, did you mean:
+ Command 'python3' from package 'python3-minimal' (main)
+pythin3: command not found
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ python3 entry.py 
+Traceback (most recent call last):
+  File "entry.py", line 10, in <module>
+    ent.insert(o, 'Type words here')
+NameError: name 'o' is not defined
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ python3 entry.py 
+Traceback (most recent call last):
+  File "entry.py", line 11, in <module>
+    etn.pack(side=TOP, fill=X)
+NameError: name 'etn' is not defined
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ python3 entry.py 
+Input => "tt"
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ ls
+entry.notes  entry.py  entry.py~  message.notes  __pycache__  quitter.py
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ ls
+entry.notes  entry.py  entry.py~  message.notes  __pycache__  quitter.py
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ python3 entry.py 
+Input => "Type words here"
+Input => "Type words here"
+Input => " sdklfj"
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ ls
+entry.notes  entry.py  entry.py~  message.notes  __pycache__  quitter.py
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ python3 getentry.py
+Traceback (most recent call last):
+  File "getentry.py", line 20, in <module>
+    get = GetEntry()
+  File "getentry.py", line 10, in __init__
+    ent.pack(side=TOP, stretch=YES, fill=BOTH)
+  File "/usr/lib/python3.4/tkinter/__init__.py", line 1928, in pack_configure
+    + self._options(cnf, kw))
+_tkinter.TclError: bad option "-stretch": must be -after, -anchor, -before, -expand, -fill, -in, -ipadx, -ipady, -padx, -pady, or -side
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ python3 getentry.py
+Traceback (most recent call last):
+  File "getentry.py", line 20, in <module>
+    get = GetEntry()
+  File "getentry.py", line 10, in __init__
+    ent.pack(side=TOP, stretch=EXPAND, fill=BOTH)
+NameError: name 'EXPAND' is not defined
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ python3 getentry.py
+Traceback (most recent call last):
+  File "getentry.py", line 20, in <module>
+    get = GetEntry()
+  File "getentry.py", line 10, in __init__
+    ent.pack(side=TOP, stretch=YES, fill=X)
+  File "/usr/lib/python3.4/tkinter/__init__.py", line 1928, in pack_configure
+    + self._options(cnf, kw))
+_tkinter.TclError: bad option "-stretch": must be -after, -anchor, -before, -expand, -fill, -in, -ipadx, -ipady, -padx, -pady, or -side
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ python3 getentry.py
+Traceback (most recent call last):
+  File "getentry.py", line 21, in <module>
+    print(get.result())
+AttributeError: 'GetEntry' object has no attribute 'result'
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ python3 getentry.py
+Traceback (most recent call last):
+  File "getentry.py", line 21, in <module>
+    print(get.result)
+AttributeError: 'GetEntry' object has no attribute 'result'
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ python3 getentry.py
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "/usr/lib/python3.4/tkinter/__init__.py", line 1490, in __call__
+    return self.func(*args)
+TypeError: <lambda>() takes 0 positional arguments but 1 was given
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "/usr/lib/python3.4/tkinter/__init__.py", line 1490, in __call__
+    return self.func(*args)
+TypeError: <lambda>() takes 0 positional arguments but 1 was given
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "/usr/lib/python3.4/tkinter/__init__.py", line 1490, in __call__
+    return self.func(*args)
+  File "getentry.py", line 16, in endit
+    self.result=self.ent.get()
+AttributeError: 'GetEntry' object has no attribute 'ent'
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "/usr/lib/python3.4/tkinter/__init__.py", line 1490, in __call__
+    return self.func(*args)
+  File "getentry.py", line 16, in endit
+    self.result=self.ent.get()
+AttributeError: 'GetEntry' object has no attribute 'ent'
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "/usr/lib/python3.4/tkinter/__init__.py", line 1490, in __call__
+    return self.func(*args)
+  File "getentry.py", line 16, in endit
+    self.result=self.ent.get()
+AttributeError: 'GetEntry' object has no attribute 'ent'
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "/usr/lib/python3.4/tkinter/__init__.py", line 1490, in __call__
+    return self.func(*args)
+  File "getentry.py", line 16, in endit
+    self.result=self.ent.get()
+AttributeError: 'GetEntry' object has no attribute 'ent'
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "/usr/lib/python3.4/tkinter/__init__.py", line 1490, in __call__
+    return self.func(*args)
+TypeError: <lambda>() takes 0 positional arguments but 1 was given
+Traceback (most recent call last):
+  File "getentry.py", line 22, in <module>
+    print(get.result)
+AttributeError: 'GetEntry' object has no attribute 'result'
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ python3 getentry.py
+Traceback (most recent call last):
+  File "getentry.py", line 20, in <module>
+    get = GetEntry()
+  File "getentry.py", line 13, in __init__
+    ent.bind('<Tab>', lambda a=a:self.btn.setfocus())
+NameError: name 'a' is not defined
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ python3 getentry.py
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "/usr/lib/python3.4/tkinter/__init__.py", line 1490, in __call__
+    return self.func(*args)
+  File "getentry.py", line 13, in <lambda>
+    ent.bind('<Tab>', lambda a:self.btn.setfocus())
+AttributeError: 'GetEntry' object has no attribute 'btn'
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "/usr/lib/python3.4/tkinter/__init__.py", line 1490, in __call__
+    return self.func(*args)
+  File "getentry.py", line 13, in <lambda>
+    ent.bind('<Tab>', lambda a:self.btn.setfocus())
+AttributeError: 'GetEntry' object has no attribute 'btn'
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "/usr/lib/python3.4/tkinter/__init__.py", line 1490, in __call__
+    return self.func(*args)
+  File "getentry.py", line 16, in endit
+    self.result=self.ent.get()
+AttributeError: 'GetEntry' object has no attribute 'ent'
+  C-c C-c  C-c C-c  C-c C-c  C-c C-c  C-c C-c  C-c C-c
+Traceback (most recent call last):
+  File "getentry.py", line 21, in <module>
+    get.mainloop()
+  File "/usr/lib/python3.4/tkinter/__init__.py", line 1072, in mainloop
+    self.tk.mainloop(n)
+KeyboardInterrupt
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ C-c: command not found
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ python3 getentry.py
+Traceback (most recent call last):
+  File "getentry.py", line 20, in <module>
+    get = GetEntry()
+  File "getentry.py", line 10, in __init__
+    ent.pack(side=TOP, expand=YES, fill=X)
+NameError: name 'ent' is not defined
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ python3 getentry.py
+Traceback (most recent call last):
+  File "getentry.py", line 20, in <module>
+    get = GetEntry()
+  File "getentry.py", line 13, in __init__
+    ent.bind('<Tab>', lambda a:self.btn.setfocus())
+NameError: name 'ent' is not defined
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ python3 getentry.py
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "/usr/lib/python3.4/tkinter/__init__.py", line 1490, in __call__
+    return self.func(*args)
+  File "getentry.py", line 13, in <lambda>
+    self.ent.bind('<Tab>', lambda a:self.btn.setfocus())
+AttributeError: 'Button' object has no attribute 'setfocus'
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "/usr/lib/python3.4/tkinter/__init__.py", line 1490, in __call__
+    return self.func(*args)
+  File "getentry.py", line 13, in <lambda>
+    self.ent.bind('<Tab>', lambda a:self.btn.setfocus())
+AttributeError: 'Button' object has no attribute 'setfocus'
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "/usr/lib/python3.4/tkinter/__init__.py", line 1490, in __call__
+    return self.func(*args)
+  File "getentry.py", line 13, in <lambda>
+    self.ent.bind('<Tab>', lambda a:self.btn.setfocus())
+AttributeError: 'Button' object has no attribute 'setfocus'
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "/usr/lib/python3.4/tkinter/__init__.py", line 1490, in __call__
+    return self.func(*args)
+  File "getentry.py", line 13, in <lambda>
+    self.ent.bind('<Tab>', lambda a:self.btn.setfocus())
+AttributeError: 'Button' object has no attribute 'setfocus'
+this
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ ls
+entry.notes  entry.py  entry.py~  getentry.py  getentry.py~  message.notes  __pycache__  quitter.py  *shell*  #*shell*#
+keyvin@Desktop:~/docnotes/pynotes/textwi
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ python3 getentry.py
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "/usr/lib/python3.4/tkinter/__init__.py", line 1490, in __call__
+    return self.func(*args)
+TypeError: endit() takes 1 positional argument but 2 were given
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "/usr/lib/python3.4/tkinter/__init__.py", line 1490, in __call__
+    return self.func(*args)
+TypeError: endit() takes 1 positional argument but 2 were given
+
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ python3 getentry.py
+dsjfk
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ python3 progmake.py
+Traceback (most recent call last):
+  File "progmake.py", line 4, in <module>
+    from quitter import Quit
+ImportError: cannot import name 'Quit'
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ ls
+entry.notes  entry.notes~  entry.py  entry.py~  getentry.py  getentry.py~  message.notes  progmake.py  progmake.py~  __pycache__  quitter.py  *shell*  *shell*~
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ cat quitter.py 
+#!/usr/bin/python3
+
+#This file creates a frame sub class that verifies a quit request.
+
+from tkinter import *
+from tkinter.messagebox import *
+
+class Quitter(Frame):
+    def __init__(self, parent=None):
+        #first thing with subclassing, call the parent's init function to properly initialize the object
+        Frame.__init__(self, parent)
+        self.pack()
+        widget = Button(self, text='Quit', command=self.quit)
+        widget.pack(side=LEFT, expand=YES, fill=BOTH)
+
+    def quit(self):
+        ans = askokcancel('Verify exit', "Really quit?")
+        if ans: Frame.quit(self)
+
+if __name__=='__main__': Quitter().mainloop()
+
+
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ python3 progmake.py
+Traceback (most recent call last):
+  File "progmake.py", line 25, in <module>
+    ents = makeform(root, fields)
+  File "progmake.py", line 17, in makeform
+    row.pack(side=TOP, fill=x)
+NameError: name 'x' is not defined
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ python3 progmake.py
+Traceback (most recent call last):
+  File "progmake.py", line 26, in <module>
+    root.bind('<Return>', fetch(entries))
+NameError: name 'entries' is not defined
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ python3 progmake.py
+input %s
+ 
+input %s
+ 
+input %s
+ 
+input %s
+ blah
+input %s
+ blah
+input %s
+ blah
+input %s
+ blah
+input %s
+ blah
+input %s
+ blah
+input %s
+ blah
+input %s
+ blah
+input %s
+ blah
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ python3 progmake.py
+  File "progmake.py", line 15
+    lab = Label(row, width=5 text=field)
+                                ^
+SyntaxError: invalid syntax
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ python3 progmake.py
+input %s
+ 
+input %s
+ 
+input %s
+ 
+input %s
+ it all
+input %s
+ lines up
+input %s
+ perfectly
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ ls
+entry.notes  entry.notes~  entry.py  entry.py~  getentry.py  getentry.py~  message.notes  progmake.py  progmake.py~  __pycache__  quitter.py  *shell*  *shell*~  #*shell*#
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ rm *~
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ ls
+entry.notes  entry.py  getentry.py  message.notes  progmake.py  __pycache__  quitter.py  *shell*  #*shell*#
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ rm #*shell\*\# 
+rm: missing operand
+Try 'rm --help' for more information.
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ rm \#*shell\*\# 
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ ls
+entry.notes  entry.py  getentry.py  message.notes  progmake.py  __pycache__  quitter.py  *shell*
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ rm \*shell\*
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$ ls
+entry.notes  entry.py  getentry.py  message.notes  progmake.py  __pycache__  quitter.py
+keyvin@Desktop:~/docnotes/pynotes/textwidgets$cd ..
+keyvin@Desktop:~/docnotes/pynotes$ mkdir layouttips
+keyvin@Desktop:~/docnotes/pynotes$ cd layouttips
+keyvin@Desktop:~/docnotes/pynotes/layouttips$ ls
+keyvin@Desktop:~/docnotes/pynotes/layouttips$ emacs layouts.note
+
+** (emacs:5524): WARNING **: Couldn't connect to accessibility bus: Failed to connect to socket /tmp/dbus-ZY25MraTgO: Connection refused
+keyvin@Desktop:~/docnotes/pynotes/layouttips$ 

@@ -1,0 +1,20 @@
+Every widget needs to be packed, but there are options to packing.
+expand=YES, fill=BOTH tells tkinter to stretch in all directions to fill all available space.
+
+FILL can be set to X, Y or BOTH. 
+
+SIDE can be set to TOP, BOTTOM, LEFT, or RIGHT
+
+STRETCH is YES or NO
+
+
+You can set features with .config, or you can use the dictionary of features. for instance a lable
+
+Widgets that are packed last get clipped if the window is to small first. 
+
+The geometry works like this: The widget packed first gets all available space on that side. The remaining area is reduced to what is left. The nect widget packed will get the remaining space on that side. Packing order is important. The widget packed first will get all available space, the second the remaining space see examples in the packing sub directory
+
+Frames need to be set to expand and fill otherwise their children will not. Children need to expand and fill when the window is resized if they are going to change as well. 
+
+anchor option - the anchor option takes all of the cardinal directions, including NE, SW, N, S etc. It also accepts CENTER. If the space devoted a widget grows and you do not want it to fill or expand to take the space, you can use anchor to anchor it in place relative to the growth involved. anchor seems pretty cool
+

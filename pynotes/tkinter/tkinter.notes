@@ -1,0 +1,90 @@
+>Tkinter is stored in the module tkinter
+
+Every widget needs to be packed, but there are options to packing.
+expand=YES, fill=BOTH tells tkinter to stretch in all directions to fill all available space.
+
+FILL can be set to X, Y or BOTH. 
+
+SIDE can be set to TOP, BOTTOM, LEFT, or RIGHT
+
+You can set features with .config, or you can use the dictionary of features. for instance a lable
+
+p =Label()
+p.config(text="some text")
+p['text'] = "some text"
+
+You do not have to keep a reference to a widget unless you intend to update it. 
+
+Label(text='text').pack()
+
+Do not store the results of pack. It does not return the object. 
+
+Callbacks and buttons. 
+
+Buttons have a feature that allows you to do a call back. In the constructor, use the command=functionname. Do not add the () after the function name, or it will call that function when parsing the constructor and pass its results.
+
+Using lambdas in callbacks. 
+You can use lambdas in callbacks to send parameters to the function. You can not normally pass paramters when calling a function. Exampe:
+
+var=5
+Widget(text='blah' command=(lambda: Function(var, 'blah')
+
+If you want to skip the lamda expression, you can define a function with no arguments that passes arguments to a second function:
+
+def callback():
+    actual_function('arg1')
+
+Back to packing for a second. If set expand=YES, it will cause the widget to take all available space, but it will not stretch the widget to make it appear larger. You have to set fill to tell it to stretch
+
+Enclosing scope tricks. If you want to generate event handlers in a loop, or generate widgets with a call back in the group, you have to be aware that variables in the defined functions will have the last value that was set in the function. 
+
+def makecallback()
+    funcs=[]
+    for c in 'abdefg':
+    	funcs.append(lamda:c)
+    return funcs
+
+makecallback() 
+	      
+for i in funcs:
+    print(i())
+
+#prints 6 gs
+
+Instead we have to manually set the value of the variable, which will be the reference:
+
+def makecallback()
+    funcs=[]
+    for c in 'abcdefg':
+    	funcs.append(lamda d=c: d)
+    return funcs
+
+#iterating through this function will print what you expect.
+
+This behavior is because functions that are not defined until they are called, but the variables they reference that are not defined or assigned in their scope - instead they are set in the enclosing scope, and they will retain the last value they were set to when the enclosed function is called. 
+
+THIS RELIES ON SETTING DEFAULt ARGUMENTS! default arguments are set at creation, not looked up when called. Important distinction to know. 
+
+CLASSES Are  A much better way of setting default parameters.
+
+you can use a widget bind method to handle a variety of callback functions:
+
+widget = button(text='Hello')
+button.pack()
+widget.bind('<mouse1>', somefuncref)
+widget.mainloop()
+
+
+Clicking the widget does the same as the command method, but you can use it for all widgets.
+
+Using Frames: 
+
+frames are an object that can hold several widgets. You can use options in packing, like we have previously seen:
+
+you add objects to a frame as follows
+
+win = Frame()
+win.pack()
+Label(win, text='blah').pack(side=TOP)
+Button(win, text="hi again", command=sumfunc).pack(side=LEFT)
+
