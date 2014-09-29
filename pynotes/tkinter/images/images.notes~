@@ -1,0 +1,1 @@
+Images can be imported as BitmapImage objects or PhotoImage objects. You then attatch them to other objects, such as labels, buttons, etc

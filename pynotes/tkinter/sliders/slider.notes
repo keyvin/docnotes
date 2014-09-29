@@ -1,0 +1,12 @@
+The scale is useful for getting input in a range of vlues. It has *many* options, so some are listed.
+
+label - sets what the label next to the slider says
+command - sets a callback handler for when the value is changed. 
+variable - associate a variable with the scale. When the scale is changed the variable is updated and vice versa
+from_ - sets the lowest value
+to - sets the highest value. Len is useful here if picking from a list. 
+length - sets length in pixels
+tickinterval - sets the interval between discreet numbers on the scale. 
+showvalue (YES OR NO) - shows the current value of the slider. 
+orient ('vertical' or 'horizontal'
+

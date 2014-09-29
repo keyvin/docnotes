@@ -1,0 +1,5 @@
+Images can be imported as BitmapImage objects or PhotoImage objects. You then attatch them to other objects, such as labels, buttons, etc
+
+!!! You must hold on to the image object explicitly. No ifs ands or buts. If you do not, when the reference is gone, the image will be garbage collected
+!!!So your widget will lose its image, probably throw a shitty error, and exit. 
+

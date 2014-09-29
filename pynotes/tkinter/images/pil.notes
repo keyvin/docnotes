@@ -1,0 +1,22 @@
+The python image library is very handy when working with TKinter.
+
+An example of using pil:
+
+This is using tk:
+from tkinter import * 
+imgobj = PhotoImage(file=imagedir+"spam.gif")
+Button( image = imgobj).pack()
+
+This is using PIL
+
+from tkinter import *
+from PIL import ImageTk
+photoimg = ImageTk.PhotoImage(file=imgdir + 'spam.jpg')
+Button(image=photoimg).pack()
+
+You can replace the tk photoimage object completely by doing:
+
+from tkinter import *
+from PIL import PhotoImage
+
+See PIL example, thumbnails.py
