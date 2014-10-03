@@ -1,0 +1,47 @@
+Listbox widgets allow you to list many objects, or to see a full listing. They aren't really useful without scrollbars.
+
+They are so commonly used together that we should just make an object. See scrolledlist.py for the object.
+
+Scrolled List can be subclassed to do whatever a selection should do. Just override runCommand and hey presto
+
+Listbox indexes start at 0 and climb till the end. end referes to the end, active denotes the current selection, and others
+
+
+list.insert(position, label)
+pos += 1
+
+You do not need to keep an index.
+
+list.insert('end',  label)
+list.insert(END, label)
+
+Two ways to get the current selected index:
+
+index = listbox.currselection()
+listbox.get(index)
+
+You can skip a line by using
+
+listbox.get(ACTIVE)
+listbox.get('active')
+
+There are four modes for selection, SINGLE, BROWSE, MULTIPLE, EXTENDED - browse is the default
+
+listbox.config(selectmode=SINGLE)
+
+For the multiple selection options, listbox.curselection() will return tuples. You can iterate over this list get the label of the selections
+
+You can link widgets with scrollbars with the following lines of code
+
+sbar.config(command=list.yview)
+list.config(yscrollcommand=sbar.set)
+
+xview will set horizontal scrolling
+
+WITH THE PACKING MANAGER IT IS IMPORTANT TO PACK THE SCROLLBARS AS SOON AS POSSIBLE SO THAT THEY DO NOT GET CLIPPED.
+
+You can add a horizontal scroll bar to a listbox.
+
+
+
+
