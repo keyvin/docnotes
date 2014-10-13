@@ -1,0 +1,41 @@
+The text widget is powerful, but its use boils down to two concepts. The first is that it's contents are simple strings. 
+
+The second concept is string positions
+
+END is the end of the string, 
+INSERT is where the cursor currently is
+SEL is the current selection
+
+Positions are denoted in a row/column format. 
+
+row.col. 
+
+1.0 selects the first row and the first column. Rows start at 1, columns start at 0
+
+You can do math with positions. 
+
+END+'-1c' 
+
+Means the end of the string widget - 1 column - which coincidentally strips the last carachter from the widget
+
+END-'1'
+
+Selects the row prior to the end
+
+You can select to the nearest word with
+
+INSERT-'wordstarts'
+
+or the line with
+
+INSERT+'lineend'
+
+MARKS - marks are important. They give you a mark that always refers to the place in the string where it was set,
+regardless of insertion or deletion. You create marks with a text.mark_set() call. Marks are strings.
+
+self.text.mark_set(INSERT, '1.0') - this sets the INSERT mark to be the first row, and INSERT will always refer to this.
+
+self.text.mark_set('linetwo', '2.0') - This mark will always refer to what was at line two, no matter if you insert or delete text. 
+
+
+
