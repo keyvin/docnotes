@@ -1,1 +1,0 @@
-You can subclass frame to make custom widget, and then plug these widgets in anywhere that they need to go, no problem. I will revisit these notes when I get to larger examples in chapter 11. 

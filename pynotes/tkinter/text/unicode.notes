@@ -1,0 +1,3 @@
+The text widget get() only returns text in unicode. You will have to decode the unicode to bytes if you want to interact with a file in binary mode. 
+
+There is a big section covering this in programming python, and presumable more in learning python. 

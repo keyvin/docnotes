@@ -1,0 +1,33 @@
+Co-ordinates:
+
+the upper left corner is (0,0), while the lower right corner is (end, end)
+
+The canvas is free form and does not use packing, but this allows for animation and precise movement, as well as creating custom controls.
+
+ELEMENTS
+Every create function that canvas has returns an element. 
+
+TAGS
+You can tag elements that you have references too. Much like you can change the attributes of multiple disperate areas using tags in text, you can change the location of items tagged in a group.
+
+Two methods for tagging elements. When creating the element, pass in a variable to use with the tag option. 
+
+The second is to use 
+addtag_withtag(newtag, elementortag)
+
+SEARCHING
+
+you can search with canvas.find* functions. find_closest for instance will find the nearest element to a mouse click.
+
+SCROLLING
+
+You can use scrollbars, but you have to do some other configuration first. 
+
+when making the canvas:
+
+Canvas(self, bg='brown', relief=SUNKEN, width=300, height=500, scrollregion=(0,0,300, 1000))
+
+scroll region sets the size of the entire canvas. When using create methods you use absolute positioning. Mouse clicks can be converted from the scrolled area to the global with
+
+canvas.canvasx(localx) and canvas.canvasy(localy)
+

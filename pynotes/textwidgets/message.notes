@@ -1,4 +1,0 @@
-Message widget is the tool of choice for displaying static text. Showinfo() is the best way to pop up a dialog. 
-Message has a ton of configuration options. 
-
-you can set color, font, whatever you need. You can find a good reference online
