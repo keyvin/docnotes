@@ -11,3 +11,5 @@ for d in dicto:
 what does list(d) do...
 
 It generates a list of the keys. 
+
+Overriding a method in the subclass of the parent will result in the subclasses version being called in parent functions. Useful to know.

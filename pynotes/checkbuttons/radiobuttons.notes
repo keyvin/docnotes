@@ -1,8 +1,0 @@
-Radio buttons are like checkboxes, but only one can be selected at any time. 
-
-They work by assigning all radio buttons in a group the same variable, but setting an ID for each of the radio buttons SPECEFIC to the button that is selected. The variable and value options take care of this. Also, if creating programmaticly, 
-
-DO NOT FORGET TO SET DEFAULT ARGUMENTS IN LAMBDAS   
-
-To select a Radio Button call the select and deselect manually.
-

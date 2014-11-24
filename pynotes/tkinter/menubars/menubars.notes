@@ -1,0 +1,12 @@
+Menubars can be added to Tk() and TopLevel() widgets. They either have an entry with an associated command, or a cascading menu
+
+
+Note on tearoffs - you should disable tearoffs for behavior that is typical of most systems. Tearoffs are not frequently used anymore, but are still the default in tkinter
+
+If you make the menu generation a function, this has the benefit of allowing you to attatch the same menu to each window in a gui, without making it part of the class. Class composition could also be a good way to do this. 
+
+You should see the text, chapter nine if you want an example of attatching menus to frames. 
+
+There is also a lot of example code relating to using Menu objects and Toolbar objects. Toolbars look cool with images used for the label. You can do all of this with PIL.
+
+Look back on the Toolbar, that could be useful butted up to a canvas widget for selecting brushes and such

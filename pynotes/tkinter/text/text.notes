@@ -37,5 +37,39 @@ self.text.mark_set(INSERT, '1.0') - this sets the INSERT mark to be the first ro
 
 self.text.mark_set('linetwo', '2.0') - This mark will always refer to what was at line two, no matter if you insert or delete text. 
 
+mark.unset will delete marks by name when they are no longer needed. 
+
+TAGS
+
+Tags can be passed into position based calls. 
+
+This brings up the SEL selector. 
+
+SEL_FIRST and SEL_LAST used in combinations with a get will select the currently selected text. 
+
+self.text.tag_add('alltext', '1.0', END) - tags all text
+self.text.tag_add(SEL, '1.0', '1.8) - sets the current selection.
+self.text.tag_remove(SEL, '1.0', END) - deselects all text
+
+You should use text.delete() to remove text from the widget, and tag_delete() to remove a tag completely
+
+The following example will use the search function to tag a term that is found:
+
+where = self.text.search(target, INSERT, END) # searches from the mark INSERT (location of the cursor) to the end of the text. Returns a mark (which is a position)
+pastit = where + ('+%dc' % len(target)) # This does math as shown above to positions, which makes an index at the end of the search term
+self.text.tag_add(SEL, where, pastit) #sets the selection (highlighting the text)
+self.text.focus() #Sets focus on the text widget itself so you can start typing
+
+The downside to this code is that it adds a selection. You should call the previously mentioned tag_remove(SEL, '1.0', END) to remove all other selections first. 
+
+Another cool function that can use marks, tags, and positions is see, it scrolls the widget so that the position passed into it is visible.
+
+see('1.0')
+see(INSERT)
+see(SEL_FIRST)
+
+Its time to put these things into practice, see simpleedit.py. My simpleedit.py is a culmination of the notes I have taken so far. Here goes nothing.
+
+Ok, back for one more thing. You can add actions and bind events to tags. You can insert buttons, other widgets, anything you may want. Text is a very, very powerful tool.
 
 
