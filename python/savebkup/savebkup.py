@@ -3,8 +3,9 @@ import os
 import shelve
 from tkinter import *
 from tkinter.filedialog import askopenfilename
+import tkinter.filedialog
 
-class savedlg(Frame):
+class SaveDlg(Frame):
     def __init__(self, parent=None, **opts):
         Frame.__init__(self, parent,  opts)
         self.lstframe = Frame(self)
@@ -16,9 +17,9 @@ class savedlg(Frame):
         #need a scrollbar for listbox. Need to link the two
         self.btnframe = Frame(self)
         
-        self.addbutton = Button(self.btnframe, text='Add', command=self.addbtn)
-        self.delbutton = Button(self.btnframe, text='Delete', command=self.delbtn)
-        self.copybutton = Button(self.btnframe, text='Copy', command=self.cpybtn)
+        self.addbutton = Button(self.btnframe, text='Add', command=self.add_btn)
+        self.delbutton = Button(self.btnframe, text='Delete', command=self.del_btn)
+        self.copybutton = Button(self.btnframe, text='Copy', command=self.cpy_btn)
         self.addbutton.pack(side=LEFT)
         self.delbutton.pack(side=LEFT)
         self.copybutton.pack(side=LEFT)
@@ -27,45 +28,54 @@ class savedlg(Frame):
         self.lstframe.pack(side=TOP, expand=True, fill=BOTH)
         self.btnframe.pack(side=BOTTOM, expand=False , fill=None)
 
-    def addbtn(self):
-        adddialog = adddlg()
-        self.wait_window(adddialog.toplevel)
-		
-    def delbtn(self):
+    def add_btn(self):
+        add_dialog = AddDlg()
+        self.wait_window(add_dialog.top_level)
+        self.listbox.insert(0, add_dialog.description)
+		#do something here with the data from that dialog
+    def del_btn(self):
         pass
-    def cpybtn(self):
+    def cpy_btn(self):
         pass
 
-class adddlg():
+class AddDlg():
 	def __init__(self, parent=None, **opts):
-		self.toplevel = Toplevel(parent, opts)
-		self.frame = Frame(self.toplevel)
-		self.pathentry = Entry(self.toplevel, width=80, text='Select File or Directory')
-		self.nameentry = Entry(self.toplevel, width=80, text='Enter name of game or file')
-		self.selbutton = Button(self.toplevel, text='...', command=self.selbutton)		
-		self.okbutton = Button(self.toplevel, text='Ok', command=self.okbutton)
-		self.pathentry.pack()
-		self.nameentry.pack()
-		self.selbutton.pack()
-		self.okbutton.pack()
-		self.toplevel.protocol('WM_DELETE_WINDOW', self.toplevel.destroy)
+		self.top_level = Toplevel(parent, opts)
+		self.file_frame = Frame(self.top_level)
+		
+		self.lbl_1 = Label(self.file_frame, text='Select File Name')
+		self.path_entry = Entry(self.file_frame, width=40, text='Select File or Directory')
+		self.name_entry = Entry(self.top_level, width=40, text='Enter name of game or file')
+		self.sel_file_button = Button(self.file_frame, text='Open File', command=self.sel_file_button)		
+		self.sel_dir_button = Button(self.file_frame, text='Open Directory', command=self.sel_dir_button)
+		self.ok_button = Button(self.top_level, text='Ok', command=self.ok_button)
+		self.path_entry.pack(side=LEFT, expand=True, fill=X)		
+		self.sel_file_button.pack(side=LEFT, expand=False)
+		self.sel_dir_button.pack(side=LEFT, expand=False)
+		self.file_frame.pack(side=TOP, expand=True, fill=X)
+		self.name_entry.pack(side=TOP, expand=True, fill=X)
+		self.ok_button.pack(side=BOTTOM)
+		self.top_level.protocol('WM_DELETE_WINDOW', self.top_level.destroy)
 		self.file =  ''
 		self.description = ''
-		self.toplevel.grab_set()
-	def okbutton(self):
-		self.file = self.pathentry.get()
-		self.description = self.nameentry.get()
-		self.toplevel.destroy()
-	def selbutton(self):
-		self.file = askopenfilename()
-		self.pathentry.delete(0, END)
-		self.pathentry.insert(0, self.file)
-		
+		self.top_level.grab_set()
+	def ok_button(self):
+		self.file = self.path_entry.get()
+		self.description = self.name_entry.get()
+		self.top_level.destroy()
+	def sel_file_button(self):
+		self.file = tkinter.filedialog.askopenfilename()
+		self.path_entry.delete(0, END)
+		self.path_entry.insert(0, self.file)
+	def sel_dir_button(self):
+		self.file = tkinter.filedialog.askdirectory()
+		self.path_entry.delete(0, END)
+		self.path_entry.insert(0, self.file)
 		
 		
 		
 #This class loads and saves state for the file list, maintains a list of files in the last backup. For ease of use, uses a shelve
-class filelist():
+class FileList():
     def __init__(self, path=''):
         if path:
             self.path = path
@@ -85,8 +95,8 @@ class filelist():
                 
 
 if __name__=='__main__':
-	savedlg().pack(expand=True, fill=BOTH)
-	savedlist = filelist()
-	savedlist.closelist()
+	SaveDlg().pack(expand=True, fill=BOTH)
+	SavedList = FileList()
+	SavedList.closelist()
 	mainloop()
 	
