@@ -1,0 +1,24 @@
+Project notes:
+    This project is to create a database for the church bible study leaders, to help them find a good study.
+    
+
+GUI Classes:
+    main dialog
+    Browse Main Records
+    Browse Keywords
+    Browse by authors 
+    search by author - show results by author
+    search by keyword - show results by keyword
+    search by subject - show results by subject
+    Show record screen
+    add study - must check all fields are filled in, a keyword is supplied, and an author is selected
+    add author - must verify information about author is correct. 
+    (keywords are added automatically with adding a specific study
+    database tables:    Study  one 
+                        Author one
+                        study to author many to many table.
+                        Keywords many to many table IE keyword, study.
+                        
+    
+    
+    

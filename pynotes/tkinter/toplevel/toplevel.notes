@@ -21,3 +21,7 @@ Make sure to create the root Tk() window before creating any widgets with the de
 Need to get the example about protocols. 
 
 Look up tkinter protocols if you want to know more. Basically you can intercept high level events. One such event is the protocol event. 
+
+wait_window(window) will cause the calling function to wait for the window to exit. You need to call
+grab_set() somewhere in the new window's construction process to prevent input from going to a different window
+
