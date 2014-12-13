@@ -1,2 +1,6 @@
 #This is just a quick project + gui to move saved games to the google drive folder. Hopefully it will keep me from losing saves pointlessly.
 
+#todo
+
+I need to create the destination folder if it does not exist. 
+I need to figure out how to store the selected destination and how to retrieve it. 

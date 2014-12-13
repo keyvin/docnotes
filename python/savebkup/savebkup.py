@@ -12,6 +12,11 @@ import distutils.dir_util
 class SaveDlg(Frame):
     def __init__(self, list=None, parent=None, **opts):
         Frame.__init__(self, parent,  opts)
+        self.top_menu = Menu(self)
+        parent.config(menu=self.top_menu)
+        self.file_menu = Menu(self.top_menu, tearoff=False)
+        self.top_menu.add_cascade(label="File", menu=self.file_menu, underline=0)
+        self.file_menu.add_command(label="Set Destination", command=self.menu_set_dest, underline=0)
         self.list=list
         self.lst_frame = Frame(self)
         self.list_box = Listbox(self.lst_frame, selectmode=SINGLE)
@@ -32,7 +37,19 @@ class SaveDlg(Frame):
         self.sbar.pack(side=LEFT, expand=False, fill=Y)
         self.lst_frame.pack(side=TOP, expand=True, fill=BOTH)
         self.btn_frame.pack(side=BOTTOM, expand=False , fill=None)
+        self.get_dest()
         self.load_list(list)
+    
+    def get_dest(self):
+        self.dest='/home/keyvin/dest/'
+    def menu_set_dest(self):
+        set_dest = SetDest()
+        self.wait_window(set_dest.top_level)
+        if not set_dest.dest:
+            return
+        self.dest = set_dest.dest
+        #do whatever to set destination
+
     def load_list(self, list):
         for i in list.shelve.keys():
             self.list_box.insert(END, i)
@@ -57,8 +74,39 @@ class SaveDlg(Frame):
 			#delete from a shelve.
 		
     def cpy_btn(self):
-        copier(self.list, 'C:\\Users\\keyvi_000\\Google Drive\\saves\\')
+        copier(self.list, self.dest)
 
+
+class SetDest():
+    def __init__(self, parent=None, **opts):
+
+        self.top_level = Toplevel(parent, opts)
+        self.dest_frame = Frame(self.top_level)
+        self.button_frame = Frame(self.top_level)
+        self.dest_entry = Entry(self.dest_frame)
+        self.dest_button = Button(self.dest_frame, text="...", command=self.dest_chooser)
+        self.ok_btn = Button(self.button_frame, text="Ok", command=self.ok_button)
+        self.cancel_btn = Button(self.button_frame, text="cancel", command=self.cancel_button)
+        self.dest_frame.pack()
+        self.dest_entry.pack()
+        self.dest_button.pack()
+        #self.top_level.pack()
+        self.ok_btn.pack()
+        self.cancel_btn.pack()
+        self.button_frame.pack()
+        self.top_level.grab_set()
+        self.dest = ''
+    def dest_chooser(self):
+       dest = tkinter.filedialog.askdirectory()
+       self.dest_entry.delete(0,END)
+       self.dest_entry.insert(0, dest)
+    def ok_button(self):
+       self.dest = self.dest_entry.get()
+       self.top_level.destroy()
+    def cancel_button(self):
+       self.top_level.destroy()
+
+       
 class AddDlg():
     def __init__(self, parent=None, **opts):
         self.top_level = Toplevel(parent, opts)
@@ -130,14 +178,16 @@ def copier(list, targetdir):
             to_copy = list.get_file(key)
             if os.path.exists(to_copy):
                 #shutil.copy(to_copy, targetdir)
+                #need to use os.path_join to join the path
                 if os.path.isdir(to_copy):
-                    distutils.dir_util.copy_tree(to_copy, targetdir+'\\'+key+'\\')
+                    distutils.dir_util.copy_tree(to_copy, os.path.join(targetdir,key))
                 if os.path.isfile(to_copy):
                     shutil.copy(to_copy, targetdir)
 					
 
 if __name__=='__main__':
-	saved_list = FileList()
-	SaveDlg(saved_list).pack(expand=True, fill=BOTH)
-	mainloop()
-	saved_list.close_list()
+    saved_list = FileList()
+    top = Tk()
+    SaveDlg(saved_list, top).pack(expand=True, fill=BOTH)
+    mainloop()
+    saved_list.close_list()
