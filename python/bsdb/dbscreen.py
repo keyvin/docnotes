@@ -1,5 +1,5 @@
 from tkinter import *
-
+from datamodel import DbInterface
 class BrowseDb(Frame):
     #db object should contain information from a previous query to be browsed
     #TODO - add a delete button to this screen
@@ -22,8 +22,8 @@ class BrowseDb(Frame):
         #buttons
         self.edit_button = Button(self.buttons_frame, text='Edit', command=None) #TODO, add stub
         self.save_button = Button(self.buttons_frame, text='Save', command=None) #TODO, add stup, lock in init
-        self.back_button = Button(self.buttons_frame, text='<', command=None) #TODO add stub
-        self.forward_button = Button(self.buttons_frame, text='>', command=None) #todo add stub, check in init if db has more than one
+        self.back_button = Button(self.buttons_frame, text='<', command=self.previous) #TODO add stub
+        self.forward_button = Button(self.buttons_frame, text='>', command=self.next) #todo add stub, check in init if db has more than one
         #TODO should add search by author, search by tags, search description, search copies
 
         #labels - Keep? Easier than packing
@@ -66,7 +66,26 @@ class BrowseDb(Frame):
         self.tags_frame.pack(side=TOP)
         self.copies_video_frame.pack(side=TOP) 
         self.buttons_frame.pack(side=TOP)
-                          
+        self.get_all()
+     def previous(self):
+         if not self.pos == 0:
+             self.pos = self.pos-1
+             self.set_screen()
+     def next(self):
+         if not self.pos == len(self.records): 
+            self.pos = self.pos+1
+            
+            self.set_screen()
+     def get_all(self):
+        self.records = self.dbobj.return_all()
+        self.pos = 0
+        #self.curr_record_lbl['text'] = '0/' + str(len(self.records))
+        self.set_screen()
+     def set_screen(self):
+        self.curr_record_lbl['text'] = str(self.pos+1) + '/' + str(len(self.records))
+        self.authors_entry.delete(0,END)
+        print(self.records)
+        self.authors_entry.insert(0,self.records[self.pos]['author'])
 
 if __name__=='__main__':
-    BrowseDb().mainloop()
+    BrowseDb(dbobj=DbInterface('test.db')).mainloop()

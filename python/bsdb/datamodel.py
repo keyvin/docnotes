@@ -1,7 +1,14 @@
 import sqlite3
 import os.path
-
-
+import subprocess
+import pickle
+def dict_factory(cursor, row):
+    d = {}
+    for idx, col in enumerate(cursor.description):
+        print(idx)
+        print(col)
+        d[col[0]] = row[idx]
+    return d
 
 class DbInterface():
 
@@ -9,15 +16,35 @@ class DbInterface():
     
     def __init__(self, dbFilename):
         self.db = self.open_DB(dbFilename)
-
+        self.db.row_factory = dict_factory
     def return_all(self):
         #return all books. Needs to get books and tags. Should be stored in a dict
-        pass
+        curr = self.db.cursor()
+        curr.execute('select * from book;')
+        
+        res = []
+        for i in curr.fetchall():
+            print(i)
+            res.append(i)
+        return res
+           
     def add(self, isbn):
         #need some way to call the python2 file and get data
-        book = { 'title': 'Test book', 'subtitle':'Test subtitle', 'description':'Test Description', 'author':'Test Author' }
+        #try:
+            
+        r = subprocess.Popen("/usr/bin/python booksapi.py "+  isbn, shell=True, stdout=subprocess.PIPE)
+       
+        out, err = r.communicate()
+        #print(out)
+        
+       # except Exception as e:
+        #    out, err 
+        #    pass #book = subprocess.output(["/usr/bin/python booksapi.py", isbn], shell=True)
+        fl = open('tmp.blah', 'rb')
+        book = pickle.load(fl)
+        #book = { 'title': 'Test book', 'subtitle':'Test subtitle', 'description':'Test Description', 'author':'Test Author' }
         cursor = self.db.cursor()
-        cursor.execute("insert into book (title, subtitle, description, author, count, leader) values (?, ?, ?, ?, 0,0);", (book['title'], book['subtitle'], book['description'], book['author']))
+        cursor.execute("insert into book (title, subtitle, description, author, count, leader) values (?, ?, ?, ?, 0,0);", (book['title'], ' ', book['description'], ','.join(book['authors'])))
         self.db.commit()
               
                      
@@ -39,6 +66,7 @@ class DbInterface():
 
 if __name__ == '__main__':
  db = DbInterface('test.db')
- db.add('1234')
+ #db.add('9780393063790')
+ db.return_all()
  db.db.close()
 
