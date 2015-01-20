@@ -1,5 +1,7 @@
 from tkinter import * 
 
+#todo - remove authors. keep keywords, browse studies. 
+
 class RootWindow(Frame):
     def __init__(self, parent=None, **opts):
         Frame.__init__(self, parent, opts)

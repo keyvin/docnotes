@@ -1,0 +1,11 @@
+import sys
+import pickle
+import os
+import apiclient
+from apiclient.discovery import build
+isbn = sys.argv[1:]
+service = build('books', 'v1', developerKey='AIzaSyBbZvSuYtmw_Uh-fLvfG6ukDsPXi5tVYEY')
+query = "isbn:%s" % (isbn,)
+s = service.volumes()
+
+r = s.get(volumeId=query)
