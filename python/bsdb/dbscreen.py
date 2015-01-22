@@ -27,17 +27,23 @@ class BrowseDb(Frame):
         #create frames
         self.editable_list = []
         self.dbobj = dbobj
-        self.title_author_frm = Frame(self)
+        self.title_frm = Frame(self)
+        self.author_frm = Frame(self)
+        self.subtitle_frm = Frame(self)
         self.description_frame = Frame(self)
         self.copies_video_frame = Frame(self)
         self.tags_frame = Frame(self)
         self.buttons_frame = Frame(self)
         #create entry and edit widgets
-        self.title_entry = Entry(self.title_author_frm)
+        self.title_entry = Entry(self.title_frm)
         self.editable_list.append(self.title_entry)
-        self.authors_entry = Entry(self.title_author_frm)
+        self.authors_entry = Entry(self.author_frm)
+        self.isbn_entry = Entry(self.author_frm)
+        self.editable_list.append(self.isbn_entry)
+        self.subtitle_entry = Entry(self.subtitle_frm)
+        self.editable_list.append(self.subtitle_entry)
         self.editable_list.append(self.authors_entry)
-        self.description_text = Text(self.description_frame)
+        self.description_text = Text(self.description_frame, wrap=WORD)
         #self.editable_list.append(self.description_text)
         self.copies_entry = Entry(self.copies_video_frame)
         self.editable_list.append(self.copies_entry)
@@ -56,8 +62,10 @@ class BrowseDb(Frame):
         #TODO should add search by author, search by tags, search description, search copies
 
         #labels - Keep? Easier than packing
-        self.title_lbl = Label(self.title_author_frm, text="Title")
-        self.author_lbl = Label(self.title_author_frm, text="Author(s)")
+        self.title_lbl = Label(self.title_frm, text="Title")
+        self.author_lbl = Label(self.author_frm, text="Author(s)")
+        self.isbn_lbl = Label(self.author_frm, text="ISBN")
+        self.subtitle_lbl = Label(self.subtitle_frm, text="Subtitle")
         self.description_lbl = Label(self.description_frame, text="Description")
         self.copies_lbl = Label(self.copies_video_frame, text="Copies")
         self.video_lbl = Label(self.copies_video_frame, text="Video(s)")
@@ -67,20 +75,24 @@ class BrowseDb(Frame):
         
         #pack title author stuff
         self.title_lbl.pack(side=LEFT)
-        self.title_entry.pack(side=RIGHT)
-        self.author_lbl.pack(side=RIGHT)
-        self.authors_entry.pack(side=RIGHT)
+        self.title_entry.pack(side=LEFT, expand=YES, fill=X)
+        self.author_lbl.pack(side=LEFT)
+        self.authors_entry.pack(side=LEFT, expand=YES, fill=X)
+        self.isbn_lbl.pack(side=LEFT)
+        self.isbn_entry.pack(side=LEFT)
+        self.subtitle_lbl.pack(side=LEFT)
+        self.subtitle_entry.pack(side=LEFT)
         #pack description:
         self.description_lbl.pack(side=TOP)
-        self.description_text.pack(side=TOP)
+        self.description_text.pack(side=TOP, expand=YES, fill=BOTH)
         #Pack Tags
         self.tags_lbl.pack(side=LEFT)
-        self.tags_entry.pack(side=LEFT)
+        self.tags_entry.pack(side=LEFT, expand=YES, fill=BOTH)
         #pack copies/video
         self.copies_lbl.pack(side=LEFT)
         self.copies_entry.pack(side=LEFT)
-        self.video_lbl.pack(side=RIGHT)
-        self.video_entry.pack(side=RIGHT)
+        self.video_lbl.pack(side=LEFT)
+        self.video_entry.pack(side=LEFT)
         #pack BUTTONS
         self.search_button.pack(side=LEFT)
         self.execute_button.pack(side=LEFT)
@@ -93,11 +105,13 @@ class BrowseDb(Frame):
     
         self.pack()
 
-        self.title_author_frm.pack(side=TOP)
+        self.title_frm.pack(side=TOP, expand=YES, fill=X)
+        self.subtitle_frm.pack(side=TOP, expand=YES, fill=X)
+        self.author_frm.pack(side=TOP, expand=YES, fill=X)
         self.description_frame.pack(side=TOP)
-        self.tags_frame.pack(side=TOP)
-        self.copies_video_frame.pack(side=TOP) 
-        self.buttons_frame.pack(side=TOP)
+        self.tags_frame.pack(side=TOP, expand=YES, fill=X)
+        self.copies_video_frame.pack(side=TOP, expand=YES, fill=X) 
+        self.buttons_frame.pack(side=TOP, expand=YES, fill=X)
         self.pos=0
         self.get_all()
         self.make_uneditable()
@@ -131,6 +145,8 @@ class BrowseDb(Frame):
         book['title']="%"+self.title_entry.get()+"%"
         book['count']="%"+self.copies_entry.get()+"%"
         book['author']="%"+self.authors_entry.get()+"%"
+        book['isbn']="%"+self.isbn_entry.get()+"%"
+        book['subtitle']="%"+ self.subtitle_entry.get()+"%"
         book['description'] = "%"+self.description_text.get('0.0', END)+"%"
         self.records = self.dbobj.search(book)
         self.pos = 0
@@ -141,6 +157,7 @@ class BrowseDb(Frame):
         self.edit()
         self.save_button.config(state='disabled')
         self.execute_button.config(state='active')
+        self.search_button.config(state='disabled')
      def save(self):
          #basically a functional stub
         book=self.records[self.pos]
@@ -148,6 +165,9 @@ class BrowseDb(Frame):
         book['count']=self.copies_entry.get()
         book['author']=self.authors_entry.get()
         book['description'] = self.description_text.get('0.0', END)
+        book['isbn']=self.isbn_entry.get()
+        book['subtitle']=self.subtitle_entry.get()
+
         #book['leader'] = self.leader_entry.get()
         self.dbobj.save(book)
         self.edit_button.config(state='active')
@@ -162,6 +182,7 @@ class BrowseDb(Frame):
         self.back_button.configure(state='active')
         self.save_button.configure(state='disabled')
         self.cancel_button.configure(state='disabled')
+        self.search_button.configure(state='enabled')
         self.set_screen()
         self.make_uneditable()
 
@@ -187,5 +208,7 @@ class BrowseDb(Frame):
         update_entry(self.copies_entry, curr_rec['count'])
         update_entry(self.video_entry, curr_rec['video'])
         update_text(self.description_text, curr_rec['description'])
+        update_entry(self.subtitle_entry, curr_rec['subtitle'])
+        update_entry(self.isbn_entry, curr_rec['isbn'])
 if __name__=='__main__':
     BrowseDb(dbobj=DbInterface('test.db')).mainloop()
