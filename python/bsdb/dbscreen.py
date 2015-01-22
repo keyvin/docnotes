@@ -46,6 +46,8 @@ class BrowseDb(Frame):
         self.tags_entry = Entry(self.tags_frame)
         self.editable_list.append(self.tags_entry)
         #buttons
+        self.search_button = Button(self.buttons_frame, text='Search', command=self.search)
+        self.execute_button = Button(self.buttons_frame, text='Execute Search', state='disabled',command=self.execute)
         self.edit_button = Button(self.buttons_frame, text='Edit', command=self.edit) #TODO, add stub
         self.cancel_button = Button(self.buttons_frame, text='Cancel', state='disabled', command=self.cancel)
         self.save_button = Button(self.buttons_frame, text='Save', state='disabled', command=self.save) #TODO, add stup, lock in init
@@ -80,8 +82,11 @@ class BrowseDb(Frame):
         self.video_lbl.pack(side=RIGHT)
         self.video_entry.pack(side=RIGHT)
         #pack BUTTONS
+        self.search_button.pack(side=LEFT)
+        self.execute_button.pack(side=LEFT)
         self.edit_button.pack(side=LEFT)
         self.save_button.pack(side=LEFT)
+        self.cancel_button.pack(side=LEFT)
         self.forward_button.pack(side=RIGHT)
         self.curr_record_lbl.pack(side=RIGHT)
         self.back_button.pack(side=RIGHT)
@@ -105,6 +110,10 @@ class BrowseDb(Frame):
         for i in self.editable_list:
             i.config(state='readonly')
         self.description_text.config(state='disabled')
+     def clear_editable(self):
+         for i in self.editable_list:
+             update_entry(i, '')
+         update_text(self.description_text, '')
      def unlock_buttons(self):
         pass
      def edit(self):
@@ -114,9 +123,39 @@ class BrowseDb(Frame):
         self.save_button.configure(state='active')
         self.cancel_button.configure(state='active')
         self.make_editable()
+     def execute(self):
+        book = self.records[0]
+        for i in book.keys():
+            book[i] = ''
+        
+        book['title']="%"+self.title_entry.get()+"%"
+        book['count']="%"+self.copies_entry.get()+"%"
+        book['author']="%"+self.authors_entry.get()+"%"
+        book['description'] = "%"+self.description_text.get('0.0', END)+"%"
+        self.records = self.dbobj.search(book)
+        self.pos = 0
+        self.make_uneditable()
+        self.set_screen()
+     def search(self):
+        self.clear_editable()
+        self.edit()
+        self.save_button.config(state='disabled')
+        self.execute_button.config(state='active')
      def save(self):
          #basically a functional stub
-         self.cancel()
+        book=self.records[self.pos]
+        book['title']=self.title_entry.get()
+        book['count']=self.copies_entry.get()
+        book['author']=self.authors_entry.get()
+        book['description'] = self.description_text.get('0.0', END)
+        #book['leader'] = self.leader_entry.get()
+        self.dbobj.save(book)
+        self.edit_button.config(state='active')
+        self.forward_button.configure(state='active')
+        self.back_button.configure(state='active')
+        self.save_button.configure(state='disabled')
+        self.cancel_button.configure(state='disabled')
+        self.make_uneditable()
      def cancel(self):
         self.edit_button.config(state='active')
         self.forward_button.configure(state='active')
@@ -124,7 +163,7 @@ class BrowseDb(Frame):
         self.save_button.configure(state='disabled')
         self.cancel_button.configure(state='disabled')
         self.set_screen()
-        self.make_editable()
+        self.make_uneditable()
 
      def previous(self):
          if not self.pos == 0:
