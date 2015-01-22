@@ -2,6 +2,9 @@ import sqlite3
 import os.path
 import subprocess
 import pickle
+
+#todo, return tags, avoid duplicates by checking primary key. 
+
 def dict_factory(cursor, row):
     d = {}
     for idx, col in enumerate(cursor.description):
@@ -9,6 +12,8 @@ def dict_factory(cursor, row):
         print(col)
         d[col[0]] = row[idx]
     return d
+
+#helper functions
 
 class DbInterface():
 
@@ -42,11 +47,17 @@ class DbInterface():
         #    pass #book = subprocess.output(["/usr/bin/python booksapi.py", isbn], shell=True)
         fl = open('tmp.blah', 'rb')
         book = pickle.load(fl)
+        print(book)
+        if 'error' in book.keys():
+            return False
         #book = { 'title': 'Test book', 'subtitle':'Test subtitle', 'description':'Test Description', 'author':'Test Author' }
         cursor = self.db.cursor()
-        cursor.execute("insert into book (title, subtitle, description, author, count, leader) values (?, ?, ?, ?, 0,0);", (book['title'], ' ', book['description'], ','.join(book['authors'])))
+        if 'subtitle' not in book.keys():
+            book['subtitle'] = ''
+        cursor.execute("insert into book (title, subtitle, description, author, count, leader, isbn, pagecount, averagerating, video ) values (?, ?, ?, ?, 0,0, ?, ?, ?, 0);",
+                       (book['title'], book['subtitle'], book['description'], ','.join(book['authors']), isbn, book['pageCount'], book['averageRating']))
         self.db.commit()
-              
+        return True
                      
     def open_DB(self, filename):
         if not os.path.isfile(filename):
@@ -57,16 +68,17 @@ class DbInterface():
         #check if db exists
         conn = sqlite3.connect(filename)
         cursor = conn.cursor()
-        cursor.execute('create table book (aid integer primary key, title varchar, subtitle varchar, description varchar, author varchar, count integer, leader integer);')
+        cursor.execute('create table book (bid integer primary key, title varchar, subtitle varchar, description varchar, author varchar, count integer, leader integer, isbn varchar, publisher varchar, pagecount varchar, averagerating varchar, video varchar);')
         conn.commit()
-        cursor.execute('create table tag (aid integer not null, note varchar);')
+        cursor.execute('create table tag (bid integer not null, note varchar);')
         conn.commit()
         return conn
-
+    
 
 if __name__ == '__main__':
  db = DbInterface('test.db')
- #db.add('9780393063790')
+ db.add('9780393063790')
+ db.add('978037540705')
  db.return_all()
  db.db.close()
 

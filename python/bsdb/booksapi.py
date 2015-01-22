@@ -13,9 +13,13 @@ s = service.volumes()
 
 r = s.list(q=query)
 r = r.execute()
+if r['totalItems'] == 0:
+    d = {'error':0}
+else:
+    d = r['items'][0]['volumeInfo']
 
-d = r['items'][0]['volumeInfo']
 tmpfile = open('tmp.blah', 'wb')
-pickle.dump(r['items'][0]['volumeInfo'], tmpfile)
+
+pickle.dump(d, tmpfile)
 
 #tmpfile.write(obj)
