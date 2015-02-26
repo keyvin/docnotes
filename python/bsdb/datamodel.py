@@ -23,6 +23,7 @@ class DbInterface():
         self.db = self.open_DB(dbFilename)
         self.db.row_factory = dict_factory
     def make_empty_book(self):
+        book = {}
         book['title']='Not Found',
         book['subtitle'] = ''
         book['author'] = ''
@@ -36,14 +37,18 @@ class DbInterface():
         for i in book.keys():
             if book[i]=='':
                 book[i]='%'
+            else:
+                b = book[i].split(' ')
+                b = '%'.join(b)
+                book[i] = b
         curr = self.db.cursor()        
         query = "select * from book where title like '%s' and subtitle like '%s' and author like '%s' and description like '%s' and video like '%s' and count like '%s' and isbn like '%s';" % (book['title'], book['subtitle'], book['author'], book['description'], book['video'], book['count'], book['isbn'])
         print(query)                                                                                                                                                                                 
         curr.execute('select * from book where title like ? and subtitle like ? and author like ? and description like ? and video like ? and count like ? and isbn like ?;', (book['title'], book['subtitle'], book['author'], book['description'], book['video'], book['count'], book['isbn']))
-        if curr.rowcount == 0:
+        list = self.make_list(curr)
+        if list ==[]:
             return [self.make_empty_book()]
-        else:
-            return self.make_list(curr)
+        return list
     def return_all(self):
         #return all books. Needs to get books and tags. Should be stored in a dict
         curr = self.db.cursor()
@@ -80,8 +85,14 @@ class DbInterface():
             return False
         #book = { 'title': 'Test book', 'subtitle':'Test subtitle', 'description':'Test Description', 'author':'Test Author' }
         cursor = self.db.cursor()
+        if 'description' not in book.keys():
+            book['description'] = ''
         if 'subtitle' not in book.keys():
             book['subtitle'] = ''
+        if 'averageRating' not in book.keys():
+            book['averageRating'] = ''
+        if 'authors' not in book.keys():
+            book['authors'] = ''
         cursor.execute("insert into book (title, subtitle, description, author, count, leader, isbn, pagecount, averagerating, video ) values (?, ?, ?, ?, 0,0, ?, ?, ?, 0);",
                        (book['title'], book['subtitle'], book['description'], ','.join(book['authors']), isbn, book['pageCount'], book['averageRating']))
         self.db.commit()
@@ -105,8 +116,14 @@ class DbInterface():
 
 if __name__ == '__main__':
  db = DbInterface('test.db')
+ f = open("bulk.txt", "r")
+ for i in f:
+     b = i.rstrip()
+     print(b)
+     db.add(b)
+
  db.add('9780393063790')
- db.add('978037540705')
+ 
  db.return_all()
  db.db.close()
 

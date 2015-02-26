@@ -81,7 +81,7 @@ class BrowseDb(Frame):
         self.isbn_lbl.pack(side=LEFT)
         self.isbn_entry.pack(side=LEFT)
         self.subtitle_lbl.pack(side=LEFT)
-        self.subtitle_entry.pack(side=LEFT)
+        self.subtitle_entry.pack(side=LEFT, expand=YES, fill=X)
         #pack description:
         self.description_lbl.pack(side=TOP)
         self.description_text.pack(side=TOP, expand=YES, fill=BOTH)
@@ -147,10 +147,13 @@ class BrowseDb(Frame):
         book['author']="%"+self.authors_entry.get()+"%"
         book['isbn']="%"+self.isbn_entry.get()+"%"
         book['subtitle']="%"+ self.subtitle_entry.get()+"%"
-        book['description'] = "%"+self.description_text.get('0.0', END)+"%"
+        book['description'] = "%"+self.description_text.get('0.0', END).rstrip()+"%"
+        
         self.records = self.dbobj.search(book)
+        print (self.records)
         self.pos = 0
         self.make_uneditable()
+        self.cancel()
         self.set_screen()
      def search(self):
         self.clear_editable()
@@ -182,7 +185,8 @@ class BrowseDb(Frame):
         self.back_button.configure(state='active')
         self.save_button.configure(state='disabled')
         self.cancel_button.configure(state='disabled')
-        self.search_button.configure(state='enabled')
+        self.search_button.configure(state='active')
+        self.execute_button.configure(state='disabled')
         self.set_screen()
         self.make_uneditable()
 
