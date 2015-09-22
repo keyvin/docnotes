@@ -4,6 +4,7 @@ import pickle
 import tkinter.filedialog
 import tkinter.simpledialog
 import tkinter.messagebox
+import shutil
 global save_path
 save_path = './save.pkl'
 #data struct - {Pairname:[Sourcepath, destpath, isdir]}
@@ -11,25 +12,28 @@ save_path = './save.pkl'
 class mainWin(Tk):
     def __init__(self):
         Tk.__init__(self)
-        
-        self.t_label = Label(self, text="Save Mover")
+        self.wm_title("File mover")
+        #self.t_label = Label(self, text="Save Mover")
         self.listbox_frame = Frame(self)
         self.list_box = Listbox(self.listbox_frame)
         self.b_frame = Frame(self)
         self.add_button = Button(self.b_frame, text="Add", command = self.add)
         self.del_button = Button(self.b_frame, text="Delete", command = self.delete)
-        self.move_button = Button(self.b_frame, text="Move!", command = self.move)
+        self.move_button = Button(self.b_frame, text="Move All", command = self.moveall)
+        self.move_one_button = Button(self.b_frame, text="Move Current", command = self.moveone)
         self.sbar = Scrollbar(self.listbox_frame, orient=VERTICAL)
         self.sbar.config(command=self.list_box.yview)
         self.list_box.config(yscrollcommand = self.sbar.set)
-        self.t_label.pack(side=TOP)
-        self.listbox_frame.pack(side=TOP)
-        self.list_box.pack(side=LEFT)
-        self.sbar.pack(side=RIGHT)
-        self.b_frame.pack(side=TOP)
+        #self.t_label.pack(side=TOP)
+        self.listbox_frame.pack(side=TOP, expand=True, fill=BOTH)
+        self.list_box.pack(side=LEFT, expand=True, fill=BOTH)
+        self.sbar.pack(side=RIGHT, fill=Y)
+        self.move_button.pack(side=RIGHT, expand =True, fill=X)       
+        self.b_frame.pack(side=TOP, fill=X)
         self.del_button.pack(side=LEFT)
         self.add_button.pack(side=LEFT)
-        self.move_button.pack(side=RIGHT)
+        
+        self.move_one_button.pack(side=RIGHT)
         self.protocol('WM_DELETE_WINDOW', self.close_handler)
         self.loadPickle()
         
@@ -41,7 +45,7 @@ class mainWin(Tk):
         
         if isdir == 'yes':
             isdir = True
-            source = tkinter.filedialog.askdirectory(title="wWhat is the source folder")
+            source = tkinter.filedialog.askdirectory(title="What is the source folder")
         else:
             isdir = False
             source = tkinter.filedialog.askopenfilename(title="File to move")
@@ -50,8 +54,12 @@ class mainWin(Tk):
         
         finalok = tkinter.messagebox.askokcancel(title="Create pair?", message= "Pair named: " + str(name) + "\n" + "Source "+ str(source) + "\n" + "Destination" + str(destination) )
         # print(finalok)
+        if source == destingation:
+            tkinter.messagebox.showerror(title="Error!", message="Source and Destination are the same!")
+            return
         if finalok:
             self.addpair(name, source, destination, isdir )
+        
             
     def delete(self):
         active = self.list_box.get(ACTIVE)
@@ -60,8 +68,16 @@ class mainWin(Tk):
         if delete_it == True:
             del(self.dir_list[active])
             self.list_box.delete(ACTIVE)
-    def move(self):
-        pass
+    def moveall(self):
+        for i in self.dir_list.keys():
+            shutil.rmtree(self.dir_list[i][1])
+            shutil.copytree(self.dir_list[i][0], self.dir_list[i][1])
+    def moveone(self):
+        current = self.list_box.get()
+        if not current:
+            return
+        else:
+            shutile.rmtree(self.dir_list[current][1])
     def addpair(self, name, source, destination, isdir):
         self.dir_list[name] = [source, destination, isdir]
         self.addtolistbox(name)
