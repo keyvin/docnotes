@@ -6,12 +6,12 @@ import tkinter.simpledialog
 import tkinter.messagebox
 import zipfile
 import shutil
-
+import datetime
 global save_path
 global save_root
 save_path = './save.pkl'
 #data struct - {Pairname:[Sourcepath, destpath, isdir, clobber]}
-save_root = 'c:\\users\\sysv\\kyevin@gmail.com\\x250savegames\\'
+save_root = 'C:\\Users\\admin\\keyvin@gmail.com\\x250savegames\\'
 
 #Flow
 # if one file 
@@ -66,13 +66,13 @@ class mainWin(Tk):
         
         #destination = tkinter.filedialog.askdirectory(title="Destination?")
         clobber = tkinter.messagebox.askquestion(title="Overwrite?", message="Do you wish to overwrite old versions?")
-        finalok = tkinter.messagebox.askokcancel(title="Create pair?", message= "Pair named: " + str(name) + "\n" + "Source: "+ str(source) + "\n" + "Destination: " + str(destination) +'\nClobber: ' + clobber  )
+        finalok = tkinter.messagebox.askokcancel(title="Create pair?", message= "Pair named: " + str(name) + "\n" + "Source: "+ str(source) + "\n" +'\nClobber: ' + clobber  )
         # print(finalok)
         #if source == destination:
         #    tkinter.messagebox.showerror(title="Error!", message="Source and Destination are the same!")
         #    return
         if finalok:
-            self.addpair(name, source, destination, isdir, clobber )
+            self.addpair(name, source, '', isdir, clobber )
         
             
     def delete(self):
@@ -84,17 +84,45 @@ class mainWin(Tk):
             self.list_box.delete(ACTIVE)
     def moveall(self):
         for i in self.dir_list.keys():
-            if os.path.exists(self.dir_list[i][1]):
-                shutil.rmtree(self.dir_list[i][1])
-                shutil.copytree(self.dir_list[i][0], self.dir_list[i][1])
+            if os.path.exists(self.dir_list[i][0]):
+                self.domove(i)
     def moveone(self):
         current = self.list_box.get(ACTIVE)
         if not current:
             return
         else:
             if os.path.exists(self.dir_list[current][0]):
+                self.domove(current)
+    def domove(self, current):
+        #directory
+        if self.dir_list[current][2] == True:
+            #clobber 
+            if self.dir_list[current][3] == 'yes':
                 shutil.make_archive(save_root + current + ".zip", "zip", self.dir_list[current][0] )
-    def domove(self, todo):
+            else:
+                #noclobber
+                #get date and time
+                date = datetime.datetime.now()
+                date = date.isoformat().split('.')[0:-1][0].replace(':',"")
+                shutil.make_archive(save_root + current + date + ".zip", "zip", self.dir_list[current][0] )
+        else:
+        #single file
+            if  self.dir_list[current][3] == 'yes':
+                #clobber
+                zf = zipfile(save_root + current + '.zip', 'w')
+                zf.write(self.dir_list[current][0])
+                zf.close()
+            else:
+                #append to zipfile 
+                date = datetime.datetime.now()
+                date = date.isoformat().split('.')[0:-1][0].replace(':',"")
+                zf = zipfile.ZipFile(save_root + current + date+ '.zip', 'w')
+                
+                zf.write(self.dir_list[current][0])
+                zf.close()
+        return
+                
+                
         pass
     def addpair(self, name, source, destination, isdir, clobber):
         self.dir_list[name] = [source, destination, isdir, clobber]
