@@ -4,16 +4,30 @@ import pickle
 import tkinter.filedialog
 import tkinter.simpledialog
 import tkinter.messagebox
+import zipfile
 import shutil
+
 global save_path
+global save_root
 save_path = './save.pkl'
-#data struct - {Pairname:[Sourcepath, destpath, isdir]}
+#data struct - {Pairname:[Sourcepath, destpath, isdir, clobber]}
+save_root = 'c:\\users\\sysv\\kyevin@gmail.com\\x250savegames\\'
+
+#Flow
+# if one file 
+#       delete existing zip (unless marked to not clobber)
+#       create zip file with one file in it using zipfile
+# If directory
+#       delete existing zip file
+#       use shutil to create the zip file again with latest version (unless no clobber)
+#todo - I need to refactor to account for zip file saves. I should always clobber archives. 
+#create a zip archive with just one file, or clobber. 
 
 class mainWin(Tk):
     def __init__(self):
         Tk.__init__(self)
         self.wm_title("File mover")
-        #self.t_label = Label(self, text="Save Mover")
+        self.t_label = Label(self, text="Destination: " + save_root)
         self.listbox_frame = Frame(self)
         self.list_box = Listbox(self.listbox_frame)
         self.b_frame = Frame(self)
@@ -24,7 +38,7 @@ class mainWin(Tk):
         self.sbar = Scrollbar(self.listbox_frame, orient=VERTICAL)
         self.sbar.config(command=self.list_box.yview)
         self.list_box.config(yscrollcommand = self.sbar.set)
-        #self.t_label.pack(side=TOP)
+        self.t_label.pack(side=TOP)
         self.listbox_frame.pack(side=TOP, expand=True, fill=BOTH)
         self.list_box.pack(side=LEFT, expand=True, fill=BOTH)
         self.sbar.pack(side=RIGHT, fill=Y)
@@ -50,15 +64,15 @@ class mainWin(Tk):
             isdir = False
             source = tkinter.filedialog.askopenfilename(title="File to move")
         
-        destination = tkinter.filedialog.askdirectory(title="Destination?")
-        
-        finalok = tkinter.messagebox.askokcancel(title="Create pair?", message= "Pair named: " + str(name) + "\n" + "Source "+ str(source) + "\n" + "Destination" + str(destination) )
+        #destination = tkinter.filedialog.askdirectory(title="Destination?")
+        clobber = tkinter.messagebox.askquestion(title="Overwrite?", message="Do you wish to overwrite old versions?")
+        finalok = tkinter.messagebox.askokcancel(title="Create pair?", message= "Pair named: " + str(name) + "\n" + "Source: "+ str(source) + "\n" + "Destination: " + str(destination) +'\nClobber: ' + clobber  )
         # print(finalok)
-        if source == destingation:
-            tkinter.messagebox.showerror(title="Error!", message="Source and Destination are the same!")
-            return
+        #if source == destination:
+        #    tkinter.messagebox.showerror(title="Error!", message="Source and Destination are the same!")
+        #    return
         if finalok:
-            self.addpair(name, source, destination, isdir )
+            self.addpair(name, source, destination, isdir, clobber )
         
             
     def delete(self):
@@ -70,16 +84,20 @@ class mainWin(Tk):
             self.list_box.delete(ACTIVE)
     def moveall(self):
         for i in self.dir_list.keys():
-            shutil.rmtree(self.dir_list[i][1])
-            shutil.copytree(self.dir_list[i][0], self.dir_list[i][1])
+            if os.path.exists(self.dir_list[i][1]):
+                shutil.rmtree(self.dir_list[i][1])
+                shutil.copytree(self.dir_list[i][0], self.dir_list[i][1])
     def moveone(self):
-        current = self.list_box.get()
+        current = self.list_box.get(ACTIVE)
         if not current:
             return
         else:
-            shutile.rmtree(self.dir_list[current][1])
-    def addpair(self, name, source, destination, isdir):
-        self.dir_list[name] = [source, destination, isdir]
+            if os.path.exists(self.dir_list[current][0]):
+                shutil.make_archive(save_root + current + ".zip", "zip", self.dir_list[current][0] )
+    def domove(self, todo):
+        pass
+    def addpair(self, name, source, destination, isdir, clobber):
+        self.dir_list[name] = [source, destination, isdir, clobber]
         self.addtolistbox(name)
     def addtolistbox(self, name):
         self.list_box.insert(END, name)
