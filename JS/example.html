@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<canvas id="myCanvas" width="1000" height="1000" style="border:1px solid #c3c3c3;">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+
+<script>
+var viewX = 0;
+var viewY = 0;
+var clickX = 0;
+var clickY = 0;
+var spacer = 50;
+var gHeight = 1000;
+var gWidth = 1000;
+
+var movecount = 0;
+var c = document.getElementById("myCanvas");
+var ctx = c.getContext("2d");
+var inRender = 0;
+var lineList = [];
+
+
+
+function render() {
+	//ctx.clearRect(0, 0, 1000, 1000);
+	ctx.fillStyle="#6F93FF";
+	ctx.fillRect(0, 0, gHeight, gWidth);
+	var offX = viewX % spacer;
+	var offY = viewY % spacer;
+	
+	for (i=0; i<=(gHeight/spacer) +1; i++){
+		
+		ctx.setLineDash([5, 5]);
+
+		ctx.beginPath();
+		ctx.moveTo(i*spacer + offX, offY)
+		ctx.lineTo(i*spacer + offX, gHeight)
+		ctx.stroke();
+		ctx.moveTo(offX, i*spacer + offY)
+		ctx.lineTo(gWidth, i*spacer + offY)
+		ctx.stroke();
+		ctx.closePath();
+	}
+	ctx.fillStyle = "Red";
+	ctx.font="20px Georgia";
+	var text = "X: " + viewX + "||Y: " + viewY;
+	ctx.fillText(text,10,20);
+	var xStart = Math.floor(viewX/spacer);
+	var yStart = Math.floor(viewY/spacer);
+	for (i=0; i <=gHeight/spacer; i++){
+		ctx.fillText(xStart, i*spacer + 10 + offX , gHeight - 10);
+		xStart++;
+	}
+	
+	requestAnimationFrame(render);
+}
+
+var mouseIsDown = false;
+
+c.onmousedown = function(e){
+    clickX = e.x ;
+    clickY = e.y ;
+
+    mouseIsDown = true;
+}
+c.onmouseup = function(e){
+    //if(mouseIsDown) mouseClick(e);
+	//movecount = 5;
+	//render();
+    //viewX = (e.x);
+    //viewY = (e.y - clickY);
+   mouseIsDown = false;
+}
+
+c.click = function(e) {
+	//calculate the closest grid lines. Boxes of 10px by 10px between grid lines centered
+	//take click, determine which grid line if any. Convert to global co-ords. Add wall to datastructure
+	
+	//caluclate x and y offset
+	//var boxSize = 16;
+	//var offX = viewX % spacer;
+	//var offY = viewY % spacer;
+	
+	//var clickX = e.x - offx;
+	//var clickY = e.y - offy;
+	
+	//if (clickX%spacer - boxSize/2 > spacer/2 - boxSize/2 && clickX%spacer + boxSize/2 < spacer/2 + boxSize/2){
+		//if (clickY%spacer - spacer > -5 && clickY%spacer <5){
+			//this is the x grid line
+		
+		//}	
+	//}
+	
+}
+
+c.onmousemove = function(e){
+    if(!mouseIsDown) return;
+	
+    
+	
+	viewX = viewX + (e.x - clickX);
+    viewY = viewY + (e.y - clickY);
+	clickX = e.x;
+	clickY = e.y;
+	
+	//render();
+    return false;
+}
+render();
+
+</script>
+
+</body>
+</html>
+
+
