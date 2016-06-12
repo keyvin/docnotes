@@ -2,7 +2,7 @@
 <html>
 <body>
 
-<canvas id="myCanvas" width="1000" height="1000" style="border:1px solid #c3c3c3;">
+<canvas id="myCanvas" width="600" height="600" style="border:1px solid #c3c3c3;">
 Your browser does not support the HTML5 canvas tag.
 </canvas>
 
@@ -12,8 +12,8 @@ var viewY = 0;
 var clickX = 0;
 var clickY = 0;
 var spacer = 50;
-var gHeight = 1000;
-var gWidth = 1000;
+var gHeight = 600;
+var gWidth = 600;
 
 var movecount = 0;
 var c = document.getElementById("myCanvas");
@@ -49,11 +49,14 @@ function render() {
 	ctx.fillText(text,10,20);
 	var xStart = Math.floor(viewX/spacer);
 	var yStart = Math.floor(viewY/spacer);
-	for (i=0; i <=gHeight/spacer; i++){
-		ctx.fillText(xStart, i*spacer + 10 + offX , gHeight - 10);
+	for (i=gHeight/spacer; i >=0; i--){
+		ctx.fillText(xStart, i*spacer + 4 + offX , gHeight - 10);
 		xStart++;
 	}
-	
+	for (i=gHeight/spacer; i >=0; i--){
+		ctx.fillText(yStart, gWidth-30, i*spacer - 4 + offY);
+		yStart++;
+	}
 	requestAnimationFrame(render);
 }
 
