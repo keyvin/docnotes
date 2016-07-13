@@ -18,30 +18,38 @@ class Proxy(threading.Thread):
         self.aws_host = aws_host
         self.incoming_socket = None
         self.myShadowClient = None
+
     def connect(self, incoming_socket):
 
         self.incoming_socket = incoming_socket
-        self.myShadowClient = AWSIoTMQTTShadowClient("impulse")       
+        self.myShadowClient = AWSIoTMQTTShadowClient("")       
         print(self.aws_host)
         self.myShadowClient.configureEndpoint(self.aws_host, 8883)
         self.myShadowClient.configureCredentials(self.awsca_cert, self.private_key, self.client_cert)       
         self.myShadowClient.configureConnectDisconnectTimeout(10)  # 10 sec
         self.myShadowClient.configureMQTTOperationTimeout(5)  # 5 sec
         res = self.myShadowClient.connect()
-        self.run()
-
+        self.start()
+        
         
     #function just passes data back and forth. Use callbacks for mqqt sending
     def main_loop(self):
         #define callbacks to return information to socket
         while True:
-            data = self.incoming_socket.recv(2048)
-            myMQTTClient = self.myShadowClient.getMQTTConnection()
-            myMQTTClient.publish("$aws/things/thing/shadow/update", data, 1)
-            print data
-            data = self.incoming_socket.write("Received")
+            try:
+                data = self.incoming_socket.recv(2048)
+                myMQTTClient = self.myShadowClient.getMQTTConnection()
+                myMQTTClient.subscribe("$aws/things/thing/shadow/update", 1, self.callback)
+                myMQTTClient.publish("$aws/things/thing/shadow/update", data, 1)
+                
+                print data
+                data = self.incoming_socket.write("Received")
+            except:
+                return
 
-    def callback(self):
-        pass
+    def callback(self, client, userdata, message):
+        print message.payload
+        self.incoming_socket.write(message.payload)
+        return
 
     

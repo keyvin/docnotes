@@ -34,7 +34,7 @@ class ProxyServer():
     #Accept requests on incoming port. Log originating IP
     def __init__(self):
         #this can be a list. 
-        self.proxy = Proxy()
+        self.proxy = []
         self.listen_begin()
 
     def handle_request(self, socket):
@@ -42,7 +42,10 @@ class ProxyServer():
         request = ssl.wrap_socket(request, keyfile=server_pkey, certfile=server_cert,
                                   server_side=True)
         self.log(client_address)
-        self.proxy.connect(request)
+        prox = Proxy()
+        prox.connect(request)
+        self.proxy.append(prox)
+
 
     #redefine as necessary
     def log(self, text):
