@@ -36,8 +36,11 @@ class Proxy(threading.Thread):
         #define callbacks to return information to socket
         while True:
             data = self.incoming_socket.recv(2048)
+            myMQTTClient = self.myShadowClient.getMQTTConnection()
+            myMQTTClient.publish("$aws/things/thing/shadow/update", data, 1)
             print data
             data = self.incoming_socket.write("Received")
+
     def callback(self):
         pass
 
