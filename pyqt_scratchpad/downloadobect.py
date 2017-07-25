@@ -4,6 +4,9 @@ import datetime
 import threading
 
 
+#divide it into microseconds
+
+# seconds/ticks = tocs
 class Download(threading.Thread):
     def __init__(self):
         self.error = True
@@ -27,15 +30,16 @@ class Download(threading.Thread):
             end_time = datetime.datetime.now()
 
             delta = end_time - start_time
-            print(delta)
+
             #Check Messages. Do something about them
             if self.tokens:
                 self.from_me.put("depleting tokens")
                 self.tokens = self.tokens - 1
                 self.do_download()
             else:
-                self.from_me.put("Tokens expended")
-                time.sleep(.01)
+                pass
+                #self.from_me.put("Tokens expended")
+                #time.sleep(.001)
             if delta.seconds >= 1:
                 self.tokens = self.token_refill
                 self.from_me.put("Refilling Bucket")
