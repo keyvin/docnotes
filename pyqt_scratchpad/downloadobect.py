@@ -23,6 +23,8 @@ class Download(threading.Thread):
         self.tokens = tokens_per_second
         threading.Thread.__init__(self)
 
+
+
     def run(self):
         start_time = datetime.datetime.now()
 
@@ -30,21 +32,17 @@ class Download(threading.Thread):
             end_time = datetime.datetime.now()
 
             delta = end_time - start_time
-
-            #Check Messages. Do something about them
             if self.tokens:
                 self.from_me.put("depleting tokens")
                 self.tokens = self.tokens - 1
                 self.do_download()
             else:
                 pass
-                #self.from_me.put("Tokens expended")
-                #time.sleep(.001)
+
             if delta.seconds >= 1:
                 self.tokens = self.token_refill
                 self.from_me.put("Refilling Bucket")
                 start_time = datetime.datetime.now()
-
 
     #override for each type of download
     def do_download(self):
