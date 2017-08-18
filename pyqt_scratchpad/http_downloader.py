@@ -37,8 +37,6 @@ class HttpDownload(Download):
 
 if __name__=="__main__":
     p = queue.Queue()
-    m = HttpDownload('c:\\users\keyvin\Desktop\hello.iso', urllib.parse.urlparse('http://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-9.1.0-amd64-xfce-CD-1.iso'), p, 20000)
+    m = HttpDownload('c:\\users\keyvin\Desktop\hello.iso', urllib.parse.urlparse('http://debian.cse.msu.edu/debian-cd/9.1.0/amd64/iso-cd/debian-9.1.0-amd64-netinst.iso'), p, 20000)
     m.start()
-    while True:
-        time.sleep(1)
-        pass
+    m.join()

@@ -51,7 +51,8 @@ class Gui (QMainWindow):
 
         pass
 
-
+    def makeToolBar(self):
+        pass
     def makeButtons(self):
         pass
 
