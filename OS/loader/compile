@@ -1,0 +1,1 @@
+i686-elf-gcc -T boot_loader.ld  -o loader.o -ffreestanding -nostdlib -lgcc loader.s
