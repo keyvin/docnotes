@@ -98,10 +98,11 @@ void scroll_up() {
   int high_row = 0;
   for (rows = 0;rows<=VGA_HEIGHT;rows++){
     for (cols = 0; cols <= VGA_WIDTH; cols++){
-      index = rows * VGA_WIDTH + cols;
-      terminal_buffer[index] = terminal_buffer[index+((rows+1)*VGA_WIDTH)];
+      index = (rows * VGA_WIDTH) + cols;
+      terminal_buffer[index] = terminal_buffer[index+VGA_WIDTH];
     }
   }
+  terminal_column++;
   return;
 }
 void terminal_putchar(char c) {
@@ -109,17 +110,20 @@ void terminal_putchar(char c) {
 	if (++terminal_column == VGA_WIDTH) {
 		terminal_column = 0;
 		if (++terminal_row == VGA_HEIGHT){
-		  //scroll_up();
-		  terminal_row = 0;
+		  scroll_up();
+		  terminal_column = 0;
+		  terminal_row = VGA_HEIGHT-1;
+		}
       	}
 	if (c == '\n'){
 	  terminal_row++;
 	  terminal_column = 0;
 	}
-	if (c == 'm'){
-	  scroll_up();
 	
-	}
+	//	if (c == 'm'){
+	//scroll_up();
+	
+	//	}
 	if (c == '\r'){
 	  if (terminal_column == 0){
 	      terminal_column = VGA_WIDTH-2;
@@ -131,11 +135,15 @@ void terminal_putchar(char c) {
 	  }
 	}
 	  
-	    
-    }
+	if (terminal_row >=VGA_HEIGHT-1){
+	  scroll_up();
+	  terminal_row = VGA_HEIGHT-2;
+	  terminal_column = 0;
+	  
+    }   
     terminal_putentryat(c, terminal_color, terminal_column, terminal_row);	  
 }
- 
+
 void terminal_write(const char* data, size_t size) {
 	for (size_t i = 0; i < size; i++)
 		terminal_putchar(data[i]);
