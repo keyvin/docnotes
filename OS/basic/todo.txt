@@ -1,0 +1,4 @@
+Somewhere in parsetree, I am passing a pointer rather than creating a new buffer, copying it. This results in double free operations when freeing the memory in a parsetree.
+
+Relevant lines: Free is at parsetree.c:224 (free tree)
+This tree is only touched by parsetree and parse. 

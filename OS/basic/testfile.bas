@@ -1,0 +1,10 @@
+10 SET vala=0
+20 IF vala < 10000
+25 SET vala=vala+1
+30 PRINT vala
+40 GOTO 20
+50 ELSE
+60 PRINT vala
+70 END IF
+80 PRINT vala
+EXEC

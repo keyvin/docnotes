@@ -173,6 +173,7 @@ void kernel_main(void) {
 	terminal_initialize();	
 	/* Newline support is left as an exercise. */
 	terminal_writestring("Hello, kernel World!\n");
+	basic();
 	while(1){
 	  a = inportb(0x60);
 	  if (old_a != a ){
@@ -181,7 +182,10 @@ void kernel_main(void) {
 	    if (c)
 	      terminal_putchar(c);
 	  }
-     }
+
+	  
+	  
+    }
 }
 
 
