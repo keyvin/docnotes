@@ -162,9 +162,7 @@ inline unsigned char inportb(unsigned int port)
 
   
 
-#if defined(__cplusplus)
-extern "C" /* Use C linkage for kernel_main. */
-#endif
+
 void kernel_main(void) {
   char a = 0;
   char old_a = 1;
@@ -172,12 +170,9 @@ void kernel_main(void) {
   /* Initialize terminal interface */
 	terminal_initialize();	
 	/* Newline support is left as an exercise. */
-	terminal_writestring("Hello, kernel World!\n");
-	basic();
-	
-	  
-	  
-    }
+	terminal_writestring("(){}[]/*-+\n");
+	basic();	  
+    
 }
 
 

@@ -1,4 +1,6 @@
- enum KEYCODE {
+//at emulation
+
+enum KEYCODE {
 	NULL_KEY = 0,
 	Q_PRESSED = 0x10,
 	Q_RELEASED = 0x90,
@@ -68,22 +70,34 @@
 	SPACE_RELEASED = 0xB9,
 	ENTER_PRESSED = 0x1C,
 	ENTER_RELEASED = 0x9C,
+	PLUS = 0x79,
+	MINUS = 0x7B,
+	TIMES = 0x7C,
+	
  };
 
 static char* _qwertzuiop = "QWERTYUIOP"; // 0x10-0x1c
 static char* _asdfghjkl = "ASDFGHJKL";
 static char* _yxcvbnm = "ZXCVBNM";
-static char* _num = "123456789";
+static char* _num = "1234567890";
+
 char keyboard_to_ascii(char key)
 {
 	//kprintf("key=0x%x\n", key);
+        if (key == 0x4E) return '+';
+	if (key == 0x58) return ')';
+	if (key == 0x57) return '(';
+	if (key == 0x0B) return '0';
 	if(key == 0x1C) return '\n';
 	if(key == 0x39) return ' ';
 	if(key == 0xE) return '\r';
-	
-	if(key == POINT_RELEASED) return '.';
-	if(key == SLASH_RELEASED) return '/';
-	if(key == ZERO_PRESSED) return '0';
+	if (key == 0x0D) return '=';
+	if (key == 0x37) return '*';
+	if (key == 0x4A) return '-';
+	if (key == 0x35) return '/';
+	//	if(key == POINT_RELEASED) return '.';
+	//if(key == SLASH_RELEASED) return '/';
+	//if(key == ZERO_PRESSED) return '0';
 	if(key >= ONE_PRESSED && key <= NINE_PRESSED)
 		return _num[key - ONE_PRESSED];
 	if(key >= 0x10 && key <= 0x1C)

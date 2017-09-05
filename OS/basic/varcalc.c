@@ -84,7 +84,7 @@ int basic(){
     //}
     //if (strlen(buffer)==1)
     //  continue;
-   buffer[strlen(buffer)-1]= '\0';
+   buffer[strlen(buffer)]= '\0';
     if (!strncmp("EXEC", buffer, 4)){
       //printf("exec encountered\n");
       executor(list, NULL);
