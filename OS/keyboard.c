@@ -70,9 +70,9 @@
 	ENTER_RELEASED = 0x9C,
  };
 
-static char* _qwertzuiop = "qwertyuiop"; // 0x10-0x1c
-static char* _asdfghjkl = "asdfghjkl";
-static char* _yxcvbnm = "zxcvbnm";
+static char* _qwertzuiop = "QWERTYUIOP"; // 0x10-0x1c
+static char* _asdfghjkl = "ASDFGHJKL";
+static char* _yxcvbnm = "ZXCVBNM";
 static char* _num = "123456789";
 char keyboard_to_ascii(char key)
 {

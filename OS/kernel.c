@@ -174,15 +174,7 @@ void kernel_main(void) {
 	/* Newline support is left as an exercise. */
 	terminal_writestring("Hello, kernel World!\n");
 	basic();
-	while(1){
-	  a = inportb(0x60);
-	  if (old_a != a ){
-	    old_a = a;
-	    c = keyboard_to_ascii(a);
-	    if (c)
-	      terminal_putchar(c);
-	  }
-
+	
 	  
 	  
     }
