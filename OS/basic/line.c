@@ -91,8 +91,15 @@ line * insertLine(line *list, line *toinsert){
 
 void printList(line *head)
 {
+  char buffer[120];
   while (head){
+    inttoa(head->lineno, buffer);
+    terminal_writestring(buffer);
+    terminal_writestring(" ");
+    terminal_writestring(head->instruction);
+    terminal_writestring("\n");
     //printf("%d %s\n", head->lineno, head->instruction);
+    //x
     head = head->next;
   }
   return;
@@ -122,7 +129,7 @@ line *executeLine(line *toexec, var *varlist){
       setVar(varlist, tmpbuffer, root->result);    
   }
   if (strncmp(toexec->instruction, "PRINT", 5)==0){
-    startpos+=5;
+    startpos+=6;
     buildTree(startpos, root, 0);
     calcTree(root, varlist);
     if (root->result.type == integer){
@@ -133,11 +140,13 @@ line *executeLine(line *toexec, var *varlist){
       //printf("%s\n", tmpbuffer);
       //printf("%d\n", root->result.value.i);
     }
-      if (root->result.type == str)
+    if (root->result.type == str) {
       //printf("%s\n", root->result.value.s);
 	terminal_writestring(root->result.value.s);
+	
     }
-  if (strncmp(toexec->instruction, "GOTO", 4)==0){
+  }
+  if (strncmp(toexec->instruction, "GOTO", 5)==0){
     startpos+=5;
     buildTree(startpos, root, 0);
     calcTree(root, varlist);

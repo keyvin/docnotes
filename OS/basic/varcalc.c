@@ -12,7 +12,7 @@
 
 //Define freestanding to compile with stdcall vs stdlib
 #define freestanding 1
-
+#define KB_BUFFSIZE 200
 /*tree structure.*/
 
 
@@ -42,7 +42,20 @@ void get_string(char *buffer){
       old_a = a;
       c = keyboard_to_ascii(a);
       if (c){
-	terminal_putchar(c);
+	if (c == 0x0E){
+	  c=0
+	  if (pos == 0){
+	    continue;
+	  }	  
+	  for (int i = pos; i < KB_BUFFSIZE-1; i++){ 
+	    buffer[i] = buffer[i+1];
+	  }
+	  pos--;
+	  terminal_bkspc();
+	  continue;
+	}
+
+       	terminal_putchar(c);
 	buffer[pos] = c;
         if (c == '\n' || c =='\r'){
 	  buffer[pos] = '\0';
@@ -56,12 +69,12 @@ void get_string(char *buffer){
     }
 	  
   }
-	return;
+ return;
 }
 
 
 int basic(){
-  char buffer[201];
+  char buffer[KB_BUFFSIZE];
   char tmpvarname[20];
  
   char *startpos = buffer;
@@ -88,6 +101,9 @@ int basic(){
     if (!strncmp("EXEC", buffer, 4)){
       //printf("exec encountered\n");
       executor(list, NULL);
+    }
+    else if (!strncmp("LIST", buffer, 4)){
+      printList(list);
     }
     else{
      tmp = newLine(buffer);

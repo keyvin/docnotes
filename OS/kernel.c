@@ -105,6 +105,17 @@ void scroll_up() {
   terminal_column++;
   return;
 }
+
+/*terminal_bkspc*/
+void terminal_bkspc() {
+  if (terminal_column != 0)
+  {
+    terminal_column--;
+    terminal_putchar(' ');
+    terminal_column--;
+  }
+}
+
 void terminal_putchar(char c) {
 	
 	if (++terminal_column == VGA_WIDTH) {

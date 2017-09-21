@@ -85,16 +85,17 @@ char keyboard_to_ascii(char key)
 {
 	//kprintf("key=0x%x\n", key);
         if (key == 0x4E) return '+';
-	if (key == 0x58) return ')';
-	if (key == 0x57) return '(';
+	if (key == 0x1B) return ')';
+	if (key == 0x1A) return '(';
 	if (key == 0x0B) return '0';
 	if(key == 0x1C) return '\n';
 	if(key == 0x39) return ' ';
-	if(key == 0xE) return '\r';
+	if(key == 0xE) return (char)0x0E;
 	if (key == 0x0D) return '=';
 	if (key == 0x37) return '*';
 	if (key == 0x4A) return '-';
 	if (key == 0x35) return '/';
+	if (key == 0x28) return '"';
 	//	if(key == POINT_RELEASED) return '.';
 	//if(key == SLASH_RELEASED) return '/';
 	//if(key == ZERO_PRESSED) return '0';
@@ -110,5 +111,8 @@ char keyboard_to_ascii(char key)
 	{
 		return _yxcvbnm[key - 0x2C];
 	}
+	if (key == 0x0E)
+	  return (0x0E);
+	
 	return 0;
 }
