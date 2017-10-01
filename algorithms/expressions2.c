@@ -108,29 +108,83 @@ void do_dump(){
 void parse(char *s )
 {
   int position = 0;
+  int flag = 0;
+  int no_push_left = 0;
   node *working = NULL;
   if (*s == '\0')
     return;
-  tree_root = mk_node(s[position]);
-  position++;
+   while (s[position] =='('){
+      
+      working = mk_node('\0');
+      push(working);
+      position++;
+    }
+   tree_root = mk_node(s[position]);
+   position++;
   
-
-  
-  while (s[position] != '\0'){
+   while (s[position] != '\0'){
     //read token (should be operator) and push tree left
-    working = tree_root;
-    tree_root = mk_node(s[position]);
-    tree_root->l = working;
-    tree_root->value = s[position];
-    position++;
-    tree_root->r = mk_node(s[position]);
-    position++;    
-  }
-  return;
+     
+   top:
+     do_dump();
+     working = tree_root;
+     tree_root = mk_node(s[position]);
+     tree_root->l = working;
+     position++;
+     do_dump();
+   no_left_push:
+     while (s[position] =='('){
+      push(tree_root);
+      working = mk_node('\0');
+      tree_root = working;
+      position++;
+      flag =1;
+     }
+     //read lvalue
+     if (flag){
+       tree_root->value = s[position];
+       flag = 0;
+       position++;
+       goto top;
+       
+     }
+   set_right:
+     tree_root->r = mk_node(s[position]);
+     position++;
+     do_dump();
+     while (s[position] == ')' && s[position] != '\0'){
+       working = pop();
+       position++;
+       if (working->value == '\0'){
+	 working->value = s[position];
+	 position++;
+	 if (working->l) {
+	   working->r = tree_root;
+	   tree_root = working;
+	   goto top;
+	 }
+	 else {
+	   working->l =  tree_root;
+	   tree_root = working;   
+	   goto no_left_push;
+	 }
+       }
+       else{
+	 working->r = tree_root;
+	 //working = mk_node(s[position]);
+	 position++;
+	 tree_root = working;
+       }
+     }
+     
+   }
+   return;
 }
 
+
+
 int main(int argv, char **argc){
-  parse("1+2+3+4");
+  parse("((1+2)+(2+3))+1");
   do_dump(tree_root);
   return 0;
 }
