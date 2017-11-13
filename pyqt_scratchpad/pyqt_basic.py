@@ -1,18 +1,18 @@
 import PyQt5
+import Adddlg
 from PyQt5 import QtGui, QtCore, Qt
 
 #cannot change Table Header Color with Windows default style
 
 
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QTableWidget, QStatusBar, QProgressBar, QTableWidgetItem, QStyleFactory, QVBoxLayout, QMainWindow
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QTableWidget, QStatusBar, QProgressBar, QTableWidgetItem, QStyleFactory, QVBoxLayout, QMainWindow, QPushButton
 from PyQt5.QtGui import QFont, QBrush, QColor
 from PyQt5.QtWidgets import QMenuBar, QAction
 
+
 header =['Name', 'Status', 'Progress', 'Priority']
 header_size = [120,60,170, 60]
-
-
 
 
 
@@ -43,17 +43,29 @@ class Gui (QMainWindow):
         self.setCentralWidget(self.table)
         pass
 
+    def add_dl(self):
+        self.to_add = Adddlg.AddDlg()
+        #self.to_add.setWindowModality(QtCore.Qt.WindowModal)
+        self.to_add.exec_()
+
     def makeMenuBar(self):
+        addAction = QAction('&Add', self)
+        addAction.triggered.connect(self.add_dl)
         self.menu = self.menuBar()
-        self.menu.addMenu('&File')
+        file_menu = self.menu.addMenu('&File')
         self.menu.addMenu('&Downloads')
         self.menu.addMenu('&About')
+        file_menu.addAction(addAction)
+        pass
 
+    def addAction(self):
+        to_add = Adddlg.AddDlg()
         pass
 
     def makeToolBar(self):
         pass
     def makeButtons(self):
+        self.add_btn = QPushButton(self, text="add")
         pass
 
     def makeLayout(self):
@@ -72,6 +84,8 @@ class Gui (QMainWindow):
         self.status_bar.setFixedHeight(20)
         #self.layout.addWidget(self.status_bar, QtCore.Qt.AlignBottom)
 
+    def addButton(self):
+        print("made it here")
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

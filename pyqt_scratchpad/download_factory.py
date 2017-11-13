@@ -1,3 +1,7 @@
+"""This class parses a url and determines which child of the 
+    download class to use
+"""
+
 import http_downloader
 import urllib.parse
 

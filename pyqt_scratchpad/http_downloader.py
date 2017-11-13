@@ -1,5 +1,5 @@
 import queue
-from downloadobect import Download
+from downloader import Download
 import http.client
 
 import http

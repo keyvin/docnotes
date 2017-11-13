@@ -6,14 +6,15 @@ from PyQt5.QtWidgets import QLineEdit, QLabel, QFormLayout, QPushButton, QApplic
 
 
 
-class AddDlg(QtWidgets.QWidget):
-    def __init__(self):
-        QtWidgets.QWidget.__init__(self)
+class AddDlg(QtWidgets.QDialog):
+    def __init__(self, parent=None):
+        QtWidgets.QDialog.__init__(self, parent)
         self.success = False
         self.url = ''
         self.target = ''
         self.makeWindow()
-        self.show()
+        #self.setWindowModality(QtCore.Qt.WindowModal)
+        self.exec_()
 
     def makeWindow(self):
         self.layout = QFormLayout()
@@ -35,7 +36,10 @@ class AddDlg(QtWidgets.QWidget):
     def addClick(self):
         #Check that destination is writeable
         #check URL exists
-        print("here")
+#        print("here")
+        self.url = self.url_entry.text()
+        self.target = self.destination_entry.text()
+
         self.destroy()
         if __name__=="__main__":
             sys.exit(0)
