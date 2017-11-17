@@ -8,17 +8,17 @@ import urllib.parse
 class DownloadFactory:
     def __init__(self):
         count_created = 0
-        self.default_tokens_per_second = 20
+        self.default_tokens_per_second = 2000
         pass
 
     #returns a downloadobject instance
     #If failure, returns None
     def make_download(self, url = '', local_file = '', queue = None  ):
-        url = urllib.parse(url)
-        file = self.open_file(local_file)
-        if url.scheme == 'http':
-            downloader = http_downloader.HttpDownloader(file, url, queue, self.default_tokens_per_second )
-
+        purl = urllib.parse.urlparse(url)[0] #just scheme
+        #file = self.open_file(local_file)
+        if purl == 'http' or purl == 'https':
+            downloader = http_downloader.HttpDownload(local_file, url, queue, self.default_tokens_per_second )
+        return downloader
     def open_file(self, local_file):
         file=None
         try:

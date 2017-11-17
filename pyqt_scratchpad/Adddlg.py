@@ -14,7 +14,7 @@ class AddDlg(QtWidgets.QDialog):
         self.target = ''
         self.makeWindow()
         #self.setWindowModality(QtCore.Qt.WindowModal)
-        self.exec_()
+
 
     def makeWindow(self):
         self.layout = QFormLayout()
@@ -40,7 +40,7 @@ class AddDlg(QtWidgets.QDialog):
         self.url = self.url_entry.text()
         self.target = self.destination_entry.text()
 
-        self.destroy()
+        self.close()
         if __name__=="__main__":
             sys.exit(0)
 

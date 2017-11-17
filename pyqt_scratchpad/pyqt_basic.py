@@ -1,7 +1,7 @@
 import PyQt5
 import Adddlg
 from PyQt5 import QtGui, QtCore, Qt
-
+import download_factory
 #cannot change Table Header Color with Windows default style
 
 
@@ -44,9 +44,11 @@ class Gui (QMainWindow):
         pass
 
     def add_dl(self):
-        self.to_add = Adddlg.AddDlg()
+        to_add = Adddlg.AddDlg()
         #self.to_add.setWindowModality(QtCore.Qt.WindowModal)
-        self.to_add.exec_()
+        to_add.exec_()
+        self.dl = download_factory.DownloadFactory().make_download(to_add.url, to_add.target, None)
+        self.dl.start()
 
     def makeMenuBar(self):
         addAction = QAction('&Add', self)
@@ -89,27 +91,7 @@ class Gui (QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    #to change table properties.
-    #app.setStyle(QStyleFactory.create("Fusion"));
-
-    #Paint Brush options
-    #brush = QBrush()
-    #brush.setColor(QColor(200,200,40))
     m = Gui()
-
-
-#    progress = QProgressBar()
- #   progress.setValue(85)
-#    table = QTableWidget(5,5)
-    #to add to bottom. insertat is another option. set layout to begin at top.
-
-
-    #table.setCellWidget(0, 1, progress )
-    #l = QLabel('hello', w)
-#    table_item.setBackground(QColor(100,100,150))
-
-
-
 
     sys.exit(app.exec_())
 

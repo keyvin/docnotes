@@ -13,12 +13,15 @@ class HttpDownload(Download):
     def __init__(self, local_file='', url='', parent_queue=None, tokens_per_second=5):
         #Call super class
         Download.__init__(self, local_file, url, parent_queue, tokens_per_second)
-        self.file_handle = open(local_file, "wb")
-        self.url = url
+        print (local_file)
+        self.file_handle = open(str(local_file), "wb")
+
+
         self.r = None
         self.so_far = 0
-        print(url.netloc)
-        self.http_conn = http.client.HTTPConnection(url.netloc)
+        self.url = urllib.parse.urlparse(url)
+        print(self.url.netloc)
+        self.http_conn = http.client.HTTPConnection(self.url.netloc)
 
     def do_download(self):
         #if problems come up, report them on the queue and abort self. Delete download
@@ -28,7 +31,9 @@ class HttpDownload(Download):
             self.r = self.http_conn.getresponse()
             print(self.r)
         out = self.r.read(1024)
-        #print (len(out))
+        print (len(out))
+        if len(out) == 0:
+            self._stop()
         self.file_handle.write(out)
         self.so_far = self.so_far + 1
         #if self.tokens == 1:
@@ -37,6 +42,6 @@ class HttpDownload(Download):
 
 if __name__=="__main__":
     p = queue.Queue()
-    m = HttpDownload('c:\\users\keyvin\Desktop\hello.iso', urllib.parse.urlparse('http://debian.cse.msu.edu/debian-cd/9.1.0/amd64/iso-cd/debian-9.1.0-amd64-netinst.iso'), p, 20000)
+    m = HttpDownload('c:\\users\keyvin\Desktop\hello.jpg', urllib.parse.urlparse('https://i.imgur.com/csTzqqQ.jpg'), p, 20000)
     m.start()
     m.join()
