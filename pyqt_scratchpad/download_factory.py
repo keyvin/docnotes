@@ -19,6 +19,7 @@ class DownloadFactory:
         if purl == 'http' or purl == 'https':
             downloader = http_downloader.HttpDownload(local_file, url, queue, self.default_tokens_per_second )
         return downloader
+
     def open_file(self, local_file):
         file=None
         try:

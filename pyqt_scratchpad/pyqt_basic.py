@@ -9,8 +9,10 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QTableWidget, QStatusBar, QProgressBar, QTableWidgetItem, QStyleFactory, QVBoxLayout, QMainWindow, QPushButton
 from PyQt5.QtGui import QFont, QBrush, QColor
 from PyQt5.QtWidgets import QMenuBar, QAction
-
-
+from PyQt5.QtCore import QTimer
+from PyQt5.QtCore import QObject
+from PyQt5.QtCore import *
+from DownloadManager import *
 header =['Name', 'Status', 'Progress', 'Priority']
 header_size = [120,60,170, 60]
 
@@ -26,6 +28,10 @@ class Gui (QMainWindow):
         self.resize(450, 200)
         self.move(300, 300)
         self.setWindowTitle('Simple')
+        self.timer = QTimer()
+        self.dl_manager = DownloadManager()
+        self.timer.timeout.connect(self.refresh)
+        self.timer.start(1000)
 
         self.show()
 
@@ -47,8 +53,8 @@ class Gui (QMainWindow):
         to_add = Adddlg.AddDlg()
         #self.to_add.setWindowModality(QtCore.Qt.WindowModal)
         to_add.exec_()
-        self.dl = download_factory.DownloadFactory().make_download(to_add.url, to_add.target, None)
-        self.dl.start()
+        self.dl_manager.add_download(to_add.url, to_add.target)
+
 
     def makeMenuBar(self):
         addAction = QAction('&Add', self)
@@ -88,6 +94,10 @@ class Gui (QMainWindow):
 
     def addButton(self):
         print("made it here")
+
+    def refresh(self):
+        print(self.dl_manager.gen_list())
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

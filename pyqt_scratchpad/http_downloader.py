@@ -25,17 +25,24 @@ class HttpDownload(Download):
 
     def do_download(self):
         #if problems come up, report them on the queue and abort self. Delete download
-        if not self.r:
-            s = self.http_conn.request('GET', self.url.path)
+        #need to process redirects.
+        try:
+            if not self.r:
+                s = self.http_conn.request('GET', self.url.path)
 
-            self.r = self.http_conn.getresponse()
-            print(self.r)
-        out = self.r.read(1024)
-        print (len(out))
-        if len(out) == 0:
+                self.r = self.http_conn.getresponse()
+                print(self.r.status)
+            out = self.r.read(1024)
+            #print (len(out))
+            #if len(out) == 0:
+             #   self._stop()
+            self.file_handle.write(out)
+
+        except:
+            print("Error on download")
+            self.file_handle.close()
             self._stop()
-        self.file_handle.write(out)
-        self.so_far = self.so_far + 1
+        self.progress = self.progress + 1024
         #if self.tokens == 1:
         #    print ("Done thus:" + str(self.so_far))
 

@@ -18,15 +18,10 @@ class Download():
         self.token_refill = tokens_per_second
         self.tokens = tokens_per_second
 
-    def
-
     def mainThread(self):
         start_time = datetime.datetime.now()
 
         while more:
-
-
-
             end_time = datetime.datetime.now()
 
             delta = end_time - start_time

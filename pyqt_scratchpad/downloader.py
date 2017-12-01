@@ -22,6 +22,7 @@ class Download(threading.Thread):
         self.token_refill = tokens_per_second
         self.tokens = tokens_per_second
         threading.Thread.__init__(self)
+        self.progress = 0
 
 
 
@@ -37,6 +38,7 @@ class Download(threading.Thread):
                 self.tokens = self.tokens - 1
                 self.do_download()
             else:
+                time.sleep(.01)
                 pass
 
             if delta.seconds >= 1:
