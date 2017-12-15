@@ -12,7 +12,8 @@ class Download(threading.Thread):
         self.error = True
         self.error_message = 'Nothing to download'
         self.from_me = queue.Queue()
-    def __init__(self, local_file='', url='', parent_queue=None, tokens_per_second=50):
+
+    def __init__(self, local_file='', url='', parent_queue=None, tokens_per_second=2000):
         self.error = False
         self.error_message = ''
         #get the file name
@@ -30,6 +31,21 @@ class Download(threading.Thread):
         start_time = datetime.datetime.now()
 
         while True:
+            messages = []
+            #rely on exception
+            try:
+                messages.append(self.to_me.get_nowait())
+            except:
+                pass
+
+            stop = False
+            for i in messages:
+                if i == "stop":
+                  stop = True
+
+            if stop == True:
+                break
+
             end_time = datetime.datetime.now()
 
             delta = end_time - start_time

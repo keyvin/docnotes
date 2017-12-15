@@ -14,7 +14,7 @@ class DownloadFactory:
     #returns a downloadobject instance
     #If failure, returns None
     def make_download(self, url = '', local_file = '', queue = None  ):
-        purl = urllib.parse.urlparse(url)[0] #just scheme
+        purl = urllib.parse.urlparse(url)[0] #0 is the location of protocol (https vs ftp vs...)
         #file = self.open_file(local_file)
         if purl == 'http' or purl == 'https':
             downloader = http_downloader.HttpDownload(local_file, url, queue, self.default_tokens_per_second )

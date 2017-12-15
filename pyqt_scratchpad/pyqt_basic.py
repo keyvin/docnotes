@@ -13,6 +13,7 @@ from PyQt5.QtCore import QTimer
 from PyQt5.QtCore import QObject
 from PyQt5.QtCore import *
 from DownloadManager import *
+import humanfriendly
 header =['Name', 'Status', 'Progress', 'Priority']
 header_size = [120,60,170, 60]
 
@@ -96,12 +97,25 @@ class Gui (QMainWindow):
         print("made it here")
 
     def refresh(self):
-        print(self.dl_manager.gen_list())
+        a = 0
+        for i in self.dl_manager.gen_list():
+            try:
+                percent = float(i[1])/float(i[2])
+                percent = int(percent *100)
+                percent = "%3d%" % (percent, )
+                print(percent)
+            except:
+                percent = 0
+            self.table.setItem(a, 0, QTableWidgetItem(i[0]))
+            self.table.setItem(a, 1, QTableWidgetItem(str(percent)))
+            self.table.setItem(a, 2, QTableWidgetItem(humanfriendly.format_size(int(i[2]))))
+            a = a +1
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     m = Gui()
-
-    sys.exit(app.exec_())
+    app.exec_()
+    m.dl_manager.stop_all()
+    sys.exit(0)
 

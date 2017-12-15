@@ -23,6 +23,10 @@ class DownloadManager:
     def gen_list(self):
         a = []
         for i in self.downloads:
-            a.append((i.local_file, i.progress))
+            a.append((i.local_file, i.progress, i.size))
         print(a)
         return a
+
+    def stop_all(self):
+        for i in self.downloads:
+            i.to_me.put("stop")

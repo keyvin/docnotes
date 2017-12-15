@@ -14,9 +14,9 @@ class HttpDownload(Download):
         #Call super class
         Download.__init__(self, local_file, url, parent_queue, tokens_per_second)
         print (local_file)
-        self.file_handle = open(str(local_file), "wb")
+        self.file_handle = open(str(local_file), "wb",0)
 
-
+        self.size = 0
         self.r = None
         self.so_far = 0
         self.url = urllib.parse.urlparse(url)
@@ -31,18 +31,19 @@ class HttpDownload(Download):
                 s = self.http_conn.request('GET', self.url.path)
 
                 self.r = self.http_conn.getresponse()
+                self.size = self.r.getheader('Content-Length')
                 print(self.r.status)
             out = self.r.read(1024)
             #print (len(out))
             #if len(out) == 0:
              #   self._stop()
             self.file_handle.write(out)
-
+            self.progress = self.progress + 1024
         except:
             print("Error on download")
             self.file_handle.close()
             self._stop()
-        self.progress = self.progress + 1024
+
         #if self.tokens == 1:
         #    print ("Done thus:" + str(self.so_far))
 
