@@ -184,7 +184,7 @@ void parse(char *s )
 
 
 int main(int argv, char **argc){
-  parse("((1+2)+(2+3))+1");
+  parse("(((1+2)+3)+(2+3))+(1+2)");
   do_dump(tree_root);
   return 0;
 }
