@@ -38,7 +38,7 @@ here:
 	mov %ax, %fs
 	mov %ax, %gs
 	mov %ax, %ss
-	
+	mov seven, %eax
 	
 	mov $stack_top, %esp
 	call kernel_main
@@ -75,6 +75,11 @@ gdtr:
 	.long GDT
 
 
+.section .worthless
+	.short 5
+	.short 6
+seven:	
+	.short 7
 
 	
 	

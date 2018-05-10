@@ -17,7 +17,9 @@ SECTIONS
 	{
 		*(.multiboot)
 		*(.text)
+		*(.gdt)
 	}
+
 
 	/* Read-only data. */
 	.rodata BLOCK(4K) : ALIGN(4K)
@@ -36,6 +38,7 @@ SECTIONS
 	{
 		*(COMMON)
 		*(.bss)
+
 	}
 
 	/* The compiler may produce other sections, by default it will put them in

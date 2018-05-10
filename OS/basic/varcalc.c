@@ -43,7 +43,7 @@ void get_string(char *buffer){
       c = keyboard_to_ascii(a);
       if (c){
 	if (c == 0x0E){
-	  c=0
+	  c=0;
 	  if (pos == 0){
 	    continue;
 	  }	  
