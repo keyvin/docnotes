@@ -175,6 +175,10 @@ inline unsigned char inportb(unsigned int port)
 
 
 void kernel_main(void) {
+	terminal_initialize();	
+  fill_table();
+  load_idt();
+  __asm__("sti");
   char a = 0;
   char old_a = 1;
   char c;

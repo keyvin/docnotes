@@ -29,9 +29,9 @@ stack_top:
 _start:
 	
 	lgdt (gdtr)
-	ljmp $0x08, $here
-	jmp here
-here:	
+	ljmp $0x08, $reload_selectors
+	
+reload_selectors:	
 	mov $0x10, %ax
 	mov %ax, %ds
 	mov %ax, %es
@@ -39,7 +39,7 @@ here:
 	mov %ax, %gs
 	mov %ax, %ss
 	
-	
+//	load esp, jump to C
 	mov $stack_top, %esp
 	call kernel_main
 
@@ -67,14 +67,16 @@ GDT:
 	.byte 0x92
 	.byte 0b1100111
 	.byte 0
-end_of_gdt:
 
+end_of_gdt:
 	.align 8
 gdtr:	
 	.short 23
 	.long GDT
 
 
+
+	
 
 	
 	
