@@ -2,12 +2,12 @@
 import select, socket, sys, queue
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.setblocking(0)
-server.bind(('127.0.0.1', 8081))
+server.bind(('192.168.1.10', 8080))
 server.listen(5)
 inputs = [server]
 outputs = []
 message_queue = queue.Queue()
-
+status = {}
 #code obtained from:
 #https://steelkiwi.com/blog/working-tcp-sockets/
 #edit to use singular message queue. Will run in thread
@@ -49,7 +49,29 @@ while inputs:
         #del message_queues[s]
 
     try:
-       print(str(message_queue.get(0)) + "\n" )
+        lines = str(message_queue.get(0)).split('.')
+        for line in lines:
+        #print(lines)
+        #line = str(message_queue.get(0))
+        #print(line)
+            ip = line.split()[0]
+            #print (ip)
+            pin = line.split()[1]
+            #print(pin)
+            state = line.split(':')[1]
+            #print(state)
+            if ip in status.keys():    
+                if pin in status[ip].keys():
+                    if not state == status[ip][pin]:
+                        print (ip + " pin: " + pin + " changed state to " + state)
+                        status[ip][pin] = state
+                else:
+                    print("new pin")
+                    status[ip][pin] = state
+            else:
+                status[ip] = {}
+                print("New IP: " + ip)
+                    
     except:
        pass
         
