@@ -8,13 +8,24 @@ inputs = [server]
 outputs = []
 message_queue = queue.Queue()
 status = {}
+
+#This dict allows mapping to house - IP and pin to location being monitored.
+#List the assigned ips here
+
+
+hardware_mappings = {}
+
+
+
 #code obtained from:
 #https://steelkiwi.com/blog/working-tcp-sockets/
 #edit to use singular message queue. Will run in thread
 #will provide data stream to GUI
 
 
-while inputs:
+
+
+def check_sensors():
     readable, writable, exceptional = select.select(
         inputs, outputs, inputs)
     for s in readable:
