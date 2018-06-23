@@ -2,7 +2,7 @@
 import select, socket, sys, queue
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.setblocking(0)
-server.bind(('192.168.1.10', 8080))
+server.bind(('127.0.0.1', 8080))
 server.listen(5)
 inputs = [server]
 outputs = []
@@ -27,7 +27,8 @@ hardware_mappings = {}
 
 def check_sensors():
     readable, writable, exceptional = select.select(
-        inputs, outputs, inputs)
+        inputs, outputs, inputs, 0)
+
     for s in readable:
         if s is server:
             connection, client_address = s.accept()
@@ -35,7 +36,9 @@ def check_sensors():
             inputs.append(connection)
             #message_queues[connection] = Queue.Queue()
         else:
+    
             data = s.recv(1024)
+    
             if data:
                 message_queue.put(data)
                 #if s not in outputs:
@@ -59,30 +62,5 @@ def check_sensors():
         s.close()
         #del message_queues[s]
 
-    try:
-        lines = str(message_queue.get(0)).split('.')
-        for line in lines:
-        #print(lines)
-        #line = str(message_queue.get(0))
-        #print(line)
-            ip = line.split()[0]
-            #print (ip)
-            pin = line.split()[1]
-            #print(pin)
-            state = line.split(':')[1]
-            #print(state)
-            if ip in status.keys():    
-                if pin in status[ip].keys():
-                    if not state == status[ip][pin]:
-                        print (ip + " pin: " + pin + " changed state to " + state)
-                        status[ip][pin] = state
-                else:
-                    print("new pin")
-                    status[ip][pin] = state
-            else:
-                status[ip] = {}
-                print("New IP: " + ip)
-                    
-    except:
-       pass
+
         
