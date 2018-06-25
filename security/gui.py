@@ -6,7 +6,11 @@ import network_server
 import queue
 #message_queue = queue.Queue()
 status = {}
-
+back_porch = [['Back Door', True, 0], ['Back porch Motion', True, 0]]
+basement = [["Basement Door", True, 0], ['Basement Motion', True, 0]]
+front_doors = [['Front Door', True, 0], ['Front Door Motion', True, 0]]
+ip_names = {'ip1': 'Front Door', 'ip2' : 'Back Door', 'ip3':'Basement'}
+ip_map = {'ip1' : back_porch, 'ip2' : basement, 'ip3': front_doors}
 
 
 class security_gui():
@@ -58,10 +62,18 @@ class security_gui():
                 break
                 pass
         
-
+        self.update_status()
         self.main_window.after(500, self.check_update)
 
-
+    def update_status(self):
+        self.state_text.delete('1.0', tkinter.END)
+        for i in ip_names.keys():
+            self.state_text.insert(tkinter.END, ip_names[i] + '\n')
+            for j in ip_map[i]:
+                #Set color based on status - green if true, red if false
+                self.state_text.insert(tkinter.END, j[0] + '\n')
+            self.state_text.insert(tkinter.END, '\n\n')
+        
 
 
 s = security_gui()
