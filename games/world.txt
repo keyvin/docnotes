@@ -1,0 +1,15 @@
+Simple RPG
+
+first person vs top down?
+
+
+First iteration:
+Text Containing:
+Party, monster parties, location, terrain type, available directions
+
+
+
+
+
+
+
