@@ -43,7 +43,7 @@ class maps:
             print("Out of Bounds")
             
             #yfault
-        if not party_obj.passable(self.grid[x][y]):
+        if not party_obj.passable(self.grid[curr_x][curr_y]):
             print("Impassible Terrain")
             pass
             #travel fault

@@ -7,5 +7,6 @@ class party:
         self.location_x = 4
         self.location_y = 4
 
-        
-        
+    def passable(self, a):
+        return True
+        pass
