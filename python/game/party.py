@@ -7,6 +7,9 @@ class party:
         self.location_x = 4
         self.location_y = 4
 
-    def passable(self, a):
+    def passable(self, terrain):
+        print(terrain)
+        if terrain == "Water":
+            return False
         return True
         pass
