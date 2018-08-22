@@ -6,7 +6,7 @@ cell_defaults = {"north": True, "south": True, "east": True, "west": True, "spec
 
 class cell:
     def __init__(self,  **kwargs):
-        #assign defaults        
+        #assign defaults
         self.properties = copy.deepcopy(cell_defaults)
         for i in kwargs.keys():
             self.properties[i] = kwargs[i]
