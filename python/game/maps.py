@@ -2,18 +2,20 @@ import copy
 
 map_commands = {"north": (0, -1), "south": (0, 1), "east": (1, 0), "west": (-1, 0)}
 
-map_terrains = {'w': 'Water', 'g': 'Grass'}
+map_terrains = {'w': 'Water', 'g': 'Grass', 'm': "Mountain"}
 w = 'w'
 g = 'g'
+m = 'm'
+
 map1 = [[w,w,w,w,w,w,w,w,w,w,w,w,w,w],
         [w,g,g,g,g,g,g,g,g,g,g,g,g,w],
         [w,g,g,g,g,g,g,g,g,g,g,g,g,w],
+        [w,g,g,g,g,g,m,g,g,g,g,g,g,w],
+        [w,g,g,g,g,g,m,m,g,g,g,g,g,w],
         [w,g,g,g,g,g,g,g,g,g,g,g,g,w],
-        [w,g,g,g,g,g,g,g,g,g,g,g,g,w],
-        [w,g,g,g,g,g,g,g,g,g,g,g,g,w],
-        [w,g,g,g,g,g,g,g,g,g,g,g,g,w],
-        [w,g,g,g,g,g,g,g,g,g,g,g,g,w],
-        [w,g,g,g,g,g,g,g,g,g,g,g,g,w],
+        [w,g,g,g,g,g,m,m,m,g,g,g,g,w],
+        [w,g,g,g,g,g,g,w,m,g,g,g,g,w],
+        [w,g,g,g,g,g,g,g,m,g,g,g,g,w],
         [w,g,g,g,g,g,g,g,g,g,g,g,g,w],
         [w,w,w,w,w,w,w,w,w,w,w,w,w,w]]
 
@@ -56,10 +58,8 @@ class maps:
             print("Out of Bounds")
             return
             pass
-
             #xfault
         if curr_y < 0 or curr_y > self.y_size:
-
             print("Out of Bounds")
             return
             #yfault
