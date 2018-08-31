@@ -2,22 +2,33 @@ import copy
 
 map_commands = {"north": (0, -1), "south": (0, 1), "east": (1, 0), "west": (-1, 0)}
 
-map_terrains = {'w': 'Water', 'g': 'Grass', 'm': "Mountain"}
+map_terrains = {'w': 'water', 'g': 'grass', 'm': "mountain"}
 w = 'w'
 g = 'g'
 m = 'm'
 
-map1 = [[w,w,w,w,w,w,w,w,w,w,w,w,w,w],
-        [w,g,g,g,g,g,g,g,g,g,g,g,g,w],
-        [w,g,g,g,g,g,g,g,g,g,g,g,g,w],
-        [w,g,g,g,g,g,m,g,g,g,g,g,g,w],
-        [w,g,g,g,g,g,m,m,g,g,g,g,g,w],
-        [w,g,g,g,g,g,g,g,g,g,g,g,g,w],
-        [w,g,g,g,g,g,m,m,m,g,g,g,g,w],
-        [w,g,g,g,g,g,g,w,m,g,g,g,g,w],
-        [w,g,g,g,g,g,g,g,m,g,g,g,g,w],
-        [w,g,g,g,g,g,g,g,g,g,g,g,g,w],
-        [w,w,w,w,w,w,w,w,w,w,w,w,w,w]]
+map1 = [[w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w],
+        [w,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,w],
+        [w,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,w],
+        [w,g,g,g,g,g,m,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,w],
+        [w,g,g,g,g,g,m,m,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,w],
+        [w,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,w],
+        [w,g,g,g,g,g,m,m,m,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,w],
+        [w,g,g,g,g,g,g,w,m,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,w],
+        [w,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,w],
+        [w,g,g,g,g,g,g,g,m,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,w],
+        [w,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,w],
+        [w,g,g,g,g,g,g,g,m,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,w],
+        [w,g,g,g,g,g,g,g,m,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,w],
+        [w,g,g,g,g,g,g,g,m,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,w],
+        [w,g,g,g,g,g,g,g,m,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,w],
+        [w,g,g,g,g,g,g,g,m,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,w],
+        [w,g,g,g,g,g,g,g,m,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,w],
+        [w,g,g,g,g,g,g,g,m,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,w],
+        [w,g,g,g,g,g,g,g,m,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,w],
+        [w,g,g,g,g,g,g,g,m,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,w],
+        [w,g,g,g,g,g,g,g,m,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,w],
+        [w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w]]
 
 
 
