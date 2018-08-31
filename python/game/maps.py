@@ -49,8 +49,15 @@ class maps:
     def __init__(self, **kwargs):
         self.x_size = len(map1[0])
         self.y_size = len(map1)
-        self.grid = [[cell(map1[y][x]) for y in range(self.y_size)] for x in range(self.x_size)]
-        pass
+        grid = []
+        for y in range(self.y_size):
+            row = []
+            for x in range(self.x_size):
+                row.append(cell(map1[y][x]))
+            grid.append(row)
+        self.grid = grid
+
+
 
     def terrain(self, x, y):
         return self.grid[y][x]["type"]
@@ -65,20 +72,22 @@ class maps:
 
         curr_x = curr_x + map_commands[command][0]
         curr_y = curr_y + map_commands[command][1]
-        if curr_x < 0 or curr_x > self.x_size:
+        if curr_x < 0 or curr_x >= self.x_size:
             print("Out of Bounds")
             return
-            pass
-            #xfault
-        if curr_y < 0 or curr_y > self.y_size:
+
+
+        if curr_y < 0 or curr_y >= self.y_size:
             print("Out of Bounds")
             return
-            #yfault
+
+        print(f"{curr_y}, {curr_x}")
+
         if not party_obj.passable(self.grid[curr_y][curr_x]["type"]):
             print("Impassible Terrain")
             return
-            pass
-            #travel fault
+
+
 
         #move was allright
         party_obj.location_x = curr_x

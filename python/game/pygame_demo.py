@@ -6,9 +6,6 @@ import os
 
 keymap = {pygame.K_LEFT:"west", pygame.K_RIGHT:"east", pygame.K_UP:"north", pygame.K_DOWN:"south"}
 
-
-
-
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
     try:
@@ -25,10 +22,8 @@ def load_image(name, colorkey=None):
 
 
 
-
-
-x_size = 650
-y_size = 500
+x_size = 700
+y_size = 700
 tile_size = 50
 max_x = int(x_size/tile_size)
 max_y = int(y_size/tile_size)
@@ -43,15 +38,15 @@ def redraw(screen, current_map, party ):
     for screen_x in range(0, max_x):
         for screen_y in range(0, max_y):
             map_x = party.location_x + (screen_x-6)
-            map_y = party.location_y + (screen_y-5)
-            if map_x < 0 or map_x > current_map.x_size:
+            map_y = party.location_y + (screen_y-6)
+            if map_x < 0 or map_x >= current_map.x_size or map_y < 0 or map_y >= current_map.y_size:
                 tile = img_wat
-            elif map_y < 0 or map_y > current_map.y_size:
-                tile = img_wat
-            tile = tile_map[current_map.terrain(map_x,map_y )]
+            else:
+#                print(f"Party {party.location_x},{party.location_y}")
+#                print(f"{map_x}, {map_y} : {current_map.x_size}, {current_map.y_size}")
+                tile = tile_map[current_map.terrain(map_x, map_y )]
 
             screen.blit(tile,(screen_x*50,screen_y*50))
-
 
 
 
@@ -59,7 +54,7 @@ def redraw(screen, current_map, party ):
 amap = maps.maps()
 aparty = party.party()
 pygame.init()
-screen = pygame.display.set_mode((650, 500))
+screen = pygame.display.set_mode((x_size, y_size))
 pygame.display.set_caption('Game')
 pygame.mouse.set_visible(0)
 img_ld, r_rect = load_image("c:\\assets\\grass.png")
@@ -70,10 +65,7 @@ background = pygame.Surface(screen.get_size())
 background = background.convert()
 
 background.fill((250, 250, 250))
-for x in range(int(650/50)):
-    for y in range(int(500/50)):
-        screen.blit(img_ld,(x*50,y*50))
-        screen.blit(img_wat,(300,300))
+
 
 pygame.display.flip()
 breaks = False
@@ -94,5 +86,6 @@ while True:
         break
 
     if do_draw:
+        do_draw = False
         redraw(screen, amap, aparty)
         pygame.display.flip()
