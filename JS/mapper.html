@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<canvas id="myCanvas" width="600" height="600" style="border:1px solid #c3c3c3;">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+
+<div id="sideBar">
+	<div class="tool" id="wall">
+	Draw Wall
+	</div>
+	<div class="tool" id="floor">
+	Draw floor
+	</div>
+
+
+</div>	
+
+<script>
+//"use strict";
+var viewX = 0;
+var viewY = 0;
+var clickX = 0;
+var clickY = 0;
+var spacer = 50;
+var gHeight = 600;
+var gWidth = 600;
+var tool = "wall"
+
+var current_map = [["hline", "red", 5,5], ["vline", "red", 5,5]];
+
+
+
+
+var movecount = 0;
+var c = document.getElementById("myCanvas");
+var ctx = c.getContext("2d");
+var inRender = 0;
+//not used
+var lineList = [];
+
+
+function inlist(arg) {
+	var isNew = false;
+	var bem = [];
+	var counter = 0;
+	var counter2 = 0;
+	var not_match = false;
+	console.log(arg);
+	console.log(current_map.length);
+	for (counter2 = 0; counter2 < current_map.length; counter2++) {
+		bem = current_map[counter2];
+		
+		for (counter = 0; counter < arg.length; counter++){
+			if (bem[counter] != arg[counter]) {
+				not_match = true;
+				break;
+		
+			}			
+		}
+		if (!not_match) {
+			//found a match
+			console.log("Match Found");
+			return true;
+		}
+		not_match = false;
+	}
+	return (false);
+};
+
+function render() {
+	//ctx.clearRect(0, 0, 1000, 1000);
+	//viewX = -1*viewX;
+	ctx.fillStyle="#6F93FF";
+	ctx.fillRect(0, 0, gHeight, gWidth);
+	var offX = viewX % spacer;
+	var offY = viewY % spacer;
+	var i = 0;
+	for (i=0; i<=(gHeight/spacer) +1; i++){
+		
+		ctx.setLineDash([5, 5]);
+
+		ctx.beginPath();
+		ctx.moveTo(i*spacer - offX, 0)
+		ctx.lineTo(i*spacer - offX, gHeight)
+		ctx.stroke();
+		ctx.moveTo(0, i*spacer - offY)
+		ctx.lineTo(gWidth, i*spacer - offY)
+		ctx.stroke();
+		ctx.closePath();
+	}
+
+	ctx.fillStyle = "Red";
+	ctx.font="20px Georgia";
+	var text = "X: " + viewX + "||Y: " + viewY;
+	ctx.fillText(text,10,20);
+	var xStart = Math.floor(viewX/spacer);
+	var yStart = Math.floor(viewY/spacer);
+	for (i=0; i<=gHeight/spacer; i++){
+		ctx.fillText(xStart, i*spacer + 4 - offX , gHeight - 10);
+		xStart++;
+	}
+	for (i=0; i <=gHeight/spacer; i++){
+		ctx.fillText(yStart, gWidth-30, i*spacer - 4 - offY);
+		yStart++;
+	}
+	
+	
+	for  (i=0; i< current_map.length; i++){
+		if (isOnScreen(current_map[i])) {
+			drawElement(current_map[i], ctx);
+		
+		}
+	
+	}
+	//viewX = -1*viewX;
+	requestAnimationFrame(render);
+}
+
+
+
+function drawElement(element, ctx){
+	var offX = viewX % spacer;
+	var offY = viewY % spacer;
+	var windowX = Math.floor(viewX/spacer);
+	var windowY = Math.floor(viewY/spacer);
+	var localX = (element[2] - windowX)*spacer - offX;
+	var localY = (element[3] - windowY)*spacer - offY;
+	ctx.setLineDash([]);
+	if (element[0] == "hline"){
+		ctx.beginPath();
+		ctx.moveTo(localX, localY);
+		ctx.lineTo(localX+spacer, localY);
+		ctx.stroke();
+		ctx.closePath();
+		
+	}
+	if (element[0] == "vline") {
+		ctx.beginPath();
+		ctx.moveTo(localX, localY);
+		ctx.lineTo(localX, localY+spacer);
+		ctx.stroke();
+		ctx.closePath();
+		
+		}
+}
+
+function isOnScreen(element) {
+	var lowerX = viewX/spacer;
+	var lowerY = viewY/spacer;
+	var upperX = viewX + gWidth/spacer;
+	var upperY = viewY + gHeight/spacer;
+	var elX = element[2];
+	var elY = element[3];
+	if (elX >= lowerX && elX < upperX){
+		if (elY >= lowerY && elY< upperY){
+			return true;
+		
+		} 
+	
+	}
+	return false;
+}
+
+var mouseIsDown = false;
+
+c.onmousedown = function(e){
+    clickX = e.x ;
+    clickY = e.y ;
+
+    mouseIsDown = true;
+}
+c.onmouseup = function(e){
+    //if(mouseIsDown) mouseClick(e);
+	//movecount = 5;
+	//render();
+    //viewX = (e.x);
+    //viewY = (e.y - clickY);
+   mouseIsDown = false;
+}
+
+
+c.onclick = function(e) {
+	//calculate the closest grid lines. Boxes of 10px by 10px between grid lines centered
+	//take click, determine which grid line if any. Convert to global co-ords. Add wall to datastructure
+	
+	//caluclate x and y offset
+	
+	var rect = c.getBoundingClientRect();
+	var hitBoxSize = 30;
+	var offX = viewX % spacer;
+	var offY = viewY % spacer;
+	
+	var clickX = e.x + offX -rect.left;
+	var clickY = e.y + offY - rect.top;
+	var onHLine = false;
+	
+	//Booleans for determining if "on" a gridline
+	var onVLine = false;
+	var inHBox = false;
+	//Boleans for if this click should draw a line or not.
+	
+	var drawHLine = false;
+	var drawVLine = false;
+	var clickVLine = false;
+	var clickHLine = false;
+	
+	
+	console.log("click at " + (e.x - rect.left) +"," + (e.y - rect.top) + ": offX:" + offX +",offY:" + offY);
+	//0 to spacer-1
+	clickVLine = (clickX % spacer);
+	//clickVLine = clickVLine + offX;
+	clickHLine = (clickY % spacer);
+	
+	//on a vline?
+	if (clickVLine < 13 || clickVLine > (spacer -10)){
+		console.log("On VLINE!");
+		onVLine = true;
+	}
+	//on an hline?
+	if (clickHLine < 13 || clickHLine > (spacer - 10)) {
+		console.log("on HLINE");
+		onHLine = true;
+	}
+	
+	//should we add a horizontal line?
+	if (onHLine){
+		if ((clickVLine < ((spacer)/2) + hitBoxSize/2) && ((clickVLine >  ((spacer)/2 -hitBoxSize/2)))){
+			drawHLine = true;
+		}
+	}
+	
+	if (onVLine){
+		if (clickHLine < ((spacer)/2) + hitBoxSize/2 && (clickHLine >  ((spacer)/2 - hitBoxSize/2))){
+			drawVLine = true;
+		}
+	}
+	
+	//calculate which grid 
+	roundX = Math.round((viewX + clickX - offX)/spacer);
+	roundY = Math.round((viewY + clickY - offY)/spacer);
+	floorX = Math.floor((viewX + clickX- offX )/spacer);
+	floorY = Math.floor((viewY + clickY- offY)/spacer);
+	
+	
+	if (drawVLine){
+		var toAdd = ["vline", "red", roundX, floorY];
+		if (inlist(toAdd, current_map)) return;
+		current_map.push(toAdd);
+	}
+	
+	if (drawHLine){
+		var toAdd = ["hline", "red", floorX, roundY];
+		if (inlist(toAdd, current_map)) return;
+		current_map.push(toAdd);
+		
+	}
+	
+	
+	
+	
+}
+
+c.onmousemove = function(e){
+    if(!mouseIsDown) return;
+	
+    //I can't figure this out, so I am going to make it more complicated. 
+	
+	//top left is 0 0
+	//e.x is the old position. e.y is the new position
+	
+	//mouse has moved to the right. 
+	if (e.x < clickX)
+		viewX = viewX + (e.x - clickX);
+    if (e.x > clickX)
+		viewX = viewX - (clickX - e.x)
+	
+	viewY = viewY - (e.y - clickY);
+	clickX = e.x;
+	clickY = e.y;
+	if (viewX < 0)viewX = 0;
+	if (viewY < 0)viewY = 0;
+	//render();
+    return false;
+}
+render();
+
+</script>
+
+</body>
+</html>
+
+
