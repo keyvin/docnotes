@@ -7,11 +7,14 @@ import tkinter.messagebox
 import zipfile
 import shutil
 import datetime
+import filewatch
 global save_path
 global save_root
+
+
 save_path = './save.pkl'
-#data struct - {Pairname:[Sourcepath, destpath, isdir, clobber]}
-save_root = 'C:\\Users\\admin\\keyvin@gmail.com\\x250savegames\\'
+#data struct - {Pairname:[Sourcepath, destpath, isdir, clobber, auto]}
+save_root = 'C:\\Users\\zeeba\\keyvin@gmail.com\\saves\\big-laptop\\'
 
 #Flow
 # if one file 
@@ -49,10 +52,13 @@ class mainWin(Tk):
         
         self.move_one_button.pack(side=RIGHT)
         self.protocol('WM_DELETE_WINDOW', self.close_handler)
+
+        self.file_watchers = []
         self.loadPickle()
-        
+        self.after(10000, self.checkChange)
         # # for i in self.dir_list.keys():
             # self.list_box.insert(END, i)
+
     def add(self):
         name = tkinter.simpledialog.askstring("Name of game", "What is the name you want this pair to have?")
         isdir = tkinter.messagebox.askquestion(title="Direcrtory?", message="Is the source a directory?")
@@ -66,13 +72,14 @@ class mainWin(Tk):
         
         #destination = tkinter.filedialog.askdirectory(title="Destination?")
         clobber = tkinter.messagebox.askquestion(title="Overwrite?", message="Do you wish to overwrite old versions?")
+        auto_bkup = tkinter.messagebox.askquestion(title="Auto copy?", message="Do you wish to automatically copy saves?")
         finalok = tkinter.messagebox.askokcancel(title="Create pair?", message= "Pair named: " + str(name) + "\n" + "Source: "+ str(source) + "\n" +'\nClobber: ' + clobber  )
         # print(finalok)
         #if source == destination:
         #    tkinter.messagebox.showerror(title="Error!", message="Source and Destination are the same!")
         #    return
         if finalok:
-            self.addpair(name, source, '', isdir, clobber )
+            self.addpair(name, source, '', isdir, clobber, auto_bkup )
         
             
     def delete(self):
@@ -93,6 +100,7 @@ class mainWin(Tk):
         else:
             if os.path.exists(self.dir_list[current][0]):
                 self.domove(current)
+
     def domove(self, current):
         #directory
         if self.dir_list[current][2] == True:
@@ -107,9 +115,9 @@ class mainWin(Tk):
                 shutil.make_archive(save_root + current + date + ".zip", "zip", self.dir_list[current][0] )
         else:
         #single file
-            if  self.dir_list[current][3] == 'yes':
+            if self.dir_list[current][3] == 'yes':
                 #clobber
-                zf = zipfile(save_root + current + '.zip', 'w')
+                zf = zipfile.ZipFile(save_root + current + '.zip', 'w')
                 zf.write(self.dir_list[current][0])
                 zf.close()
             else:
@@ -124,8 +132,9 @@ class mainWin(Tk):
                 
                 
         pass
-    def addpair(self, name, source, destination, isdir, clobber):
-        self.dir_list[name] = [source, destination, isdir, clobber]
+
+    def addpair(self, name, source, destination, isdir, clobber, auto_copy):
+        self.dir_list[name] = [source, destination, isdir, clobber, auto_copy]
         self.addtolistbox(name)
     def addtolistbox(self, name):
         self.list_box.insert(END, name)
@@ -134,6 +143,22 @@ class mainWin(Tk):
         pickle.dump(self.dir_list, file)
         file.close()
         self.quit()
+
+    def checkChange(self):
+        print("anything changed?")
+        for i in self.file_watchers:
+            if i.change_queue.empty():
+                continue
+            try:
+                while i.change_queue.get(False):
+                    pass
+            except:
+                pass
+            print(i.path_to_watch + "has changed")
+            if i.name in self.dir_list.keys():
+                self.domove(i.name)
+        self.after(10000, self.checkChange)
+
     def loadPickle(self):
         if os.path.isfile(save_path):
             file = open(save_path,'rb')
@@ -143,6 +168,9 @@ class mainWin(Tk):
             for i in self.dir_list.keys():
                 print(i)
                 self.addtolistbox(i)
+                tmp_watch = filewatch.dirWatch(self.dir_list[i][0], not self.dir_list[i][2], i)
+                self.file_watchers.append(tmp_watch)
+                tmp_watch.start()
         else:
             self.dir_list = {}
             

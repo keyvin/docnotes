@@ -3,13 +3,17 @@ import queue
 import time
 import win32file
 import win32con
+import win32event
 import threading
+
+
 
 class dirWatch(threading.Thread): 
 
-	def __init__(self, path="."):
+	def __init__(self, path=".", isFile=False, name=''):
 		threading.Thread.__init__(self)
 		self.change_queue = queue.Queue()
+		self.name=name
 		self.ACTIONS = {
 		1 : "Created",
 		2 : "Deleted",
@@ -20,8 +24,12 @@ class dirWatch(threading.Thread):
 
 		# Thanks to Claudio Grondi for the correct set of numbers
 		self.FILE_LIST_DIRECTORY = 0x0001
-
-		self.path_to_watch = path
+		self.single_file = isFile
+		if self.single_file:
+			self.path_to_watch = os.path.split(path)[0]
+			self.file_to_watch = os.path.split(path)[1]
+		else:
+			self.path_to_watch = path
 		
 		self.hDir = win32file.CreateFile (
 		self.path_to_watch,
@@ -69,12 +77,19 @@ class dirWatch(threading.Thread):
 			for action, file in results:
 				full_filename = os.path.join (self.path_to_watch, file)
 				msg = msg +  self.ACTIONS.get (action, "Unknown")+'\n'
-			print(msg)
-			self.change_queue.put("changed " + self.path_to_watch)
-		
+				if self.single_file and self.file_to_watch == file:
+					print("Watched file changed")
+					self.change_queue.put(file + " Changed")
+					break
+			if not self.single_file:
+				print(msg)
+				#Let's give it time to all hit the disk
+				self.change_queue.put("changed " + self.path_to_watch)
+			time.sleep(10)
+
 if __name__=="__main__":
 	print("Started")
-	watch1 = dirWatch("D:\\SteamLibrary\\steamapps\\common\\Knights of the Old Republic II\\saves\\")
+	watch1 = dirWatch("c:\\sub\\")
 	watch1.start()
 	while True:
 		time.sleep(10)
