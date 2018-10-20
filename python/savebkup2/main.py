@@ -80,7 +80,10 @@ class mainWin(Tk):
         #    return
         if finalok:
             self.addpair(name, source, '', isdir, clobber, auto_bkup )
-        
+        if auto_bkup:
+            tmp_watch = filewatch.dirWatch(self.dir_list[i][0], not self.dir_list[i][2], i)
+            self.file_watchers.append(tmp_watch)
+            tmp_watch.start()
             
     def delete(self):
         active = self.list_box.get(ACTIVE)
@@ -89,10 +92,12 @@ class mainWin(Tk):
         if delete_it == True:
             del(self.dir_list[active])
             self.list_box.delete(ACTIVE)
+
     def moveall(self):
         for i in self.dir_list.keys():
             if os.path.exists(self.dir_list[i][0]):
                 self.domove(i)
+
     def moveone(self):
         current = self.list_box.get(ACTIVE)
         if not current:
