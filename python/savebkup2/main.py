@@ -6,6 +6,7 @@ import tkinter.simpledialog
 import tkinter.messagebox
 import zipfile
 import shutil
+import win32process
 import datetime
 import filewatch
 global save_path
@@ -14,7 +15,7 @@ global save_root
 
 save_path = './save.pkl'
 #data struct - {Pairname:[Sourcepath, destpath, isdir, clobber, auto]}
-save_root = 'C:\\Users\\zeeba\\keyvin@gmail.com\\saves\\big-laptop\\'
+save_root = 'C:\\Users\\keyvin2\\keyvin@gmail.com\\saves\\space-saves\\'
 
 #Flow
 # if one file 
@@ -30,7 +31,7 @@ class mainWin(Tk):
     def __init__(self):
         Tk.__init__(self)
         self.wm_title("File mover")
-        self.t_label = Label(self, text="Destination: " + save_root)
+        self.t_label = Label(self, text="Destination: " + save_root, width=20)
         self.listbox_frame = Frame(self)
         self.list_box = Listbox(self.listbox_frame)
         self.b_frame = Frame(self)
@@ -45,11 +46,21 @@ class mainWin(Tk):
         self.listbox_frame.pack(side=TOP, expand=True, fill=BOTH)
         self.list_box.pack(side=LEFT, expand=True, fill=BOTH)
         self.sbar.pack(side=RIGHT, fill=Y)
-        self.move_button.pack(side=RIGHT, expand =True, fill=X)       
+
+        self.log_frame = Frame(self)
+        self.log_sbar = Scrollbar(self.log_frame, orient=VERTICAL)
+        self.log_widget = Text(self.log_frame,width=20, height=3)
+        self.log_sbar.config(command=self.log_widget.yview)
+        self.log_widget.config(yscrollcommand=self.log_sbar.set)
+        self.log_sbar.pack(side=RIGHT, fill=Y)
+        self.log_widget.pack(side=RIGHT, expand=True ,fill=BOTH)
+        self.log_frame.pack(side=TOP, fill=BOTH)
+
+        self.move_button.pack(side=RIGHT, expand =True, fill=X)
         self.b_frame.pack(side=TOP, fill=X)
         self.del_button.pack(side=LEFT)
         self.add_button.pack(side=LEFT)
-        
+
         self.move_one_button.pack(side=RIGHT)
         self.protocol('WM_DELETE_WINDOW', self.close_handler)
 
@@ -81,8 +92,9 @@ class mainWin(Tk):
         if finalok:
             self.addpair(name, source, '', isdir, clobber, auto_bkup )
         if auto_bkup:
-            tmp_watch = filewatch.dirWatch(self.dir_list[i][0], not self.dir_list[i][2], i)
+            tmp_watch = filewatch.dirWatch(self.dir_list[i][0], not self.dir_list[i][2], name)
             self.file_watchers.append(tmp_watch)
+            self.writeLog("Watching " + name)
             tmp_watch.start()
             
     def delete(self):
@@ -141,13 +153,15 @@ class mainWin(Tk):
     def addpair(self, name, source, destination, isdir, clobber, auto_copy):
         self.dir_list[name] = [source, destination, isdir, clobber, auto_copy]
         self.addtolistbox(name)
+
     def addtolistbox(self, name):
         self.list_box.insert(END, name)
+
     def close_handler(self):
         file = open(save_path, 'wb')
         pickle.dump(self.dir_list, file)
         file.close()
-        self.quit()
+        win32process.ExitProcess(0)
 
     def checkChange(self):
         print("anything changed?")
@@ -159,7 +173,7 @@ class mainWin(Tk):
                     pass
             except:
                 pass
-            print(i.path_to_watch + "has changed")
+            self.writeLog(i.name + " has changed. Copying.")
             if i.name in self.dir_list.keys():
                 self.domove(i.name)
         self.after(10000, self.checkChange)
@@ -173,11 +187,19 @@ class mainWin(Tk):
             for i in self.dir_list.keys():
                 print(i)
                 self.addtolistbox(i)
-                tmp_watch = filewatch.dirWatch(self.dir_list[i][0], not self.dir_list[i][2], i)
-                self.file_watchers.append(tmp_watch)
-                tmp_watch.start()
+                if self.dir_list[i][4]:
+                    tmp_watch = filewatch.dirWatch(self.dir_list[i][0], not self.dir_list[i][2], i)
+                    self.file_watchers.append(tmp_watch)
+                    tmp_watch.start()
+                    self.writeLog("Watching " + i)
         else:
             self.dir_list = {}
+
+    def writeLog(self, text='', state="normal"):
+        self.log_widget.config(state='normal')
+        self.log_widget.insert(END, text+'\n')
+
+        self.log_widget.config(state='disabled')
             
 # class 
 			
