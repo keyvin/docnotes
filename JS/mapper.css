@@ -1,0 +1,29 @@
+body {
+    background-color: lightblue;
+}
+
+h1 {
+    color: navy;
+    margin-left: 20px;
+}
+
+
+.tool {
+	background-color: darkblue;
+	width: 40px;
+	height: 40px;
+}
+
+#sideBar { 
+	float: right;
+	width: 10%;
+	align: right;
+}
+
+#floor {
+	float: left;
+}
+
+/*#selects an ID
+
+//.selects a class */

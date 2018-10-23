@@ -15,7 +15,7 @@ global save_root
 
 save_path = './save.pkl'
 #data struct - {Pairname:[Sourcepath, destpath, isdir, clobber, auto]}
-save_root = 'C:\\Users\\keyvin2\\keyvin@gmail.com\\saves\\space-saves\\'
+save_root = 'C:\\Users\\zeeba\\keyvin@gmail.com\\saves\\big-laptop\\'
 
 #Flow
 # if one file 

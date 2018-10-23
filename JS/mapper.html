@@ -1,20 +1,27 @@
 <!DOCTYPE html>
 <html>
+<head>
+	<link rel="stylesheet" type="text/css" href="mapper.css">
+</head>
 <body>
-
 <canvas id="myCanvas" width="600" height="600" style="border:1px solid #c3c3c3;">
 Your browser does not support the HTML5 canvas tag.
 </canvas>
 
 <div id="sideBar">
-	<div class="tool" id="wall">
-	Draw Wall
-	</div>
-	<div class="tool" id="floor">
-	Draw floor
-	</div>
-
-
+	<table>
+		<tr>
+		<td>
+			<div class="tool" id="wall">
+				Draw Wall
+			</div>
+		</td>
+		<td>
+		<div class="tool" id="floor">
+			Draw floor
+		</div>
+		</td>
+		<tr>
 </div>	
 
 <script>
@@ -28,19 +35,46 @@ var gHeight = 600;
 var gWidth = 600;
 var tool = "wall"
 
-var current_map = [["hline", "red", 5,5], ["vline", "red", 5,5]];
+var current_map = [["hline", "red", 5,5], ["vline", "red", 5,5], ["floor", "red", 3,3]];
 
 
 
 
 var movecount = 0;
 var c = document.getElementById("myCanvas");
+var floor_tool = document.getElementById("floor");
+var wall_tool = document.getElementById("wall");
 var ctx = c.getContext("2d");
 var inRender = 0;
 //not used
 var lineList = [];
+var currTool = "wall";
+floor_tool.onclick = floor_select;
+wall_tool.onclick = wall_select;
 
 
+function floor_select() {
+		if (currTool == "floor") {
+			return;
+		}
+		else {
+			floor_tool.style.background = "green";
+			wall_tool.style.background = "darkblue";
+			currTool = "floor";
+		}
+	
+}
+
+function wall_select() {
+	if (currTool == "wall") {
+		return;
+	}
+	else {
+			floor_tool.style.background = "darkblue";
+			wall_tool.style.background = "green";
+			currTool = "wall";
+	}
+}
 function inlist(arg) {
 	var isNew = false;
 	var bem = [];
@@ -143,7 +177,13 @@ function drawElement(element, ctx){
 		ctx.stroke();
 		ctx.closePath();
 		
-		}
+	}
+	
+	if (element[0] == "floor") {
+		ctx.rect(localX+2,localY+2,spacer-2,spacer-2);
+		ctx.fill(); 
+	}
+	
 }
 
 function isOnScreen(element) {
