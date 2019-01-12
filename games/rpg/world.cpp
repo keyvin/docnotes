@@ -1,6 +1,13 @@
 #include "world.h"
 
 
+world::world(){
+//maybe load a default. We are going with position 8,8,for now.
+    pos_x = 8;
+    pos_y = 8;
+    make_map();
+}
+
 void world::make_map(){
   for (int x = 0; x <X_MAX; x++){
     for (int y = 0; y < Y_MAX; y++){
@@ -38,10 +45,10 @@ char world::map_type_to_char(enum cell_type a){
 
   }
 
-
+ return 'D';
 }
 
-void dump_map() {
+void world::dump_map() {
   char outbuffer[X_MAX+1];
   for (int y = 0; y < Y_MAX; y++){
     for (int x = 0; x < X_MAX; x++){
@@ -53,10 +60,29 @@ void dump_map() {
   return;
 }
 
+void world::show_view(){
+    /*Centered on the position*/
+    int port_x, port_y;
+    view_size_x, view_size_y, pos_x, pos_y;
+    /*is view size_x and view size y odd?*/
+    //assume yes
+    char outbuffer[view_size_x+1];
+    port_x = (int) (view_size_y/2);
+    port_y = (int) (view_size_x/2);
+    int curr_x, curr_y;
+    curr_x = curr_y =0;
+    for (curr_x = -port_x; curr_x != port_x; curr_x++)
+        for (curr_y = -port_y; curr_y != port_y; curr_y++ ) {
+            if (pos_y+curr_y < 0 || pos_y+curr_y > Y_MAX)
+            else if (pos_x+curr_x <0 || pos_x + curr_x > X_MAX) {
+                outbuffer[curr_x] = 'W';
 
+            }
+            else
+            {
+                outbuffer = map_type_to_char[]
+            }
 
-
-world::world()
-{
-
+        }
 }
+
