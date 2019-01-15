@@ -5,6 +5,8 @@ world::world(){
 //maybe load a default. We are going with position 8,8,for now.
     pos_x = 8;
     pos_y = 8;
+    view_size_x=20;
+    view_size_y=20;
     make_map();
 }
 
@@ -31,7 +33,7 @@ void world::make_map(){
   return;
 }
 
-char world::map_type_to_char(enum cell_type a){
+char world::map_type_to_char(cell_type a){
   //Internals of this function can change as necessary
   switch (a) {
       case MOUNTAIN:
@@ -66,23 +68,34 @@ void world::show_view(){
     view_size_x, view_size_y, pos_x, pos_y;
     /*is view size_x and view size y odd?*/
     //assume yes
-    char outbuffer[view_size_x+1];
+    char outbuffer[X_MAX+1];
     port_x = (int) (view_size_y/2);
     port_y = (int) (view_size_x/2);
     int curr_x, curr_y;
     curr_x = curr_y =0;
-    for (curr_x = -port_x; curr_x != port_x; curr_x++)
-        for (curr_y = -port_y; curr_y != port_y; curr_y++ ) {
-            if (pos_y+curr_y < 0 || pos_y+curr_y > Y_MAX)
-            else if (pos_x+curr_x <0 || pos_x + curr_x > X_MAX) {
-                outbuffer[curr_x] = 'W';
+    for (curr_y = -port_y; curr_y != port_y; curr_y++) {
+        if (pos_y+curr_y < 0 || pos_y+curr_y > Y_MAX){
+            for (int a = 0; a !=view_size_x-1; a++){
+                outbuffer[a] = 'W';
+            }
+            outbuffer[view_size_x] = '\0';
+            printf("%s\n", outbuffer);
+            continue;
+        }
+        for (curr_x = -port_x; curr_x != port_x; curr_x++ ) {
+
+            if (pos_x+curr_x <0 || pos_x + curr_x > X_MAX) {
+                outbuffer[curr_x+port_x] = 'W';
 
             }
             else
             {
-                outbuffer = map_type_to_char[]
+                outbuffer[curr_x+port_x] = map_type_to_char(current_map[pos_y + curr_y+port_y][pos_x+curr_x+port_y].type);
             }
 
         }
+        outbuffer[view_size_x]='\0';
+        printf("%s\n",outbuffer);
+    }
 }
 

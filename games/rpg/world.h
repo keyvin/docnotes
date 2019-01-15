@@ -8,7 +8,7 @@
 typedef enum CELL_TYPE { MOUNTAIN, LAND, FOREST, WATER, RIVER } cell_type;
 
 typedef struct MAP_CELL {
-  enum cell_type type;
+  cell_type type;
   bool passable;
 } map_cell;
 
@@ -20,7 +20,7 @@ private:
     int view_size_x, view_size_y;
 public:
     world();
-    char map_type_to_char(enum cell_type);
+    char map_type_to_char(cell_type);
     void make_map();
     void dump_map();
     void show_view();
