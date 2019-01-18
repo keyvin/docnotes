@@ -1,0 +1,3 @@
+/home/keyvin/docnotes/games/rpg/build/CMakeFiles/rebuild_cache.dir
+/home/keyvin/docnotes/games/rpg/build/CMakeFiles/rpg.dir
+/home/keyvin/docnotes/games/rpg/build/CMakeFiles/edit_cache.dir

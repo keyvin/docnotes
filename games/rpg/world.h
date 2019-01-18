@@ -18,12 +18,15 @@ private:
     map_cell current_map[X_MAX][Y_MAX];
     int pos_x, pos_y;
     int view_size_x, view_size_y;
+    map_cell ** current_view; 
 public:
     world();
+    ~world();
     char map_type_to_char(cell_type);
     void make_map();
     void dump_map();
     void show_view();
+    void update_view();
 };
 
 #endif // WORLD_H
