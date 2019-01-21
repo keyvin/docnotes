@@ -2,16 +2,17 @@
 
 
 world::world(){
-//maybe load a default. We are going with position 8,8,for now.
-    pos_x = 8;
-    pos_y = 8;
-    view_size_x=20;
-    view_size_y=20;
+  //maybe load a default. We are going with position 8,8,for now.
+    pos_x = 2;
+    pos_y = 2;
+    view_size_x=60;
+    view_size_y=25;
     make_map();
-    current_view = new map_cell *[view_size_y];
+    current_view = new char *[view_size_y];
     for (int a = 0; a < view_size_y;a++){
-      current_view[a] = new map_cell[view_size_x];
+      current_view[a] = new char[view_size_x+1];
     }
+    update_view();
 }
 
 world::~world() {
@@ -22,6 +23,7 @@ world::~world() {
   delete [] current_view;
   
 }
+
 void world::make_map(){
   for (int x = 0; x <X_MAX; x++){
     for (int y = 0; y < Y_MAX; y++){
@@ -56,7 +58,6 @@ char world::map_type_to_char(cell_type a){
 
       case LAND:
 	return 'L';
-
   }
 
  return 'D';
@@ -75,43 +76,99 @@ void world::dump_map() {
 }
 
 void world::show_view(){
+  int x,y;
+  for (y = 0; y< view_size_y; y++){
+    printf("%s\n", current_view[y]);
+  }
+}
+
+//Returns a character in the current view
+char world::view_at(int x, int y) {
+  if ( (x>=0) && (x < view_size_x) &&
+        (y>=0) && (y < view_size_y)) {
+    return current_view[y][x];
+  }
+  return '\0';
+}
+
+  
+
+void world::update_view(){
     /*Centered on the position*/
     int port_x, port_y;
     int map_absolute_x, map_absolute_y;
     view_size_x, view_size_y, pos_x, pos_y;
     /*is view size_x and view size y odd?*/
     //assume yes
-    char outbuffer[X_MAX+1];
-    port_x = (int) (view_size_y/2);
-    port_y = (int) (view_size_x/2);
+    //char outbuffer[X_MAX+1];
+    port_x = (int) (view_size_x/2);
+    port_y = (int) (view_size_y/2);
     int curr_x, curr_y;
     curr_x = curr_y =0;
     for (curr_y = -port_y; curr_y != port_y; curr_y++) {
-        if (pos_y+curr_y < 0 || pos_y+curr_y > Y_MAX){
-
-	    for (int a = 0; a !=view_size_x-1; a++){
-                outbuffer[a] = 'W';
+      map_absolute_y = pos_y + curr_y + port_y;
+      if (pos_y+curr_y < 0 || pos_y+curr_y > Y_MAX){
+ 	  
+	    for (int a = 0; a !=view_size_x; a++){
+               current_view[curr_y+port_y][a] = 'W';
             }
-            outbuffer[view_size_x] = '\0';
-            printf("%s\n", outbuffer);
+            current_view[curr_y+port_y][view_size_x] = '\0';
             continue;
         }
         for (curr_x = -port_x; curr_x != port_x; curr_x++ ) {
 	  map_absolute_x = pos_x + curr_x + port_x;
-	  map_absolute_y = pos_y + curr_y + port_y;
-	  
 	  if (pos_x+curr_x <0 || pos_x + curr_x > X_MAX) {
-	    outbuffer[curr_x+port_x] = 'W';
+	    current_view[curr_y+port_y][curr_x+port_x] = 'W';
 
 	  }
 	  else {
-	      outbuffer[curr_x+port_x] = map_type_to_char(
+	      current_view[curr_y+port_y][curr_x+port_x] = map_type_to_char(
 					   current_map[map_absolute_y][map_absolute_x].type);
             }
 
         }
-        outbuffer[view_size_x]='\0';
-        printf("%s\n",outbuffer);
+        current_view[curr_y+port_y][view_size_x]='\0';       
     }
 }
+
+bool world::is_passable(int x, int y) {
+  if (x < 0 || x > X_MAX || y < 0 || y > Y_MAX)
+    return (false);
+  if (current_map[y][x].type != LAND){
+    return (false);
+  }
+
+}
+
+bool world::north() {
+  if (!is_passable(pos_x, pos_y-1))
+    return false;
+  --pos_y;
+  return true;
+}
+
+bool world::south() {
+  if (!is_passable(pos_x, pos_y+1))
+    return false;
+  ++pos_y;
+  return true;
+
+}
+
+bool world::east() {
+  if (!is_passable(pos_x-1, pos_y))
+    return false;
+  ++pos_x;
+  return true;
+
+
+}
+
+bool world::west() {
+  if (!is_passable(pos_x-1, pos_y))
+    return false;
+  --pos_x;
+  return true;
+}
+
 

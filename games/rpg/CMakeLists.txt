@@ -7,5 +7,5 @@ project(rpg)
 set ( PROJECT_LINK_LIBS ncurses)
 link_directories( /usr/lib/)
  
-add_executable(${PROJECT_NAME} "main.cpp" "world.cpp")
+add_executable(${PROJECT_NAME} "main.cpp" "world.cpp" "screen.cpp" "controller.cpp")
 target_link_libraries(rpg ${PROJECT_LINK_LIBS} )
