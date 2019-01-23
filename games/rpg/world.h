@@ -2,8 +2,8 @@
 #define WORLD_H
 #include <cstdio>
 
-#define X_MAX 200
-#define Y_MAX 200
+#define X_MAX 99
+#define Y_MAX 99
 
 typedef enum CELL_TYPE { MOUNTAIN, LAND, FOREST, WATER, RIVER } cell_type;
 
@@ -16,9 +16,10 @@ class world
 {
 private:
     map_cell current_map[X_MAX][Y_MAX];
-    int pos_x, pos_y;
+
     char **current_view; 
 public:
+    int pos_x, pos_y;
     int view_size_x, view_size_y;
     world();
     ~world();

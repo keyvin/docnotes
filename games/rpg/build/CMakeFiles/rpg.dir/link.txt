@@ -1,1 +1,1 @@
-/usr/bin/c++    -rdynamic CMakeFiles/rpg.dir/main.cpp.o CMakeFiles/rpg.dir/world.cpp.o  -o rpg -lncurses 
+/usr/bin/c++  -g  -rdynamic CMakeFiles/rpg.dir/main.cpp.o CMakeFiles/rpg.dir/world.cpp.o CMakeFiles/rpg.dir/screen.cpp.o CMakeFiles/rpg.dir/controller.cpp.o  -o rpg -lncurses 

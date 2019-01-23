@@ -123,6 +123,33 @@ rpg/fast:
 	$(MAKE) -f CMakeFiles/rpg.dir/build.make CMakeFiles/rpg.dir/build
 .PHONY : rpg/fast
 
+controller.o: controller.cpp.o
+
+.PHONY : controller.o
+
+# target to build an object file
+controller.cpp.o:
+	$(MAKE) -f CMakeFiles/rpg.dir/build.make CMakeFiles/rpg.dir/controller.cpp.o
+.PHONY : controller.cpp.o
+
+controller.i: controller.cpp.i
+
+.PHONY : controller.i
+
+# target to preprocess a source file
+controller.cpp.i:
+	$(MAKE) -f CMakeFiles/rpg.dir/build.make CMakeFiles/rpg.dir/controller.cpp.i
+.PHONY : controller.cpp.i
+
+controller.s: controller.cpp.s
+
+.PHONY : controller.s
+
+# target to generate assembly for a file
+controller.cpp.s:
+	$(MAKE) -f CMakeFiles/rpg.dir/build.make CMakeFiles/rpg.dir/controller.cpp.s
+.PHONY : controller.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -149,6 +176,33 @@ main.s: main.cpp.s
 main.cpp.s:
 	$(MAKE) -f CMakeFiles/rpg.dir/build.make CMakeFiles/rpg.dir/main.cpp.s
 .PHONY : main.cpp.s
+
+screen.o: screen.cpp.o
+
+.PHONY : screen.o
+
+# target to build an object file
+screen.cpp.o:
+	$(MAKE) -f CMakeFiles/rpg.dir/build.make CMakeFiles/rpg.dir/screen.cpp.o
+.PHONY : screen.cpp.o
+
+screen.i: screen.cpp.i
+
+.PHONY : screen.i
+
+# target to preprocess a source file
+screen.cpp.i:
+	$(MAKE) -f CMakeFiles/rpg.dir/build.make CMakeFiles/rpg.dir/screen.cpp.i
+.PHONY : screen.cpp.i
+
+screen.s: screen.cpp.s
+
+.PHONY : screen.s
+
+# target to generate assembly for a file
+screen.cpp.s:
+	$(MAKE) -f CMakeFiles/rpg.dir/build.make CMakeFiles/rpg.dir/screen.cpp.s
+.PHONY : screen.cpp.s
 
 world.o: world.cpp.o
 
@@ -186,9 +240,15 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... rpg"
 	@echo "... edit_cache"
+	@echo "... controller.o"
+	@echo "... controller.i"
+	@echo "... controller.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... screen.o"
+	@echo "... screen.i"
+	@echo "... screen.s"
 	@echo "... world.o"
 	@echo "... world.i"
 	@echo "... world.s"

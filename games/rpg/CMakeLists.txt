@@ -5,6 +5,7 @@ project(rpg)
 
 #For the shared library:
 set ( PROJECT_LINK_LIBS ncurses)
+set ( CMAKE_BUILD_TYPE Debug)
 link_directories( /usr/lib/)
  
 add_executable(${PROJECT_NAME} "main.cpp" "world.cpp" "screen.cpp" "controller.cpp")

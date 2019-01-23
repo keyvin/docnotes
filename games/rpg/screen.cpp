@@ -20,6 +20,7 @@ screen::screen() {
   start_color();
   init_pair(1, COLOR_GREEN, COLOR_BLACK);
   init_pair(2, COLOR_BLUE, COLOR_BLACK);
+  init_pair(3, COLOR_WHITE, COLOR_BLACK);
   noecho();
   raw();
   
@@ -31,18 +32,21 @@ screen::~screen() {
 
 //replace world with a singleton eventually
 void screen::draw_world(world *curr_world) {
-  for (int y = 0; y != curr_world->view_size_y; y++) {
-    for (int x = 0; x != curr_world->view_size_x; x++) {
+  for (int y = 0; y < curr_world->view_size_y; y++) {
+    for (int x = 0; x < curr_world->view_size_x; x++) {
       char curr = curr_world->view_at(x, y);
       int color = map_char_to_color(curr);
       if (color) {
-	attron(COLOR_PAIR(color));
-	mvaddch(y,x,curr);
-	attroff(COLOR_PAIR(color));
+        attron(COLOR_PAIR(color));
+        mvaddch(y,x,curr);
+        attroff(COLOR_PAIR(color));
       }
       
     }
   }
+  mvaddch(curr_world->view_size_y/2,curr_world->view_size_x/2, '@');
+  move(1, 50);
+  printw("(%d,%d", curr_world->pos_x, curr_world->pos_y);
   refresh();
   
 }

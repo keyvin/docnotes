@@ -18,10 +18,10 @@ void controller::process_input(char in){
     current_world->south();
     break;
   case 'k':
-    current_world->east();
+    current_world->north();
     break;
   case 'l':
-    current_world->north();
+    current_world->east();
     break;
   }
 }
