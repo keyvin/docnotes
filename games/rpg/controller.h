@@ -15,8 +15,7 @@ class controller {
  public:
   controller(world *, screen *);
   void process_input(char );
-  
-  
+    
 };
 
 #endif

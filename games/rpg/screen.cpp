@@ -46,7 +46,7 @@ void screen::draw_world(world *curr_world) {
   }
   mvaddch(curr_world->view_size_y/2,curr_world->view_size_x/2, '@');
   move(1, 50);
-  printw("(%d,%d", curr_world->pos_x, curr_world->pos_y);
+  printw("(%2d,%2d)  ", curr_world->pos_x, curr_world->pos_y);
   refresh();
   
 }
