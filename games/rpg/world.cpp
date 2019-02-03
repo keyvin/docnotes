@@ -54,7 +54,7 @@ char world::map_type_to_char(cell_type a){
 	return 'W';
 
       case LAND:
-	return 'L';
+	return '.';
   }
 
  return 'D';

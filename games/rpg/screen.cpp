@@ -5,7 +5,7 @@ int screen::map_char_to_color(char c){
   switch (c) {
   case 'W':
     return 2;
-  case 'L':
+  case '.':
     return 1;
   }
   return 0;

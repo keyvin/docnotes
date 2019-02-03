@@ -6,35 +6,19 @@
 
 #IncludeRegexTransform: 
 
-/home/keyvin/docnotes/games/rpg/controller.h
-iostream
--
-string
--
-vector
--
+/home/keyvin/docnotes/games/rpg/screen.cpp
 screen.h
 /home/keyvin/docnotes/games/rpg/screen.h
 world.h
 /home/keyvin/docnotes/games/rpg/world.h
 
-/home/keyvin/docnotes/games/rpg/main.cpp
-iostream
+/home/keyvin/docnotes/games/rpg/screen.h
+ncurses.h
 -
 world.h
 /home/keyvin/docnotes/games/rpg/world.h
-ncurses.h
--
-screen.h
-/home/keyvin/docnotes/games/rpg/screen.h
-controller.h
-/home/keyvin/docnotes/games/rpg/controller.h
-time.h
-/home/keyvin/docnotes/games/rpg/time.h
 
-/home/keyvin/docnotes/games/rpg/screen.h
-ncurses.h
--
+/home/keyvin/docnotes/games/rpg/world.cpp
 world.h
 /home/keyvin/docnotes/games/rpg/world.h
 

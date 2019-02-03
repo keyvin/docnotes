@@ -41,8 +41,8 @@ int main()
 	nanosleep(&sleep_timer, &remainder);
       }
       count++;
-      if (count % 60 == 0){
-	mvprintw(10, 50, "%u   ", count/60);
+      if (count % target_t == 0){
+	mvprintw(10, 50, "%u   ", count/target_t);
       }
     }
     return 0;
