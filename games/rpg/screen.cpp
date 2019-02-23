@@ -14,7 +14,7 @@ int screen::map_char_to_color(char c){
 
 screen::screen() {
   //init the ncurses reference
-  initscr();
+/*  initscr();
   printw("Screen initialized");
   refresh();
   start_color();
@@ -23,16 +23,16 @@ screen::screen() {
   init_pair(3, COLOR_WHITE, COLOR_BLACK);
   noecho();
   raw();
-  
+  */
 }
 
 screen::~screen() {
-  endwin();
+//  endwin();
 }
 
 //replace world with a singleton eventually
 void screen::draw_world(world *curr_world) {
-  for (int y = 0; y < curr_world->view_size_y; y++) {
+  /*for (int y = 0; y < curr_world->view_size_y; y++) {
     for (int x = 0; x < curr_world->view_size_x; x++) {
       char curr = curr_world->view_at(x, y);
       int color = map_char_to_color(curr);
@@ -48,5 +48,5 @@ void screen::draw_world(world *curr_world) {
   move(1, 50);
   printw("(%2d,%2d)  ", curr_world->pos_x, curr_world->pos_y);
   refresh();
-  
+  */
 }

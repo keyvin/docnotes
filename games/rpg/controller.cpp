@@ -1,8 +1,8 @@
 #include "controller.h"
 
-controller::controller(world *crr, screen *cvv){
+controller::controller(world *crr){
   current_world = crr;
-  current_screen = cvv;
+  //current_screen =  NULL;
 }
 
 

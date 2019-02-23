@@ -3,17 +3,17 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "screen.h"
+//#include "screen.h"
 #include "world.h"
 class controller {
 
  private:
   int internal;
   world *current_world;
-  screen *current_screen;
+  //screen *current_screen;
   
  public:
-  controller(world *, screen *);
+  controller(world *);
   void process_input(char );
     
 };

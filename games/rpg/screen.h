@@ -1,11 +1,11 @@
 #ifndef SCREEN_H 
 #define SCREEN_H
-#include <ncurses.h>
+//#include <ncurses.h>
 #include "world.h"
 class screen {
 
  private:
-  SCREEN *scrn;
+  //SCREEN *scrn;
 
  public:
 
