@@ -7,9 +7,9 @@ import os
 keymap = {pygame.K_LEFT:"west", pygame.K_RIGHT:"east", pygame.K_UP:"north", pygame.K_DOWN:"south"}
 
 def load_image(name, colorkey=None):
-    fullname = os.path.join('data', name)
+    #fullname = os.path.join('data', name)
     try:
-        image = pygame.image.load(fullname)
+        image = pygame.image.load(name)
     except pygame.error:
         print ('Cannot load image:'+ name)
         raise SystemExit
@@ -48,6 +48,8 @@ def redraw(screen, current_map, party ):
 
             screen.blit(tile,(screen_x*50,screen_y*50))
 
+    screen.blit(img_player,( x_size/2-25, y_size/2-25) )
+
 
 
 
@@ -57,9 +59,10 @@ pygame.init()
 screen = pygame.display.set_mode((x_size, y_size))
 pygame.display.set_caption('Game')
 pygame.mouse.set_visible(0)
-img_ld, r_rect = load_image("c:\\assets\\grass.png")
-img_wat, rect = load_image("c:\\assets\\water.png")
-img_mtn, rect = load_image("c:\\assets\\mountain.png")
+img_ld, r_rect = load_image("grass.png")
+img_wat, rect = load_image("water.png")
+img_mtn, rect = load_image("mountain.png")
+img_player, rect = load_image("player.png")
 tile_map = {'water':img_wat, 'mountain':img_mtn, 'grass':img_ld}
 background = pygame.Surface(screen.get_size())
 background = background.convert()
