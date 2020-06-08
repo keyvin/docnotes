@@ -11,7 +11,10 @@ class location:
             #do something here to parse exits
             pass
         #attributes (like dark, water, etc)
-
+    def parse_exit(self, string):
+        #pass
+        return
+    
 class exit:
     def __init__(self, location_file):
         self.name = location_file.read()
