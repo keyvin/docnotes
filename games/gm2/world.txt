@@ -1,0 +1,13 @@
+0000
+Location Name
+Short Description
+Longer description that takes up who knows how much space or w/e
+N:DOOR_NUM:EXIT_LOCATION
+E:DOOR_NUM:EXIT_LOCATION
+END
+
+0001
+Location Name
+Short Description
+Longer description blah blah
+N:0000:0000
