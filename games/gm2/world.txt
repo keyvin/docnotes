@@ -1,0 +1,21 @@
+0001
+Start of the path	
+A short path travels into a thicket of pine trees. 
+The smell of pine permeates this place. Pine nettles crunch underfoot. 
+DX N:0:0002
+END
+
+0001
+Pine Forest
+In the shadows of the pines
+Pine trees tower over you. A small path runs north and south through the area
+DX N:0:0003
+DX S:0:0001
+END
+
+0002
+Small cottage
+Cottage at the end of the path
+A small cottage is here, at the end of the path. The door is slightly ajar
+DX S:0:0002
+
