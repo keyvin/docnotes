@@ -89,5 +89,10 @@ namespace SaveMoverTray
                 List.Items.Add(gameToAdd.Name);
             }
         }
+
+        private void fileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
