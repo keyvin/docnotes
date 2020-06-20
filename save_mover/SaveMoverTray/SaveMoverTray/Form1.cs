@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 using System.Windows.Forms;
 
 namespace SaveMoverTray
@@ -23,9 +24,11 @@ namespace SaveMoverTray
             {
                 List.Items.Add(name);
             }
+
             
         }
-
+            
+        
         private void Form1_Load(object sender, EventArgs e)
         {
 
@@ -42,7 +45,13 @@ namespace SaveMoverTray
                 notifyIcon1.Visible = true;
             }
         }
+        private void Form1_Close(object sender, EventArgs e)
+        {
+            notifyIcon1.Visible = false;
+            notifyIcon1.Icon.Dispose();
 
+            notifyIcon1.Dispose();
+        }
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             Show();
@@ -93,6 +102,51 @@ namespace SaveMoverTray
         private void fileToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void saveListToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+       
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+
+            saveFileDialog1.Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*";
+            saveFileDialog1.FilterIndex = 1;
+            saveFileDialog1.RestoreDirectory = true;
+
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (saveFileDialog1.FileName != null)
+                {
+                    // Code to write the stream goes here.
+                    glist.SaveList(saveFileDialog1.FileName);
+                }
+            }
+        }
+       
+        private void restoreListToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.InitialDirectory = "";
+                openFileDialog.Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 2;
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    //Get the path of specified file
+                    string filePath = openFileDialog.FileName;
+
+                    //Read the contents of the file into a stream
+                    glist.LoadList(filePath);
+                    List.Items.Clear();
+                    foreach (var name in glist.GetGames())
+                    {
+                        List.Items.Add(name);
+                    }
+
+                }
+            }
         }
     }
 }

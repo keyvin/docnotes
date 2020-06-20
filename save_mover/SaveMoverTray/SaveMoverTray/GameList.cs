@@ -27,7 +27,7 @@ namespace SaveMoverTray
 
         }
 
-        public bool LoadList()
+        public bool LoadList(string fileName = "gamelist.json")
         {
             List<Game> failList = new List<Game>();
             string text = "";
@@ -60,10 +60,10 @@ namespace SaveMoverTray
             }
             return names;
         }
-        public bool SaveList()
+        public bool SaveList(String fname="gamelist.json")
         {
             string json = JsonConvert.SerializeObject(gameList) ;
-            System.IO.File.WriteAllText(@"gamelist.json", json);
+            System.IO.File.WriteAllText(fname, json);
 
             return true;
         }

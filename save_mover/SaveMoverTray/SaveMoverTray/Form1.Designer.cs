@@ -42,10 +42,10 @@
             this.List = new System.Windows.Forms.ListBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.restoreListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editEntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.adjustParametersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
@@ -142,6 +142,26 @@
             this.fileToolStripMenuItem.Text = "File";
             this.fileToolStripMenuItem.Click += new System.EventHandler(this.fileToolStripMenuItem_Click);
             // 
+            // saveListToolStripMenuItem
+            // 
+            this.saveListToolStripMenuItem.Name = "saveListToolStripMenuItem";
+            this.saveListToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveListToolStripMenuItem.Text = "Save List";
+            this.saveListToolStripMenuItem.Click += new System.EventHandler(this.saveListToolStripMenuItem_Click);
+            // 
+            // restoreListToolStripMenuItem
+            // 
+            this.restoreListToolStripMenuItem.Name = "restoreListToolStripMenuItem";
+            this.restoreListToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.restoreListToolStripMenuItem.Text = "Restore List";
+            this.restoreListToolStripMenuItem.Click += new System.EventHandler(this.restoreListToolStripMenuItem_Click);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -150,24 +170,6 @@
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.optionsToolStripMenuItem.Text = "Options";
-            // 
-            // saveListToolStripMenuItem
-            // 
-            this.saveListToolStripMenuItem.Name = "saveListToolStripMenuItem";
-            this.saveListToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.saveListToolStripMenuItem.Text = "Save List";
-            // 
-            // restoreListToolStripMenuItem
-            // 
-            this.restoreListToolStripMenuItem.Name = "restoreListToolStripMenuItem";
-            this.restoreListToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.restoreListToolStripMenuItem.Text = "Restore List";
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
             // 
             // editEntryToolStripMenuItem
             // 
