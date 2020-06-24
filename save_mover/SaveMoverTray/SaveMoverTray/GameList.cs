@@ -38,8 +38,9 @@ namespace SaveMoverTray
             if (System.IO.File.Exists(fullPath))
             {
                 text = System.IO.File.ReadAllText(fullPath);
-
-                gameList = JsonConvert.DeserializeObject<List<Game>>(text);
+                var lines  = text.Split('\n');
+                gameList = JsonConvert.DeserializeObject<List<Game>>(lines[0]);
+                saveDirectory = JsonConvert.DeserializeObject<String>(lines[1]);
                 foreach (var a in gameList)
                 {
                     if (a.AutoCopy && !a.StartWatch())
@@ -69,8 +70,10 @@ namespace SaveMoverTray
         public bool SaveList(String fname="gamelist.json")
         {
             string fullPath = Path.Combine(Program.defaultsPath, fname);
-            string json = JsonConvert.SerializeObject(gameList) ;
+            string json = JsonConvert.SerializeObject(gameList) + '\n'+ JsonConvert.SerializeObject(saveDirectory);
             System.IO.File.WriteAllText(fullPath, json);
+            
+
 
             return true;
         }

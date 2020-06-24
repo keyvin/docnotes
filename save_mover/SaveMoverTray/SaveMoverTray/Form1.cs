@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace SaveMoverTray
 {
@@ -151,12 +152,12 @@ namespace SaveMoverTray
 
         private void adjustParametersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var a = new Form3();
-            a.Show();
+            var a = new Form3(GameList.saveDirectory);
+            a.ShowDialog();
             if (a.DialogResult == DialogResult.OK)
             {
+                GameList.saveDirectory = a.savePath;
 
-               
             }
         }
     }
