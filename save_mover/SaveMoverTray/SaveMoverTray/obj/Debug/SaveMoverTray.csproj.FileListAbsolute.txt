@@ -87,3 +87,4 @@ C:\Users\keyvin\Desktop\docnotes\save_mover\SaveMoverTray\SaveMoverTray\obj\Debu
 C:\Users\keyvin\Desktop\docnotes\save_mover\SaveMoverTray\SaveMoverTray\obj\Debug\SaveMoverTray.csproj.CopyComplete
 C:\Users\keyvin\Desktop\docnotes\save_mover\SaveMoverTray\SaveMoverTray\obj\Debug\SaveMoverTray.exe
 C:\Users\keyvin\Desktop\docnotes\save_mover\SaveMoverTray\SaveMoverTray\obj\Debug\SaveMoverTray.pdb
+C:\Users\keyvin\Desktop\development\docnotes\save_mover\SaveMoverTray\SaveMoverTray\obj\Debug\SaveMoverTray.Form3.resources

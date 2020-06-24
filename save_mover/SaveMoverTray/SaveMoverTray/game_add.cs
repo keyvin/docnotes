@@ -135,11 +135,12 @@ namespace SaveMoverTray
         public async Task<bool> makeZip()
         {
             Finished = false;
-            if (File.Exists("c:\\saves\\" + Name + ".zip"))
+            string fullPath = Path.Combine(GameList.saveDirectory, Name+".zip" );
+            if (File.Exists(fullPath))
             {
-                File.Delete("c:\\saves\\" + Name + ".zip");
+                File.Delete(fullPath);
             }
-            await Task.Run(() => ZipFile.CreateFromDirectory(GameDir, "c:\\saves\\" + Name + ".zip"));            
+            await Task.Run(() => ZipFile.CreateFromDirectory(GameDir,fullPath));            
             
             Finished = true;
             System.Console.WriteLine("Made zip");

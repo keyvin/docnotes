@@ -148,5 +148,16 @@ namespace SaveMoverTray
                 }
             }
         }
+
+        private void adjustParametersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var a = new Form3();
+            a.Show();
+            if (a.DialogResult == DialogResult.OK)
+            {
+
+               
+            }
+        }
     }
 }

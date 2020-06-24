@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.IO;
 
 
 namespace SaveMoverTray
@@ -12,9 +13,11 @@ namespace SaveMoverTray
     public class GameList
     {
         List<Game> gameList;
-        string saveDirectory { get; }
+        public static string saveDirectory { get; set; }
         public GameList()
         {
+            saveDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            saveDirectory = Path.Combine(saveDirectory, @"OneDrive\");
             gameList = new List<Game>();
         }
         public void AddGame(Game ToAdd)
@@ -29,11 +32,12 @@ namespace SaveMoverTray
 
         public bool LoadList(string fileName = "gamelist.json")
         {
+            string fullPath = Path.Combine(Program.defaultsPath, fileName);
             List<Game> failList = new List<Game>();
             string text = "";
-            if (System.IO.File.Exists("gamelist.json"))
+            if (System.IO.File.Exists(fullPath))
             {
-                text = System.IO.File.ReadAllText("gamelist.json");
+                text = System.IO.File.ReadAllText(fullPath);
 
                 gameList = JsonConvert.DeserializeObject<List<Game>>(text);
                 foreach (var a in gameList)
@@ -48,6 +52,8 @@ namespace SaveMoverTray
                     gameList.Remove(tor);
                 }
             }
+            if (!PathExists(saveDirectory))
+                return false;
             return true;
         }
         
@@ -62,8 +68,9 @@ namespace SaveMoverTray
         }
         public bool SaveList(String fname="gamelist.json")
         {
+            string fullPath = Path.Combine(Program.defaultsPath, fname);
             string json = JsonConvert.SerializeObject(gameList) ;
-            System.IO.File.WriteAllText(fname, json);
+            System.IO.File.WriteAllText(fullPath, json);
 
             return true;
         }

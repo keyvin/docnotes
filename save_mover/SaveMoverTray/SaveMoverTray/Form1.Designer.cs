@@ -145,21 +145,21 @@
             // saveListToolStripMenuItem
             // 
             this.saveListToolStripMenuItem.Name = "saveListToolStripMenuItem";
-            this.saveListToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveListToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.saveListToolStripMenuItem.Text = "Save List";
             this.saveListToolStripMenuItem.Click += new System.EventHandler(this.saveListToolStripMenuItem_Click);
             // 
             // restoreListToolStripMenuItem
             // 
             this.restoreListToolStripMenuItem.Name = "restoreListToolStripMenuItem";
-            this.restoreListToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.restoreListToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.restoreListToolStripMenuItem.Text = "Restore List";
             this.restoreListToolStripMenuItem.Click += new System.EventHandler(this.restoreListToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             // 
             // optionsToolStripMenuItem
@@ -182,12 +182,13 @@
             this.adjustParametersToolStripMenuItem.Name = "adjustParametersToolStripMenuItem";
             this.adjustParametersToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.adjustParametersToolStripMenuItem.Text = "Adjust Parameters";
+            this.adjustParametersToolStripMenuItem.Click += new System.EventHandler(this.adjustParametersToolStripMenuItem_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(352, 335);
+            this.ClientSize = new System.Drawing.Size(352, 305);
             this.Controls.Add(this.List);
             this.Controls.Add(this.deleteButton);
             this.Controls.Add(this.addButton);
