@@ -28,7 +28,7 @@ namespace map_tool
         {
             
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            ballTexture = Content.Load<Texture2D>("ball");
+            ballTexture = Content.Load<Texture2D>("hor.png");
             // TODO: use this.Content to load your game content here
         }
 

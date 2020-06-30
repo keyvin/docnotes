@@ -21,3 +21,7 @@ C:\Users\keyvin\Desktop\docnotes\map_tool\obj\Debug\netcoreapp3.1\map_tool.cspro
 C:\Users\keyvin\Desktop\docnotes\map_tool\obj\Debug\netcoreapp3.1\map_tool.dll
 C:\Users\keyvin\Desktop\docnotes\map_tool\obj\Debug\netcoreapp3.1\map_tool.pdb
 C:\Users\keyvin\Desktop\docnotes\map_tool\obj\Debug\netcoreapp3.1\map_tool.genruntimeconfig.cache
+C:\Users\keyvin\Desktop\docnotes\map_tool\bin\Debug\netcoreapp3.1\Content\assets\hor.xnb
+C:\Users\keyvin\Desktop\docnotes\map_tool\bin\Debug\netcoreapp3.1\Content\assets\hor_door.xnb
+C:\Users\keyvin\Desktop\docnotes\map_tool\bin\Debug\netcoreapp3.1\Content\assets\vert.xnb
+C:\Users\keyvin\Desktop\docnotes\map_tool\bin\Debug\netcoreapp3.1\Content\assets\vert_door.xnb
