@@ -1,14 +1,27 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace map_tool
 {
+    public enum tool_selection { wall, door, locked_door, one_way, invisible, impassible}; 
+    
+    public class pallette
+    {
+        public Dictionary<tool_selection, Texture2D> selections;
+        public tool_selection curr_tool;
+
+
+
+    }
+    
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        Texture2D ballTexture;
+        Texture2D hor_wall;
         public Game1()
         {
 
@@ -28,7 +41,7 @@ namespace map_tool
         {
             
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            ballTexture = Content.Load<Texture2D>("hor.png");
+            hor_wall = Content.Load<Texture2D>("assets/hor");
             // TODO: use this.Content to load your game content here
         }
 
@@ -45,6 +58,9 @@ namespace map_tool
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            _spriteBatch.Begin();
+            _spriteBatch.Draw(hor_wall, new Vector2(0, 0), Color.White);
+            _spriteBatch.End();
 
             // TODO: Add your drawing code here
 
