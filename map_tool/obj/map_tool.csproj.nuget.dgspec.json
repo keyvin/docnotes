@@ -42,6 +42,10 @@
               "target": "Package",
               "version": "[3.8.0.1375-develop, )"
             },
+            "MonoGame.Extended": {
+              "target": "Package",
+              "version": "[3.7.0, )"
+            },
             "MonoGame.Framework.DesktopGL": {
               "target": "Package",
               "version": "[3.8.0.1375-develop, )"

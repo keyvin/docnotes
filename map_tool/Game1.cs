@@ -1,6 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
+using MonoGame.Extended.Shapes;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -8,12 +12,22 @@ namespace map_tool
 {
     public enum tool_selection { wall, door, locked_door, one_way, invisible, impassible}; 
     
-    public class pallette
+    public class Pallette
     {
         public Dictionary<tool_selection, Texture2D> selections;
         public tool_selection curr_tool;
 
+        public void LoadToolImages(ContentManager Content)
+        {
+            selections.Add(tool_selection.wall, Content.Load<Texture2D>("assets/hor"));
+            selections.Add(tool_selection.door, Content.Load<Texture2D>("assets/door"));
 
+        }
+        public void DrawToolbox(SpriteBatch target)
+        {
+            MonoGame.Extended.ShapeExtensions.DrawRectangle(target, new RectangleF(80, 80, 200, 200), Color.White, 2);
+            return;
+        }
 
     }
     
@@ -21,10 +35,13 @@ namespace map_tool
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        public bool mouseDown { get; set; }
+        public MouseState mouseOld;
         Texture2D hor_wall;
+        public List<CircleF> circles;
         public Game1()
         {
-
+            circles = new List<CircleF>();
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -43,6 +60,16 @@ namespace map_tool
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             hor_wall = Content.Load<Texture2D>("assets/hor");
             // TODO: use this.Content to load your game content here
+            VertexPositionColor[] _vertexPositionColors = new[]
+            {
+            new VertexPositionColor(new Vector3(0, 0, 1), Color.White),
+            new VertexPositionColor(new Vector3(10, 0, 1), Color.White),
+            new VertexPositionColor(new Vector3(10, 10, 1), Color.White),
+            new VertexPositionColor(new Vector3(0, 10, 1), Color.White)
+            };
+             BasicEffect _basicEffect = new BasicEffect(GraphicsDevice);
+            _basicEffect.World = Matrix.CreateOrthographicOffCenter(
+                0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 0, 0, 1);
         }
 
         protected override void Update(GameTime gameTime)
@@ -51,7 +78,24 @@ namespace map_tool
                 Exit();
 
             // TODO: Add your update logic here
+            MouseState mouseState = Mouse.GetState();
+            if (mouseState.LeftButton == ButtonState.Pressed && mouseOld.LeftButton == ButtonState.Released)
+            {
+                mouseOld = mouseState;
+                // do something here
+            }
+            if (mouseState.LeftButton == ButtonState.Released && mouseOld.LeftButton == ButtonState.Pressed)
+            { 
 
+                if (Math.Abs(mouseOld.X - mouseState.X) < 5 && Math.Abs(mouseOld.Y - mouseState.Y) < 5)
+                {
+
+
+                    circles.Add(new CircleF(new Point2(mouseState.X, mouseState.Y), 30));
+                    
+                }
+                mouseOld = mouseState;
+            }
             base.Update(gameTime);
         }
 
@@ -60,6 +104,11 @@ namespace map_tool
             GraphicsDevice.Clear(Color.CornflowerBlue);
             _spriteBatch.Begin();
             _spriteBatch.Draw(hor_wall, new Vector2(0, 0), Color.White);
+            foreach (var c in circles)
+            {
+                MonoGame.Extended.ShapeExtensions.DrawCircle(_spriteBatch, c, 20, Color.White, 2);
+            }
+                MonoGame.Extended.ShapeExtensions.DrawRectangle(_spriteBatch, new RectangleF(80, 80, 200, 200), Color.White, 2);
             _spriteBatch.End();
 
             // TODO: Add your drawing code here

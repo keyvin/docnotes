@@ -25,3 +25,5 @@ C:\Users\keyvin\Desktop\docnotes\map_tool\bin\Debug\netcoreapp3.1\Content\assets
 C:\Users\keyvin\Desktop\docnotes\map_tool\bin\Debug\netcoreapp3.1\Content\assets\hor_door.xnb
 C:\Users\keyvin\Desktop\docnotes\map_tool\bin\Debug\netcoreapp3.1\Content\assets\vert.xnb
 C:\Users\keyvin\Desktop\docnotes\map_tool\bin\Debug\netcoreapp3.1\Content\assets\vert_door.xnb
+C:\Users\keyvin\Desktop\docnotes\map_tool\bin\Debug\netcoreapp3.1\MonoGame.Extended.dll
+C:\Users\keyvin\Desktop\docnotes\map_tool\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll

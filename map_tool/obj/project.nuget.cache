@@ -1,11 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "jSiC5zk7MK7F3n0Lqkce0hNWyRs0XqY4Vt5Zxb/lRQhwVoHO/C4WmDZk5XWcBNltw0vC38fx+J2KT1UjucyVYw==",
+  "dgSpecHash": "md4AkMwCrKQwdBQq5tjlg7xsHwJlsIyhJibcMJWTD5p+a0o69qZybTZf8307e3Bzzq938mcOL3+HeXRlPaPQ4g==",
   "success": true,
   "projectFilePath": "C:\\Users\\keyvin\\Desktop\\docnotes\\map_tool\\map_tool.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\keyvin\\.nuget\\packages\\monogame.content.builder.task\\3.8.0.1375-develop\\monogame.content.builder.task.3.8.0.1375-develop.nupkg.sha512",
-    "C:\\Users\\keyvin\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.0.1375-develop\\monogame.framework.desktopgl.3.8.0.1375-develop.nupkg.sha512"
+    "C:\\Users\\keyvin\\.nuget\\packages\\monogame.extended\\3.7.0\\monogame.extended.3.7.0.nupkg.sha512",
+    "C:\\Users\\keyvin\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.0.1375-develop\\monogame.framework.desktopgl.3.8.0.1375-develop.nupkg.sha512",
+    "C:\\Users\\keyvin\\.nuget\\packages\\newtonsoft.json\\11.0.2\\newtonsoft.json.11.0.2.nupkg.sha512"
   ],
   "logs": []
 }
