@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\keyvin\\Desktop\\docnotes\\map_tool\\map_tool.csproj": {}
+    "C:\\Users\\keyvin\\Desktop\\development\\docnotes\\map_tool\\map_tool.csproj": {}
   },
   "projects": {
-    "C:\\Users\\keyvin\\Desktop\\docnotes\\map_tool\\map_tool.csproj": {
+    "C:\\Users\\keyvin\\Desktop\\development\\docnotes\\map_tool\\map_tool.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\keyvin\\Desktop\\docnotes\\map_tool\\map_tool.csproj",
+        "projectUniqueName": "C:\\Users\\keyvin\\Desktop\\development\\docnotes\\map_tool\\map_tool.csproj",
         "projectName": "map_tool",
-        "projectPath": "C:\\Users\\keyvin\\Desktop\\docnotes\\map_tool\\map_tool.csproj",
+        "projectPath": "C:\\Users\\keyvin\\Desktop\\development\\docnotes\\map_tool\\map_tool.csproj",
         "packagesPath": "C:\\Users\\keyvin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\keyvin\\Desktop\\docnotes\\map_tool\\obj\\",
+        "outputPath": "C:\\Users\\keyvin\\Desktop\\development\\docnotes\\map_tool\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\keyvin\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -16,17 +16,43 @@ namespace map_tool
     {
         public Dictionary<tool_selection, Texture2D> selections;
         public tool_selection curr_tool;
+        public Vector2 screenLocation;
+        public Vector2 extents;
+        public Pallette(Vector2 sLoc, Vector2 ext)
+        {
+            selections = new Dictionary<tool_selection, Texture2D>();
+            screenLocation = sLoc;
+            extents = ext;
 
+        }
         public void LoadToolImages(ContentManager Content)
         {
             selections.Add(tool_selection.wall, Content.Load<Texture2D>("assets/hor"));
-            selections.Add(tool_selection.door, Content.Load<Texture2D>("assets/door"));
+            selections.Add(tool_selection.door, Content.Load<Texture2D>("assets/hor_door"));
 
         }
-        public void DrawToolbox(SpriteBatch target)
+        public void DrawToolbox(GraphicsDevice d, SpriteBatch target)
         {
-            MonoGame.Extended.ShapeExtensions.DrawRectangle(target, new RectangleF(80, 80, 200, 200), Color.White, 2);
+            if ((d.Viewport.Width > 200) && (d.Viewport.Height > 200))
+            {
+                target.Begin();
+                MonoGame.Extended.ShapeExtensions.DrawRectangle(target, new RectangleF(screenLocation.X, screenLocation.Y, extents.X, extents.Y), Color.White, 2);
+                target.Draw(selections[tool_selection.wall], new Vector2(screenLocation.X + 10, screenLocation.Y + 10), Color.White);
+                target.Draw(selections[tool_selection.door], new Vector2(screenLocation.X+70, screenLocation.Y + 10), Color.White);
+                target.End();
+            }
             return;
+        }
+        public bool HandleClick(MouseState e)
+        {
+            if (e.X > screenLocation.X && e.X < screenLocation.X +extents.X) 
+                if (e.Y > screenLocation.Y && e.Y < screenLocation.Y + extents.Y)
+                {
+                    
+                    return true;
+                }
+            
+            return false;
         }
 
     }
@@ -39,11 +65,14 @@ namespace map_tool
         public MouseState mouseOld;
         Texture2D hor_wall;
         public List<CircleF> circles;
+        Pallette p;
         public Game1()
         {
+            
             circles = new List<CircleF>();
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+        
             IsMouseVisible = true;
         }
 
@@ -70,6 +99,8 @@ namespace map_tool
              BasicEffect _basicEffect = new BasicEffect(GraphicsDevice);
             _basicEffect.World = Matrix.CreateOrthographicOffCenter(
                 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 0, 0, 1);
+            p = new Pallette(new Vector2(GraphicsDevice.Viewport.Width-140,10), new Vector2(120,200));
+            p.LoadToolImages(Content);
         }
 
         protected override void Update(GameTime gameTime)
@@ -89,9 +120,8 @@ namespace map_tool
 
                 if (Math.Abs(mouseOld.X - mouseState.X) < 5 && Math.Abs(mouseOld.Y - mouseState.Y) < 5)
                 {
-
-
-                    circles.Add(new CircleF(new Point2(mouseState.X, mouseState.Y), 30));
+                    if (!p.HandleClick(mouseState))
+                        circles.Add(new CircleF(new Point2(mouseState.X, mouseState.Y), 30));
                     
                 }
                 mouseOld = mouseState;
@@ -110,7 +140,7 @@ namespace map_tool
             }
                 MonoGame.Extended.ShapeExtensions.DrawRectangle(_spriteBatch, new RectangleF(80, 80, 200, 200), Color.White, 2);
             _spriteBatch.End();
-
+            p.DrawToolbox(GraphicsDevice, _spriteBatch);
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);

@@ -1,5 +1,5 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"C:/Users/keyvin/Desktop/docnotes/map_tool/Content/assets/hor.png","C:/Users/keyvin/Desktop/docnotes/map_tool/Content/bin/DesktopGL/Content/assets/hor.xnb","TextureProcessor","Texture2DContent",176,6809,0.2084018
-"C:/Users/keyvin/Desktop/docnotes/map_tool/Content/assets/hor_door.png","C:/Users/keyvin/Desktop/docnotes/map_tool/Content/bin/DesktopGL/Content/assets/hor_door.xnb","TextureProcessor","Texture2DContent",208,6809,0.003661
-"C:/Users/keyvin/Desktop/docnotes/map_tool/Content/assets/vert.png","C:/Users/keyvin/Desktop/docnotes/map_tool/Content/bin/DesktopGL/Content/assets/vert.xnb","TextureProcessor","Texture2DContent",174,6809,0.0026668
-"C:/Users/keyvin/Desktop/docnotes/map_tool/Content/assets/vert_door.png","C:/Users/keyvin/Desktop/docnotes/map_tool/Content/bin/DesktopGL/Content/assets/vert_door.xnb","TextureProcessor","Texture2DContent",190,6809,0.0028838
+"C:/Users/keyvin/Desktop/development/docnotes/map_tool/Content/assets/hor.png","C:/Users/keyvin/Desktop/development/docnotes/map_tool/Content/bin/DesktopGL/Content/assets/hor.xnb","TextureProcessor","Texture2DContent",176,6809,0.1414023
+"C:/Users/keyvin/Desktop/development/docnotes/map_tool/Content/assets/hor_door.png","C:/Users/keyvin/Desktop/development/docnotes/map_tool/Content/bin/DesktopGL/Content/assets/hor_door.xnb","TextureProcessor","Texture2DContent",208,6809,0.0015886
+"C:/Users/keyvin/Desktop/development/docnotes/map_tool/Content/assets/vert.png","C:/Users/keyvin/Desktop/development/docnotes/map_tool/Content/bin/DesktopGL/Content/assets/vert.xnb","TextureProcessor","Texture2DContent",174,6809,0.0014193
+"C:/Users/keyvin/Desktop/development/docnotes/map_tool/Content/assets/vert_door.png","C:/Users/keyvin/Desktop/development/docnotes/map_tool/Content/bin/DesktopGL/Content/assets/vert_door.xnb","TextureProcessor","Texture2DContent",190,6809,0.0013102
