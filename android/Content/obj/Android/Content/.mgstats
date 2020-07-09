@@ -1,0 +1,5 @@
+Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"C:/Users/keyvin/Desktop/docnotes/android/Content/assets/hor.png","C:/Users/keyvin/Desktop/docnotes/android/Content/bin/Android/Content/assets/hor.xnb","TextureProcessor","Texture2DContent",176,6809,0.1995141
+"C:/Users/keyvin/Desktop/docnotes/android/Content/assets/hor_door.png","C:/Users/keyvin/Desktop/docnotes/android/Content/bin/Android/Content/assets/hor_door.xnb","TextureProcessor","Texture2DContent",208,6809,0.0028194
+"C:/Users/keyvin/Desktop/docnotes/android/Content/assets/vert.png","C:/Users/keyvin/Desktop/docnotes/android/Content/bin/Android/Content/assets/vert.xnb","TextureProcessor","Texture2DContent",174,6809,0.0025958
+"C:/Users/keyvin/Desktop/docnotes/android/Content/assets/vert_door.png","C:/Users/keyvin/Desktop/docnotes/android/Content/bin/Android/Content/assets/vert_door.xnb","TextureProcessor","Texture2DContent",190,6809,0.0033689
