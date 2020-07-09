@@ -1,34 +1,68 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Microsoft.VisualBasic.CompilerServices;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
+using MonoGame.Extended.Screens;
 using MonoGame.Extended.Shapes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 
 namespace map_tool
 {
     public enum tool_selection { wall, door, locked_door, one_way, invisible, impassible}; 
+    public class tool_item{
+        public tool_selection type { get; set; }
+        public Texture2D image { get; set; }
+        public Vector2 location { get; set; }
+        public Vector2 extent { get; set; }
+        public float scale { get; set; }
+        public bool selected { get; set; }
+
+    }
     
     public class Pallette
     {
         public Dictionary<tool_selection, Texture2D> selections;
+        public List<tool_selection> order;
+        public List<tool_item> tool_items;
         public tool_selection curr_tool;
         public Vector2 screenLocation;
         public Vector2 extents;
+        public float horizontalSpacingPct { get; set; }
+        public int verticalSpacingPct;
+        public string[] orderedAssets;
         public Pallette(Vector2 sLoc, Vector2 ext)
         {
             selections = new Dictionary<tool_selection, Texture2D>();
+            tool_items = new List<tool_item>();
+            orderedAssets = new string[] { "assets/hor", "assets/hor_door", "assets/hor_door" };
+            horizontalSpacingPct = .3f;
+            order = new List<tool_selection>();
+            order.Add(tool_selection.wall);
+            order.Add(tool_selection.door);
+            order.Add(tool_selection.impassible);
             screenLocation = sLoc;
             extents = ext;
 
         }
         public void LoadToolImages(ContentManager Content)
         {
-            selections.Add(tool_selection.wall, Content.Load<Texture2D>("assets/hor"));
-            selections.Add(tool_selection.door, Content.Load<Texture2D>("assets/hor_door"));
+            for (int itemNum = 0; itemNum < order.Count; itemNum++)
+            {
+                tool_item working = new tool_item();
+                working.type = order[itemNum];
+                working.image = Content.Load<Texture2D>(orderedAssets[itemNum]);
+                working.location = calcXY(itemNum);
+                //aspect determined by horizontal size (will be square)
+                working.extent = new Vector2(extents.X * horizontalSpacingPct, extents.X *horizontalSpacingPct);
+                working.selected = false;
+                working.scale = working.extent.X / working.image.Width;
+                tool_items.Add(working);
+             }
 
         }
         public void DrawToolbox(GraphicsDevice d, SpriteBatch target)
@@ -36,25 +70,58 @@ namespace map_tool
             if ((d.Viewport.Width > 200) && (d.Viewport.Height > 200))
             {
                 target.Begin();
-                MonoGame.Extended.ShapeExtensions.DrawRectangle(target, new RectangleF(screenLocation.X, screenLocation.Y, extents.X, extents.Y), Color.White, 2);
-                target.Draw(selections[tool_selection.wall], new Vector2(screenLocation.X + 10, screenLocation.Y + 10), Color.White);
-                target.Draw(selections[tool_selection.door], new Vector2(screenLocation.X+70, screenLocation.Y + 10), Color.White);
+                MonoGame.Extended.ShapeExtensions.DrawRectangle(target, new RectangleF(screenLocation.X, screenLocation.Y, extents.X, extents.Y), Color.White, 4);
+                foreach (var tool in tool_items)
+                {
+                    target.Draw(tool.image, tool.location, null, Color.White,
+                                0f,
+                                Vector2.Zero, tool.scale, SpriteEffects.None, 0f);
+
+                    if (tool.selected == true)
+                    {
+                        MonoGame.Extended.ShapeExtensions.DrawRectangle(target, new RectangleF(tool.location.X - 3, tool.location.Y - 3, tool.extent.X + 3, tool.extent.X + 3), Color.Black, 3);
+                    }
+                
+                }
+             }
                 target.End();
-            }
+            
             return;
+        }
+        private  Vector2 calcXY(int num)
+        {
+            Vector2 working = new Vector2(0, 0);
+            int column = num % 2;
+            working.X = (.10f * extents.X) + (column * (extents.X* .45f)) + screenLocation.X;
+            working.Y = ((.10f * extents.Y) + (extents.X * horizontalSpacingPct)) * Convert.ToInt32(num / 2) + screenLocation.Y;
+                        
+            return working;
         }
         public bool HandleClick(MouseState e)
         {
-            if (e.X > screenLocation.X && e.X < screenLocation.X +extents.X) 
+            if (e.X > screenLocation.X && e.X < screenLocation.X + extents.X)
                 if (e.Y > screenLocation.Y && e.Y < screenLocation.Y + extents.Y)
                 {
-                    
+
+                    for (int j = 0; j < tool_items.Count; j++)
+                    {
+                        if (e.X > tool_items[j].location.X && e.X < tool_items[j].location.X + tool_items[j].extent.X)
+                            if (e.Y > tool_items[j].location.Y && e.Y < tool_items[j].location.Y + tool_items[j].extent.Y)
+                            {
+
+
+                                tool_items[j].selected = !tool_items[j].selected;
+                                return true;
+                            }
+
+                    }
+
                     return true;
                 }
-            
-            return false;
-        }
 
+            return false;
+
+        }
     }
     
     public class Game1 : Game

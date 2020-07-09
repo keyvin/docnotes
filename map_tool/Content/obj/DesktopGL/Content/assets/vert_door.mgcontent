@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/Users/keyvin/Desktop/development/docnotes/map_tool/Content/assets/vert_door.png</SourceFile>
-  <SourceTime>2020-07-07T05:26:38.6414988-04:00</SourceTime>
-  <DestFile>C:/Users/keyvin/Desktop/development/docnotes/map_tool/Content/bin/DesktopGL/Content/assets/vert_door.xnb</DestFile>
-  <DestTime>2020-07-08T01:37:47.9286069-04:00</DestTime>
+  <SourceFile>C:/Users/keyvin/Desktop/docnotes/map_tool/Content/assets/vert_door.png</SourceFile>
+  <SourceTime>2020-06-29T00:19:57.2047928-04:00</SourceTime>
+  <DestFile>C:/Users/keyvin/Desktop/docnotes/map_tool/Content/bin/DesktopGL/Content/assets/vert_door.xnb</DestFile>
+  <DestTime>2020-07-08T20:08:50.5881051-04:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2020-05-27T15:15:40-04:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

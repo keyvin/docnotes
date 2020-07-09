@@ -4,10 +4,10 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/keyvin/Desktop/development/docnotes/map_tool/Content/assets/hor.png</File>
-    <File>C:/Users/keyvin/Desktop/development/docnotes/map_tool/Content/assets/hor_door.png</File>
-    <File>C:/Users/keyvin/Desktop/development/docnotes/map_tool/Content/assets/vert.png</File>
-    <File>C:/Users/keyvin/Desktop/development/docnotes/map_tool/Content/assets/vert_door.png</File>
+    <File>C:/Users/keyvin/Desktop/docnotes/map_tool/Content/assets/hor.png</File>
+    <File>C:/Users/keyvin/Desktop/docnotes/map_tool/Content/assets/hor_door.png</File>
+    <File>C:/Users/keyvin/Desktop/docnotes/map_tool/Content/assets/vert.png</File>
+    <File>C:/Users/keyvin/Desktop/docnotes/map_tool/Content/assets/vert_door.png</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />
