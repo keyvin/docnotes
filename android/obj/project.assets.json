@@ -1,0 +1,186 @@
+{
+  "version": 3,
+  "targets": {
+    "MonoAndroid,Version=v9.0": {
+      "MonoGame.Content.Builder.Task/3.8.0.1375-develop": {
+        "type": "package",
+        "build": {
+          "build/MonoGame.Content.Builder.Task.props": {},
+          "build/MonoGame.Content.Builder.Task.targets": {}
+        }
+      },
+      "MonoGame.Extended/3.7.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "11.0.2"
+        },
+        "compile": {
+          "lib/netstandard2.0/MonoGame.Extended.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/MonoGame.Extended.dll": {}
+        }
+      },
+      "MonoGame.Framework.Android/3.8.0.1375-develop": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "Java.Interop",
+          "System.Runtime.Serialization"
+        ],
+        "compile": {
+          "lib/monoandroid90/MonoGame.Framework.dll": {}
+        },
+        "runtime": {
+          "lib/monoandroid90/MonoGame.Framework.dll": {}
+        },
+        "build": {
+          "build/MonoGame.Framework.Android.targets": {}
+        }
+      },
+      "Newtonsoft.Json/11.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "MonoGame.Content.Builder.Task/3.8.0.1375-develop": {
+      "sha512": "y9xhEPl9qxswlDpkIZ9maJexAxNKW4a0imegbLkD9DK0PLevoTIqEL0FfjuWishI64R/zok+9Bad+YInw8FKWQ==",
+      "type": "package",
+      "path": "monogame.content.builder.task/3.8.0.1375-develop",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "build/MonoGame.Content.Builder.Task.props",
+        "build/MonoGame.Content.Builder.Task.targets",
+        "build/version/3.8.0.1375-develop/Version.props",
+        "monogame.content.builder.task.3.8.0.1375-develop.nupkg.sha512",
+        "monogame.content.builder.task.nuspec"
+      ]
+    },
+    "MonoGame.Extended/3.7.0": {
+      "sha512": "gnxfWcMLWke1I21T+0h8ckZnum2jzybfaDtMTk5LUaPTdLCIt4nHpRYM467JdpOte2wtUzsuTAtQtKICqYk9rg==",
+      "type": "package",
+      "path": "monogame.extended/3.7.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.0/MonoGame.Extended.dll",
+        "monogame.extended.3.7.0.nupkg.sha512",
+        "monogame.extended.nuspec"
+      ]
+    },
+    "MonoGame.Framework.Android/3.8.0.1375-develop": {
+      "sha512": "1QatkH1xssYfov9MXahdQ6emD1BQlsy+DAQ8cUfOLPds+yoFcZ3JN13bcDRRPO/Ih6UTGVKaAjP23GeBGmrnOg==",
+      "type": "package",
+      "path": "monogame.framework.android/3.8.0.1375-develop",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "build/MonoGame.Framework.Android.targets",
+        "lib/monoandroid90/MonoGame.Framework.dll",
+        "lib/monoandroid90/MonoGame.Framework.xml",
+        "monogame.framework.android.3.8.0.1375-develop.nupkg.sha512",
+        "monogame.framework.android.nuspec"
+      ]
+    },
+    "Newtonsoft.Json/11.0.2": {
+      "sha512": "IvJe1pj7JHEsP8B8J8DwlMEx8UInrs/x+9oVY+oCD13jpLu4JbJU2WCIsMRn5C4yW9+DgkaO8uiVE5VHKjpmdQ==",
+      "type": "package",
+      "path": "newtonsoft.json/11.0.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "lib/net20/Newtonsoft.Json.dll",
+        "lib/net20/Newtonsoft.Json.xml",
+        "lib/net35/Newtonsoft.Json.dll",
+        "lib/net35/Newtonsoft.Json.xml",
+        "lib/net40/Newtonsoft.Json.dll",
+        "lib/net40/Newtonsoft.Json.xml",
+        "lib/net45/Newtonsoft.Json.dll",
+        "lib/net45/Newtonsoft.Json.xml",
+        "lib/netstandard1.0/Newtonsoft.Json.dll",
+        "lib/netstandard1.0/Newtonsoft.Json.xml",
+        "lib/netstandard1.3/Newtonsoft.Json.dll",
+        "lib/netstandard1.3/Newtonsoft.Json.xml",
+        "lib/netstandard2.0/Newtonsoft.Json.dll",
+        "lib/netstandard2.0/Newtonsoft.Json.xml",
+        "lib/portable-net40+sl5+win8+wp8+wpa81/Newtonsoft.Json.dll",
+        "lib/portable-net40+sl5+win8+wp8+wpa81/Newtonsoft.Json.xml",
+        "lib/portable-net45+win8+wp8+wpa81/Newtonsoft.Json.dll",
+        "lib/portable-net45+win8+wp8+wpa81/Newtonsoft.Json.xml",
+        "newtonsoft.json.11.0.2.nupkg.sha512",
+        "newtonsoft.json.nuspec"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    "MonoAndroid,Version=v9.0": [
+      "MonoGame.Content.Builder.Task >= 3.8.0.1375-develop",
+      "MonoGame.Extended >= 3.7.0",
+      "MonoGame.Framework.Android >= 3.8.0.1375-develop"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\keyvin\\.nuget\\packages\\": {},
+    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\Users\\keyvin\\Desktop\\docnotes\\android\\android.csproj",
+      "projectName": "android",
+      "projectPath": "C:\\Users\\keyvin\\Desktop\\docnotes\\android\\android.csproj",
+      "packagesPath": "C:\\Users\\keyvin\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\keyvin\\Desktop\\docnotes\\android\\obj\\",
+      "projectStyle": "PackageReference",
+      "skipContentFileWrite": true,
+      "fallbackFolders": [
+        "C:\\Microsoft\\Xamarin\\NuGet\\"
+      ],
+      "configFilePaths": [
+        "C:\\Users\\keyvin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "monoandroid90"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "monoandroid90": {
+          "projectReferences": {}
+        }
+      }
+    },
+    "frameworks": {
+      "monoandroid90": {
+        "dependencies": {
+          "MonoGame.Content.Builder.Task": {
+            "target": "Package",
+            "version": "[3.8.0.1375-develop, )"
+          },
+          "MonoGame.Extended": {
+            "target": "Package",
+            "version": "[3.7.0, )"
+          },
+          "MonoGame.Framework.Android": {
+            "target": "Package",
+            "version": "[3.8.0.1375-develop, )"
+          }
+        }
+      }
+    }
+  }
+}

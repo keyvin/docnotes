@@ -7,14 +7,26 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "map_tool", "map_tool.csproj
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		android|Any CPU = android|Any CPU
+		android|x64 = android|x64
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
 		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A8C35647-8FF6-406B-B3CD-27A5A6B81876}.android|Any CPU.ActiveCfg = android|Any CPU
+		{A8C35647-8FF6-406B-B3CD-27A5A6B81876}.android|Any CPU.Build.0 = android|Any CPU
+		{A8C35647-8FF6-406B-B3CD-27A5A6B81876}.android|x64.ActiveCfg = android|x64
+		{A8C35647-8FF6-406B-B3CD-27A5A6B81876}.android|x64.Build.0 = android|x64
 		{A8C35647-8FF6-406B-B3CD-27A5A6B81876}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A8C35647-8FF6-406B-B3CD-27A5A6B81876}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8C35647-8FF6-406B-B3CD-27A5A6B81876}.Debug|x64.ActiveCfg = Debug|x64
+		{A8C35647-8FF6-406B-B3CD-27A5A6B81876}.Debug|x64.Build.0 = Debug|x64
 		{A8C35647-8FF6-406B-B3CD-27A5A6B81876}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8C35647-8FF6-406B-B3CD-27A5A6B81876}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8C35647-8FF6-406B-B3CD-27A5A6B81876}.Release|x64.ActiveCfg = Release|x64
+		{A8C35647-8FF6-406B-B3CD-27A5A6B81876}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
