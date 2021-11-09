@@ -32,7 +32,7 @@ from rp2 import PIO, StateMachine, asm_pio
 #74lvc125 has it's direction controlled by WRITE. PIO State machine branches based on READ. 
 
 
-WAIT_PIN = Pin(12, Pin.OUT, )
+WAIT_PIN = Pin(12, Pin.OUT )
 DATA_BUS_BASE = Pin(14, Pin.OUT)
 CS_PIN = Pin(13, Pin.IN)
 READ_PIN = Pin(11)
@@ -70,7 +70,7 @@ def z80_io():
     out(pindirs,8)
     jmp("exit")
     label("rcv")
-    mov(osr,invert(null))
+    mov(osr,null)
     out(pindirs,8)    
     in_(pins, 8)
     push()   
