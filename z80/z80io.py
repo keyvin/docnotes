@@ -7,23 +7,24 @@ from rp2 import PIO, StateMachine, asm_pio
 #There is a difference between physical and GPIO. pins in this sketch reference gpio pin numbering
 
 
-#Though the sketch operates fast enough that extra IO wait is not necessary, when the pico keeps a wait line held low
+#Though the sketch operates fast enough that extra IO wait is not necessary, the pico keeps a gpio line held low except when being accessed.
 #The chip select is ORed (74hct32) with this wait line, causing the z80 cpu to wait until the pico brings WAIT
 #high. The Pico outputs or reads data (possibly stalling till data is available)
 #then waits for it's chip select to go high. It then brings the wait pin low, which will trigger the z80 WAIT state
-#when the chip select goes low again.
+#when the chip is next selected
 
 #I am using a 74HCT154 to decode four address lines, a 74hct32 for address selection and generation of the wait signal
 #and two 74lvc245s as logic level shifters
 
 #The chip select is used to enable/disable the data bus 74lvc245, ensuring that the pico is disconneced from the data bus
 #after the IO. It has 3.3v on the low side (pico) and 5v on the high side. It is powered from the 3.3v side.
-#my z80 is capable of reading the 3.3v during reads properly. Your mileage may vary.
+#my z80 is capable of reading the resulting 3.3v output during reads properly. Your mileage may vary.
 
-#The write signal from the Z80 is used to set the direction of the data bus 74lvc245. It is also used in the state machine. 
+#The write signal from the Z80 is used to set the direction of the data bus 74lvc245. It's complement READ is used by
+#the state machine, though you could change this by reversing the branch logic. 
 
 #Signals like c/s, write, read, and the lower address lines are passed through the second 74lvc245. It's direction is 
-#always B to A. This is to protect the pico. 
+#always B to A. This is to protect the pico from 5v. 
 
 #D0-8 connects to GPIOs 14-21. C/S (active low as written, but you can change that in the PIO SM) to GP13, 
 #WAIT to GP12 (via ORed cs at 74hct32) and read (from z80, could reverse to use write in PIO SM). 
@@ -31,6 +32,8 @@ from rp2 import PIO, StateMachine, asm_pio
 #TL/DR - I am using the c/s for the pico ORed GPIO pin to assert WAIT. When CS is asserted, the data bus is enabled. 
 #74lvc125 has it's direction controlled by WRITE. PIO State machine branches based on READ. 
 
+#Since the octal bus buffer goes high Z when the IO device isn't selected, I do not see a need to clear the output 
+#pins after access.
 
 WAIT_PIN = Pin(12, Pin.OUT )
 DATA_BUS_BASE = Pin(14, Pin.OUT)
