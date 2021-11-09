@@ -30,7 +30,7 @@ from rp2 import PIO, StateMachine, asm_pio
 #WAIT to GP12 (via ORed cs at 74hct32) and read (from z80, could reverse to use write in PIO SM). 
 
 #TL/DR - I am using the c/s for the pico ORed GPIO pin to assert WAIT. When CS is asserted, the data bus is enabled. 
-#74lvc125 has it's direction controlled by WRITE. PIO State machine branches based on READ. 
+#74lvc245 has it's direction controlled by WRITE. PIO State machine branches based on READ. 
 
 #Since the octal bus buffer goes high Z when the IO device isn't selected, I do not see a need to clear the output 
 #pins after access.
