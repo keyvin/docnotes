@@ -16,6 +16,7 @@ target_sources(simple_vga PRIVATE vga.c)
 target_link_libraries(simple_vga PRIVATE
         pico_stdlib
         hardware_pio
+	hardware_dma
 )
 
 pico_add_extra_outputs(simple_vga)

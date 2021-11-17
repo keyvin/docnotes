@@ -2,8 +2,6 @@
 #include "hardware/pio.h"
 #include "hardware/gpio.h"
 #include "hardware/clocks.h"
-#include "hardware/dma.h"
-#include "hardware/structs/bus_ctrl.h"
 #include "rgb.pio.h"
 #include "sync.pio.h"
 
@@ -14,8 +12,8 @@
 //Ex. a 640x480@60hz has 800 pixels per line
 //640 visible (RGB values, but no H&V sync)
 //16 Front porch, 96 sync pulse, 48 back porch
-//after 480 of these lines, we have a few vblank lines
-//10 Front porch (hsync normal), 2 sync pulse (vsync and hysnc), 33 back porch
+//after 480 of these lines, we have a vsync line
+//10 Front porch, 2 sync pulse, 33 back porch
 
 //The PIO must change pin values every
 // (1/25.175mhz)s
@@ -59,8 +57,6 @@ void generate_vblank_rgb(uint8_t *);
 void generate_hsync_scan(uint8_t *);
 void generate_vsync_scan(uint8_t *);
 
-
-
 int main(){
 //our output is 480 lines of rgb and hsync.
 //10 lines of vblank and hsync
@@ -85,56 +81,15 @@ int main(){
 	uint8_t blank8 = 0;
 	//to keep in sync, rgb needs 4x the data (2 bits per 8 bits)  
 	pio_sm_put(pio, sm_rgb, blank);
-	pio_sm_put(pio, sm_rgb, blank);
-	pio_sm_put(pio,sm_rgb, blank);
 	pio_sm_put(pio, sm_sync, blank8);
-	pio_sm_put(pio, sm_sync, blank8);
-	pio_sm_put(pio, sm_sync, blank8);
-	
-    	int rgb_dma_chan = dma_claim_unused_channel(true);
-	dma_channel_config dcrgb = dma_channel_get_default_config(rgb_dma_chan);
-	channel_config_set_transfer_data_size(&dcrgb, DMA_SIZE_32);
-	channel_config_set_write_increment(&dcrgb, false);
-	channel_config_set_read_increment(&dcrgb, true);
-					//pio, state machine, is_tx
-	channel_config_set_dreq(&dcrgb, pio_get_dreq(pio,sm_rgb, true));
-
-	dma_channel_configure(
-	        rgb_dma_chan,
-	        &dcrgb,
-	        &pio0_hw->txf[sm_rgb], // Write address (only need to set this once)
-	        NULL,             // Don't provide a read address yet
-	        200,              //count
-	        false             // Don't start yet
-	);
-	int sync_dma_chan = dma_claim_unused_channel(true);
-	dma_channel_config dcsync = dma_channel_get_default_config(sync_dma_chan);
-	channel_config_set_transfer_data_size(&dcsync, DMA_SIZE_8);
-	channel_config_set_write_increment(&dcsync, false);
-	channel_config_set_read_increment(&dcsync, true);
-	channel_config_set_dreq(&dcsync, pio_get_dreq(pio, sm_sync, true));
-	dma_channel_configure (
-		sync_dma_chan, 
-		&dcsync,
-		&pio0_hw->txf[sm_sync],
-		NULL,
-		200,
-		false
-	);
-
-
-
-//start RGB first then sync so synchronized
-
-
+	//rgb first, sync second.
+	pio_sm_set_enabled(pio, sm_rgb, true);
+	pio_sm_set_enabled(pio, sm_sync, true);
 	uint16_t scanline = 0;
 	uint16_t pixel = 0;
 	uint32_t *rgb;
 	uint8_t *sync;	
 	uint8_t flip =0;
-	pio_sm_set_enabled(pio, sm_rgb, true);
-	pio_sm_set_enabled(pio, sm_sync, true);
-
 	while (1) {
 		if (scanline <  480) {
 			rgb = (uint32_t *) RGB_buffer;
@@ -160,10 +115,14 @@ int main(){
 			scanline =0;
 			continue;
 		}
-		//we could alternate buffers, assign blocks, etc. 
-		dma_channel_set_read_addr(rgb_dma_chan, rgb, true);
-		dma_channel_set_read_addr(sync_dma_chan, sync, true);
-		dma_channel_wait_for_finish_blocking(sync_dma_chan);
+                unsigned int f = 0;
+		while (pixel < 200){    //800/4
+			pio_sm_put_blocking(pio, sm_sync, sync[pixel]);
+			pio_sm_put(pio, sm_rgb, rgb[pixel]); 
+			pixel++;
+
+                }
+		pixel = 0;
 		scanline++;
 
 	}
