@@ -1,5 +1,7 @@
 #include  "pico/stdlib.h"
 #include "hardware/pio.h"
+#include "hardware/gpio.h"
+#include "hardware/clocks.h"
 #include "rgb.pio.h"
 #include "sync.pio.h"
 
@@ -50,67 +52,77 @@ uint8_t Hsync_buffer[200]; //2bpp(HVHVHVHV)
 uint8_t Vsync_buffer[200]; //2bpp 
 
 
+void generate_rgb_scan(uint8_t *);
+void generate_vblank_rgb(uint8_t *);
+void generate_hsync_scan(uint8_t *);
+void generate_vsync_scan(uint8_t *);
 
 int main(){
 //our output is 480 lines of rgb and hsync.
 //10 lines of vblank and hsync
 //2 lines of vblank and vsync
 //33 lines of vblank and hsync 
+	generate_rgb_scan(RGB_buffer);
+	generate_vblank_rgb(Vblank);
+	generate_hsync_scan(Hsync_buffer);
+	generate_vsync_scan(Vsync_buffer);	
 	PIO pio = pio0;
-	float freq = 25175000
-	float div = clock_get_hz(clk_sys) / ();
-	uint offset = pio_add_program(pio, &rgb_program);
-	uint offset2 = pio_add_program(pio, &sync_program);
+	float freq = 25175000.0;
+	float div = (float)clock_get_hz(clk_sys) / freq;
+	uint offset_rgb = pio_add_program(pio, &rgb_program);
+	uint offset_sync = pio_add_program(pio, &sync_program);
 	uint sm_sync = pio_claim_unused_sm(pio, true);
 	uint sm_rgb = pio_claim_unused_sm(pio, true);
 	//must be started in this order
-	rgb_program_init(pio, sm_rgb, offset, 9, div);
-	sync_program_init(pio, sm_sync, offset,0, div);
+	rgb_program_init(pio, sm_rgb, offset_rgb, 0, div);
+	sync_program_init(pio, sm_sync, offset_sync, 10, div);
 	//make sure fifos have something in them
 	uint32_t blank = 0;
+	uint8_t blank8 = 0;
 	//to keep in sync, rgb needs 4x the data (2 bits per 8 bits)  
-	
 	pio_sm_put(pio, sm_rgb, blank);
-	pio_sm_put(pio, sm_rgb, blank);
-	pio_sm_put(pio, sm_rgb, blank);
-	pio_sm_put(pio, sm_rgb, blank);
-	pio_sm_put(pio, sm_sync, blank);
+	pio_sm_put(pio, sm_sync, blank8);
 	//rgb first, sync second.
 	pio_sm_set_enabled(pio, sm_rgb, true);
 	pio_sm_set_enabled(pio, sm_sync, true);
 	uint16_t scanline = 0;
 	uint16_t pixel = 0;
 	uint32_t *rgb;
-	uint32_t *sync;	
+	uint8_t *sync;	
+	uint8_t flip =0;
 	while (1) {
 		if (scanline <  480) {
 			rgb = (uint32_t *) RGB_buffer;
-			sync = (uint32_t *) Hsync_buffer;
+			sync = Hsync_buffer;
 		}
 
 		else if (scanline  < 490) {
 			rgb = (uint32_t *) Vblank;
-			sync = (uint32_t *) Hsync_buffer;
+			sync = Hsync_buffer;
 		
 		}
 		else if (scanline < 492) {
 			rgb = (uint32_t *) Vblank;
-		}	sync = (uint32_t *) Vsync_buffer;
-
+			sync = Vsync_buffer;
+		}
+		
 		else if (scanline < 525) {
 			rgb = (uint32_t *) Vblank;
-			sync = (uint32_t *) Hsync_buffer;
+			sync = Hsync_buffer;
 
 		}
 		else {
 			scanline =0;
 			continue;
 		}
-                while (pixel < 200){    //800/4
-	                pio_sm_put_blocking(pio, sm_rgb, rgb[pixel]);
-                        pio_sm_put_blocking(pio, sm_sync, sync[pixel]);
-                        pixel++;
+                unsigned int f = 0;
+		while (pixel < 200){    //800/4
+			pio_sm_put_blocking(pio, sm_sync, sync[pixel]);
+			pio_sm_put(pio, sm_rgb, rgb[pixel]); 
+			pixel++;
+
                 }
+		pixel = 0;
 		scanline++;
 
 	}
@@ -124,33 +136,35 @@ int main(){
 //200 bytes 
 
 //to avoid synchronization issues, pad out to full length
+//void generate_hsync_line(uint8_t *);
 void generate_rgb_scan (uint8_t * buffer) {
 	for (int i =0; i < 640; i++) {
-	val = i/160;
+	int val = i/160;
 	switch (val){
 		case 0:
-			buffer[i] = 0
+			buffer[i] = 0;
 			break;
 		case 1:
-			buffer[i] = 0xff
+			buffer[i] = 0xff;
 			break;
 		case 2: 
-			buffer[i] = 0xBB
+			buffer[i] = 0xFB;
 			break;
 		case 3:
-			buffer[i] = 0;
+			buffer[i] = 0x09;
 	}
 	}
-	for (i=640; i < 800; i++) {
+	for (int i=640; i < 800; i++) {
 		buffer[i] = 0;
 	}
 }
 
 void generate_vblank_rgb(uint8_t * buffer) {
-	for (i=0; i< 800; i++)
+	for (int i=0; i< 800; i++)
 		buffer[i]=0;
 }
-void generate_hsync_line(uint8_t * buffer) {
+
+void generate_hsync_scan(uint8_t * buffer) {
 	//visible 80 bytes 0
 	//two bits in buffer per pixel. 
 	//two bytes per 8 pixels
@@ -159,21 +173,25 @@ void generate_hsync_line(uint8_t * buffer) {
 	//96 pixels 24 bytes (10101010)	
 	//48 pixels, 12 bytes 0
 	for (int i = 0; i < 164; i++) {
-		buffer[i] = 0;
+		buffer[i] = 0xFF;
 	}
 	for (int i= 164; i < 188; i++){
-		buffer[i] = 0xAA //170, 10101010
+		buffer[i] = 0x55; //170, 10101010
 	}
 	for (int i=188; i < 200; i++) {
-		buffer[i] = 0;
+		buffer[i] = 0xFF;
 	}
 }
 
 //same as a hsync_line, but every 2nd bit 
 //must be 1
-void generate_vysnc_line(uint8_t *buffer) {
-	generate_hysnc_line(buffer);
+
+void generate_vsync_scan(uint8_t *buffer) {
+	generate_hsync_scan(buffer);
 	for (int i = 0; i < 200; i++){
-		buffer[i] = buffer[i] |0x55
+		if (buffer[i] ==0xFF)
+			buffer[i] = 0xAA;
+		if (buffer[i] == 0x55)
+			buffer[i] = 0x00;
 	}
 }

@@ -7,8 +7,8 @@
 ;no need to discard at end of line.
 
 .program sync
-
 start:
+	nop
 	irq clear 7
 	nop
 	.wrap_target
@@ -17,13 +17,16 @@ start:
 
 % c-sdk {
 static inline void sync_program_init(PIO pio, uint sm, uint offset, uint pin, float freq) {
-        pio_sm_config c = rgb_program_get_default_config(offset);
+        pio_sm_config c = sync_program_get_default_config(offset);
         //config, base, num
+        for (int i=0;i<2;i++) {pio_gpio_init(pio, pin+i);}
+        pio_sm_set_consecutive_pindirs(pio, sm, pin, 2, true);
+
         sm_config_set_out_pins(&c, pin, 2);
         sm_config_set_clkdiv(&c, freq);
+	sm_config_set_out_shift(&c, true, true, 8);
+
 	//connect pins to this pio
-        for (int i=0;i<2;i++) pio_gpio_init(pio, pin+i);
-        pio_sm_set_consecutive_pindirs(pio, sm, pin, 2, true);
         //init on pio
         pio_sm_init(pio, sm, offset, &c);
         //start
