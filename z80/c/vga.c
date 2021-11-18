@@ -81,24 +81,29 @@ void fill_scan(uint8_t *buffer, int line) {
 }
 
 void z80io_core_entry() {
-	float freq = 50000000.0;
+	float freq = 80000000.0;
 	float div = (float)clock_get_hz(clk_sys) / freq;
 	PIO pio = pio1;
 	uint offset_z80io = pio_add_program(pio, &z80io_program);
 	uint sm_z80io = pio_claim_unused_sm(pio, true);	
 	z80io_init(pio, sm_z80io, offset_z80io, div);
 	pio_sm_set_enabled(pio, sm_z80io, true);
-	gpio_set_dir(13,0);
-	gpio_set_dir(12,1);
-	
+	gpio_init(11);
+	gpio_init(12);
+	gpio_init(13);
+	gpio_set_dir(11,GPIO_IN);
+	gpio_set_dir(13,GPIO_IN);
+	gpio_set_dir(12,GPIO_OUT);
 	gpio_put(12,1);
+	//gpio_pull_up(13);
+	//gpio_put(12,1);
 	//gpio_set_dir(11,0);
-	for (int i = 0; i < 8; i++) gpio_set_dir(14+i,0);
+
 	uint position = 0;
 	while (1) {
 		if(!pio_sm_is_rx_fifo_empty(pio, sm_z80io)){
-		background[position] = (uint8_t) pio_sm_get(pio, sm_z80io);
-		position++;
+			background[position] = (uint8_t) pio_sm_get(pio, sm_z80io);
+			position++;
 		}
 		if (position == 19200)position=0;
 	}
@@ -113,7 +118,6 @@ int main(){
 //10 lines of vblank and hsync
 //2 lines of vblank and vsync
 //33 lines of vblank and hsync 
-	multicore_launch_core1(z80io_core_entry);
 	generate_rgb_scan(RGB_buffer[0]);
 	generate_rgb_scan(RGB_buffer[1]);
 	generate_vblank_rgb(Vblank);
@@ -190,6 +194,7 @@ int main(){
 	uint32_t flip = 0;
 	pio_sm_set_enabled(pio, sm_rgb, true);
 	pio_sm_set_enabled(pio, sm_sync, true);
+	multicore_launch_core1(z80io_core_entry);
 
 	while (1) {
 		if (scanline <  480) {

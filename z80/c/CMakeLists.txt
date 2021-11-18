@@ -7,7 +7,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(SIMPLE_VGA_PATH ${PROJECT_SOURCE_DIR})
 
 pico_sdk_init()
-
 add_executable(simple_vga)
 pico_generate_pio_header(simple_vga ${CMAKE_CURRENT_LIST_DIR}/sync.pio) 
 pico_generate_pio_header(simple_vga ${CMAKE_CURRENT_LIST_DIR}/rgb.pio)

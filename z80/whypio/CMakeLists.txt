@@ -10,15 +10,16 @@ pico_sdk_init()
 
 add_executable(z80io)
 pico_generate_pio_header(z80io ${CMAKE_CURRENT_LIST_DIR}/z80io.pio) 
-target_sources(z80io.c PRIVATE z80io.c)
+target_sources(z80io PRIVATE z80io.c)
 
 target_link_libraries(z80io PRIVATE
-        pico_stdlib
-        hardware_pio
+    pico_stdlib
+    hardware_pio
 	hardware_dma
 	pico_multicore
 )
-
+    pico_enable_stdio_usb(z80io 1)
+    pico_enable_stdio_uart(z80io 0)
 pico_add_extra_outputs(z80io)
 
 

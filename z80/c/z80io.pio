@@ -2,7 +2,6 @@
 .program z80io
 .side_set 1
 .wrap_target
-start:
 nop side 0
 wait 0 GPIO 13 side 0
 in PINS,8 side 0
@@ -15,16 +14,17 @@ wait 1 GPIO 13 side 1
 %c-sdk {
 static inline void z80io_init(PIO pio, uint sm, uint offset, float freq) {
 	pio_sm_config c = z80io_program_get_default_config(offset);
-		
-	for (int i=0;i<14;i++) pio_gpio_init(pio, 11+i);
-	//pio_sm_set_consecutive_pindirs(pio, sm, 14, 8, false);
-	//sm_config_set_out_pins(&c, 14, 8);
+
+	for (int i=0;i<11;i++) pio_gpio_init(pio, 14+i);
+	pio_sm_set_consecutive_pindirs(pio, sm, 14, 8, false);
+	sm_config_set_out_pins(&c, 14, 8);
 	sm_config_set_clkdiv(&c, freq);
-	//sm_config_set_out_shift(&c, true, true, 8);
-	sm_config_set_in_shift(&c, true, true, 32);
+	sm_config_set_out_shift(&c, true, true, 8);
+	sm_config_set_in_shift(&c, false, true, 32);
 	sm_config_set_sideset_pins(&c, 12);
+	sm_config_set_sideset(&c, 1, false, false);
 	sm_config_set_in_pins(&c, 14);
-//	sm_config_set_jmp_pin(&c, 11);
+	sm_config_set_jmp_pin(&c, 11);
 	pio_sm_init(pio, sm, offset, &c);
 }
 %}
