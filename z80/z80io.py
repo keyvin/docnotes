@@ -86,7 +86,7 @@ def z80_io():
 sm2 = StateMachine(
         0,
         globals()["z80_io"],   
-        freq = 50000000,             #50mhz seems fast enough for 7mhz Z80
+        freq = 10000000,             #50mhz seems fast enough for 7mhz Z80
         out_base=DATA_BUS_BASE,
         in_base=DATA_BUS_BASE,
         set_base=DATA_BUS_BASE,
@@ -103,7 +103,7 @@ WAIT_PIN.value(0) # enable blocking
 j = 1
 while True:
     j=j+1    
-    sm2.put(j)    
+    #sm2.put(j)    
     if sm2.rx_fifo()>0:
         print(sm2.get()) 
     

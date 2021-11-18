@@ -4,10 +4,9 @@
 #include "hardware/clocks.h"
 #include "hardware/dma.h"
 #include "hardware/structs/bus_ctrl.h"
-#include "pico/multicore.h"
 #include "rgb.pio.h"
 #include "sync.pio.h"
-#include "z80io.pio.h"
+
 //Goal is to create functions that 
 //create buffers with the timing pixels
 //embedded. 
@@ -80,40 +79,11 @@ void fill_scan(uint8_t *buffer, int line) {
 	}
 }
 
-void z80io_core_entry() {
-	float freq = 50000000.0;
-	float div = (float)clock_get_hz(clk_sys) / freq;
-	PIO pio = pio1;
-	uint offset_z80io = pio_add_program(pio, &z80io_program);
-	uint sm_z80io = pio_claim_unused_sm(pio, true);	
-	z80io_init(pio, sm_z80io, offset_z80io, div);
-	pio_sm_set_enabled(pio, sm_z80io, true);
-	gpio_set_dir(13,0);
-	gpio_set_dir(12,1);
-	
-	gpio_put(12,1);
-	//gpio_set_dir(11,0);
-	for (int i = 0; i < 8; i++) gpio_set_dir(14+i,0);
-	uint position = 0;
-	while (1) {
-		if(!pio_sm_is_rx_fifo_empty(pio, sm_z80io)){
-		background[position] = (uint8_t) pio_sm_get(pio, sm_z80io);
-		position++;
-		}
-		if (position == 19200)position=0;
-	}
-
-		
-	
-	
-}
-
 int main(){
 //our output is 480 lines of rgb and hsync.
 //10 lines of vblank and hsync
 //2 lines of vblank and vsync
 //33 lines of vblank and hsync 
-	multicore_launch_core1(z80io_core_entry);
 	generate_rgb_scan(RGB_buffer[0]);
 	generate_rgb_scan(RGB_buffer[1]);
 	generate_vblank_rgb(Vblank);
@@ -131,7 +101,7 @@ int main(){
 	uint sm_rgb = pio_claim_unused_sm(pio, true);
 	//must be started in this order
 	rgb_program_init(pio, sm_rgb, offset_rgb, 0, div);
-	sync_program_init(pio, sm_sync, offset_sync, 8, div);
+	sync_program_init(pio, sm_sync, offset_sync, 10, div);
 	//make sure fifos have something in them
 	uint32_t blank = 0;
 	uint8_t blank8 = 0;
