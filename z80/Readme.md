@@ -8,4 +8,4 @@ I’ve created a video interface for the z80 with a raspberry pi pico. Address s
 Much thanks to youtube user Deramp5113, without which I wouldn’t have known where to begin in using my diskless rc 2014 (https://www.youtube.com/watch?v=qSizis0ezck&t=207s). 
 
 Thanks to Dylan from retro-comp for pointing out I’d get spurious IO due to interrupt acknowledge.
-Thank you to David Ahl and publisher of Creative computing's Basic Computer Games, and Leonard Rosendust for "banner", the source for the basic demo
+Thank you to David Ahl of Creative computing's Basic Computer Games, and Leonard Rosendust for "banner", the source for the basic demo
