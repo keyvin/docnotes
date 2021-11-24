@@ -125,7 +125,7 @@ void z80io_core_entry() {
 						printf("new %d\n", (uint8_t) io);
 						old = (uint8_t) io;
 				}
-				if (extent == 0x25) {
+				if (extent != 0x00) {
 				 background[ (y*X_RES)+x] = (uint8_t)io;
 				 x++;
 				 if (x  >= col+extent){
@@ -135,7 +135,7 @@ void z80io_core_entry() {
 				 if (y >= row+extent) {
 					y = row;
 				 }
-				}
+			    }
 				else {				
 				 background[position] = (uint8_t)io;	
 				 position++;
