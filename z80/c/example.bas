@@ -1,10 +1,13 @@
 new
+50 REM Adapted from creative computing "banner"
+51 REM port 3 sets x,y dimension - 0  clears screen
+52 rem port 1 sets x coord
+53 rem port 2 sets y coord
+54 rem port 0 writes 1 RGB 8bpp pixel
+55 rem sequential fill
 
-50 REM
-60 REM
 
-
-78 out 47, 0
+78 out 47, 0 
 79 out 47, 9
 80 l2$="HELLO WORLD!"
 81 DIM AR(10,10)

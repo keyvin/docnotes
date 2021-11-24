@@ -9,6 +9,8 @@
 #include "rgb.pio.h"
 #include "sync.pio.h"
 #include "z80io.pio.h"
+
+//for legibility
 #define X_RES 160
 #define Y_RES 120
 
@@ -37,11 +39,10 @@
 //until we've done enough lines it's time
 //for a vsync
 
-//My first mode will use 160x120 upscaled to 
-//640x480 as my monitors do not aspect correct
-//lower. Each pixel from the z80 will be x4
-//and every scanline will repeat 4x. The pico
-//only has 240k RAM. 
+//Mode is 160x120, 2x to 640x480 
+//Each pixel from the z80 will be x4
+//so every scanline will repeat 4x. 
+//The pico only has 240k RAM. 
 
 //Our Dma buffers Will take ~1kb per line. 
 
@@ -52,19 +53,21 @@
 //2 lines of vsync buffer
 //33 back porch  - normal hsync lines
 
-//need to be divisible by 4 for simplest possible pio. 
+//modes need to be divisible by 4
+//2 dma buffers for RGB so we can flip flop
 uint8_t RGB_buffer[2][800]; //8bpp
 uint8_t Vblank[800];   //8bpp, 0s
 uint8_t Hsync_buffer[200]; //2bpp(HVHVHVHV)
 uint8_t Vsync_buffer[200]; //2bpp 
 
+//frame buffer
 uint8_t background[19200];
-
 void generate_rgb_scan(uint8_t *);
 void generate_vblank_rgb(uint8_t *);
 void generate_hsync_scan(uint8_t *);
 void generate_vsync_scan(uint8_t *);
 
+//initial screen
 void fill_background() {
 	for (int i =0; i < 120; i++)
 		for (int j = 0;  j < 160; j++) {
@@ -72,6 +75,7 @@ void fill_background() {
 		}
 }
 
+//generates scanline from buffer
 void fill_scan(uint8_t *buffer, int line) {
 	int start = line*160;
 	int s = 0;
@@ -84,6 +88,7 @@ void fill_scan(uint8_t *buffer, int line) {
 	}
 }
 
+//second core handles z80
 void z80io_core_entry() {
 	float freq = 50000000.0;
 	float div = (float)clock_get_hz(clk_sys) / freq;
@@ -125,7 +130,7 @@ void z80io_core_entry() {
 						printf("new %d\n", (uint8_t) io);
 						old = (uint8_t) io;
 				}
-				if (extent != 0x00) {
+				if (extent != 0x00) { // if zero, whole screen fills
 				 background[ (y*X_RES)+x] = (uint8_t)io;
 				 x++;
 				 if (x  >= col+extent){
@@ -202,6 +207,7 @@ int main(){
 	fill_background();
 	fill_scan(RGB_buffer[0],0);
 	fill_scan(RGB_buffer[1],0);
+	//configure pio0 for video output
 	PIO pio = pio0;
 	float freq = 25175000.0;
 	float div = (float)clock_get_hz(clk_sys) / freq;
@@ -209,7 +215,7 @@ int main(){
 	uint offset_sync = pio_add_program(pio, &sync_program);
 	uint sm_sync = pio_claim_unused_sm(pio, true);
 	uint sm_rgb = pio_claim_unused_sm(pio, true);
-	//must be started in this order
+	//must be started in this order so they stay synchronized
 	rgb_program_init(pio, sm_rgb, offset_rgb, 0, div);
 	sync_program_init(pio, sm_sync, offset_sync, 9, div);
 	//make sure fifos have something in them
@@ -271,7 +277,7 @@ int main(){
 	pio_sm_set_enabled(pio, sm_rgb, true);
 	pio_sm_set_enabled(pio, sm_sync, true);
 	multicore_launch_core1(z80io_core_entry);
-
+//mode is hard coded
 	while (1) {
 		if (scanline <  480) {
 			if (flip==1)flip=0;
@@ -283,8 +289,7 @@ int main(){
 
 		else if (scanline  < 490) {
 			rgb = (uint32_t *) Vblank;
-			sync = Hsync_buffer;
-		
+			sync = Hsync_buffer;		
 		}
 		else if (scanline < 492) {
 			rgb = (uint32_t *) Vblank;
