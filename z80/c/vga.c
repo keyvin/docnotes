@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include  "pico/stdlib.h"
 #include "hardware/pio.h"
 #include "hardware/gpio.h"
@@ -8,6 +9,9 @@
 #include "rgb.pio.h"
 #include "sync.pio.h"
 #include "z80io.pio.h"
+#define X_RES 160
+#define Y_RES 120
+
 //Goal is to create functions that 
 //create buffers with the timing pixels
 //embedded. 
@@ -81,7 +85,7 @@ void fill_scan(uint8_t *buffer, int line) {
 }
 
 void z80io_core_entry() {
-	float freq = 80000000.0;
+	float freq = 50000000.0;
 	float div = (float)clock_get_hz(clk_sys) / freq;
 	PIO pio = pio1;
 	uint offset_z80io = pio_add_program(pio, &z80io_program);
@@ -99,13 +103,84 @@ void z80io_core_entry() {
 	//gpio_put(12,1);
 	//gpio_set_dir(11,0);
 
-	uint position = 0;
+	uint32_t position = 0;
+	uint32_t io = 0;
+	uint16_t regs = 0;
+	uint8_t row = X_RES;
+	uint8_t col = Y_RES;
+	uint8_t extent = 0;
+	uint8_t x = 0;
+	uint8_t y = 0;
+	uint8_t old =0;
+	uint8_t new = 0;
+	//bit fields for the registers are due to
+	//3 pin gap on pi pico (rp2040) - 
 	while (1) {
 		if(!pio_sm_is_rx_fifo_empty(pio, sm_z80io)){
-			background[position] = (uint8_t) pio_sm_get(pio, sm_z80io);
-			position++;
+			io = pio_sm_get(pio, sm_z80io) &0x0000011FF;
+			//are register pins set?
+			regs = (uint16_t) io &0x1100;
+			if (regs == 0) {
+				if ((((uint8_t) io)) != old){
+						printf("new %d\n", (uint8_t) io);
+						old = (uint8_t) io;
+				}
+				if (extent == 0x25) {
+				 background[ (y*X_RES)+x] = (uint8_t)io;
+				 x++;
+				 if (x  >= col+extent){
+					x =col;
+					y++;
+				 }
+				 if (y >= row+extent) {
+					y = row;
+				 }
+				}
+				else {				
+				 background[position] = (uint8_t)io;	
+				 position++;
+				 if (position == 19200){position=0 ;}				 
+				}
+			}
+			//row address set
+			else if (regs ==  0x0100){
+				//row start
+				//printf ("setting x,col: %d\r\n", io&0x000000ff);
+				x = col = (uint8_t) (io) ;
+				y = row;
+				if (col >= X_RES)
+					x =col =0;
+					
+
+			}
+			//column address set
+			else if (regs == 0x1000) {
+				//printf ("setting y,row: %d\r\n", io&0x000000ff);
+				y = row = (uint8_t) (io) ;
+				x = col;
+				if (row >= Y_RES)
+					y = row =0;
+			}
+			//width (square for now)
+			else if (regs == 0x01100) {
+				uint8_t ox = extent;
+				extent = ((uint8_t) io);
+		//		printf ("setting extent: %d\r\n", io&0x000000ff);
+				if (col + extent > X_RES)
+					extent = 0;
+				if (row + extent > Y_RES)
+					extent = 0;
+				if (extent ==0)	{ //switch to absolute 
+					for (uint i = 0; i < 19200/4; i++) *(((uint32_t *) background) +i) = 0;
+					position =  0;
+				}
+				x = col;
+				y = row;
+			}
 		}
-		if (position == 19200)position=0;
+
+		
+		
 	}
 
 		
@@ -118,6 +193,7 @@ int main(){
 //10 lines of vblank and hsync
 //2 lines of vblank and vsync
 //33 lines of vblank and hsync 
+	//stdio_init_all();
 	generate_rgb_scan(RGB_buffer[0]);
 	generate_rgb_scan(RGB_buffer[1]);
 	generate_vblank_rgb(Vblank);
@@ -135,7 +211,7 @@ int main(){
 	uint sm_rgb = pio_claim_unused_sm(pio, true);
 	//must be started in this order
 	rgb_program_init(pio, sm_rgb, offset_rgb, 0, div);
-	sync_program_init(pio, sm_sync, offset_sync, 8, div);
+	sync_program_init(pio, sm_sync, offset_sync, 9, div);
 	//make sure fifos have something in them
 	uint32_t blank = 0;
 	uint8_t blank8 = 0;

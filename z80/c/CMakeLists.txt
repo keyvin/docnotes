@@ -19,7 +19,8 @@ target_link_libraries(simple_vga PRIVATE
 	hardware_dma
 	pico_multicore
 )
-
+    pico_enable_stdio_usb(simple_vga 1)
+    pico_enable_stdio_uart(simple_vga 0)
 pico_add_extra_outputs(simple_vga)
 
 

@@ -32,9 +32,25 @@ int main() {
 	uint position = 0;
 	printf("entering loop\n");
 	unsigned int loop =0;
+	uint32_t a;
+	uint32_t o = 0;
+	uint32_t f =0;
+	uint32_t count = 0;
 	while (1) {
 		if(!pio_sm_is_rx_fifo_empty(pio, sm_z80io)){
-		printf("recieved %d\n",pio_sm_get(pio, sm_z80io));
+		a =f = o = pio_sm_get(pio,sm_z80io);
+		
+		o = a&0x00001100;
+		f = a&0x000000ff;
+		if (o==0x00001100)printf("width set %d\r\n", a);
+		if (o==0x00001100)printf ("truncated 32 is %d\nRegular is %d\r\n", (uint8_t) f, f);
+		if (o==0x00000100)printf("x set\r\n");
+		if (o==0x00001000)printf("y set\r\n");
+		if (o==0x0000000) count++;
+		if (count%25 == 0) printf("25 writes\r\n");
+		//printf("recieved %d\r\n",o);
+
+		
 		position++;
 		}
 		if (position == 19200)position=0;
