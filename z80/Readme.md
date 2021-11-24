@@ -4,8 +4,10 @@ I’ve created a video interface for the z80 with a raspberry pi pico. Address s
 
 ![output](output.jpg)
 
-	I’ve included a very simple and very slow “Hello World” program written in basic-80
-	
+
+I’ve included a very simple and very slow “Hello World” program written in basic-80
+[Here](https://github.com/keyvin/docnotes/blob/master/z80/c/example.bas)
+
 
 Much thanks to youtube user Deramp5113, without which I wouldn’t have known where to begin in using my diskless rc 2014 (https://www.youtube.com/watch?v=qSizis0ezck&t=207s). 
 
