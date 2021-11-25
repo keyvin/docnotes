@@ -2,13 +2,13 @@
 .program z80io
 .side_set 1
 .wrap_target
-nop side 0 [4]           'wait for bouncing
-wait 0 GPIO 13 side 0 [2] 'handle "bounce"
+nop side 0 [4]           ;wait for bouncing
+wait 0 GPIO 13 side 0 [2] ;handle "bounce"
 in PINS,14 side 0
 push block side 1
 exit:
 nop side 1
-wait 1 GPIO 13 side 1 [2] 'handle bounce
+wait 1 GPIO 13 side 1 [2] ;handle bounce
 .wrap
 
 %c-sdk {
