@@ -84,6 +84,7 @@ int main(){
 //10 lines of vblank and hsync
 //2 lines of vblank and vsync
 //33 lines of vblank and hsync 
+	set_sys_clock_khz(130000, true);
 	generate_rgb_scan(RGB_buffer[0]);
 	generate_rgb_scan(RGB_buffer[1]);
 	generate_vblank_rgb(Vblank);
@@ -187,13 +188,14 @@ int main(){
 		}
 		else {
 			scanline =0;
-			continue;
+			//continue;
 		}
 		//we could alternate buffers, assign blocks, etc. 
 		dma_channel_set_read_addr(rgb_dma_chan, rgb, true);
 		dma_channel_set_read_addr(sync_dma_chan, sync, true);
 		//fill the buffer for the flip
 		fill_scan(RGB_buffer[((flip+1)%2)], (int)scanline/4);
+		dma_channel_wait_for_finish_blocking(rgb_dma_chan);
 		dma_channel_wait_for_finish_blocking(sync_dma_chan);
 		scanline++;
 

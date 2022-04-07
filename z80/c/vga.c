@@ -199,6 +199,7 @@ int main(){
 //2 lines of vblank and vsync
 //33 lines of vblank and hsync 
 	//stdio_init_all();
+	set_sys_clock_khz(130000, true);
 	generate_rgb_scan(RGB_buffer[0]);
 	generate_rgb_scan(RGB_buffer[1]);
 	generate_vblank_rgb(Vblank);
