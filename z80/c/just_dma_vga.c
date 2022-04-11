@@ -102,7 +102,7 @@ int main(){
 	uint sm_rgb = pio_claim_unused_sm(pio, true);
 	//must be started in this order
 	rgb_program_init(pio, sm_rgb, offset_rgb, 0, div);
-	sync_program_init(pio, sm_sync, offset_sync, 10, div);
+	sync_program_init(pio, sm_sync, offset_sync, 8, div);
 	//make sure fifos have something in them
 	uint32_t blank = 0;
 	uint8_t blank8 = 0;

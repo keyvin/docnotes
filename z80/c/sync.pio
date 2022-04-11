@@ -26,7 +26,7 @@ static inline void sync_program_init(PIO pio, uint sm, uint offset, uint pin, fl
 
         sm_config_set_out_pins(&c, pin, 2);
         sm_config_set_clkdiv(&c, freq);
-	sm_config_set_out_shift(&c, true, true, 8);
+	sm_config_set_out_shift(&c, false, true, 8);
 
 	//connect pins to this pio
         //init on pio
