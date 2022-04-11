@@ -8,11 +8,13 @@
 
 .program sync
 start:
-	nop
 	irq clear 7
 	nop
 	.wrap_target
-	out pins, 2
+	out pins,2
+	nop
+	nop
+
 	.wrap
 
 % c-sdk {

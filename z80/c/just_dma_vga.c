@@ -84,7 +84,7 @@ int main(){
 //10 lines of vblank and hsync
 //2 lines of vblank and vsync
 //33 lines of vblank and hsync 
-	set_sys_clock_khz(130000, true);
+	set_sys_clock_khz(131000, true);
 	generate_rgb_scan(RGB_buffer[0]);
 	generate_rgb_scan(RGB_buffer[1]);
 	generate_vblank_rgb(Vblank);
@@ -94,7 +94,7 @@ int main(){
 	fill_scan(RGB_buffer[0],0);
 	fill_scan(RGB_buffer[1],0);
 	PIO pio = pio0;
-	float freq = 25175000.0;
+	float freq = 75525000.0;
 	float div = (float)clock_get_hz(clk_sys) / freq;
 	uint offset_rgb = pio_add_program(pio, &rgb_program);
 	uint offset_sync = pio_add_program(pio, &sync_program);
