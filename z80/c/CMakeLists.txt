@@ -11,7 +11,7 @@ add_executable(simple_vga)
 pico_generate_pio_header(simple_vga ${CMAKE_CURRENT_LIST_DIR}/sync.pio) 
 pico_generate_pio_header(simple_vga ${CMAKE_CURRENT_LIST_DIR}/rgb.pio)
 pico_generate_pio_header(simple_vga ${CMAKE_CURRENT_LIST_DIR}/z80io.pio)
-target_sources(simple_vga PRIVATE just_dma_vga.c)
+target_sources(simple_vga PRIVATE vga.c)
 
 target_link_libraries(simple_vga PRIVATE
         pico_stdlib

@@ -97,13 +97,13 @@ void z80io_core_entry() {
 	uint sm_z80io = pio_claim_unused_sm(pio, true);	
 	z80io_init(pio, sm_z80io, offset_z80io, div);
 	pio_sm_set_enabled(pio, sm_z80io, true);
+	gpio_init(10);
 	gpio_init(11);
 	gpio_init(12);
-	gpio_init(13);
 	gpio_set_dir(11,GPIO_IN);
-	gpio_set_dir(13,GPIO_IN);
-	gpio_set_dir(12,GPIO_OUT);
-	gpio_put(12,1);
+	gpio_set_dir(12,GPIO_IN);
+	gpio_set_dir(10,GPIO_OUT);
+	gpio_put(10,1);
 	//gpio_pull_up(13);
 	//gpio_put(12,1);
 	//gpio_set_dir(11,0);
@@ -210,7 +210,7 @@ int main(){
 	fill_scan(RGB_buffer[1],0);
 	//configure pio0 for video output
 	PIO pio = pio0;
-	float freq = 25175000.0;
+	float freq = 75525000.0;
 	float div = (float)clock_get_hz(clk_sys) / freq;
 	uint offset_rgb = pio_add_program(pio, &rgb_program);
 	uint offset_sync = pio_add_program(pio, &sync_program);
@@ -218,7 +218,7 @@ int main(){
 	uint sm_rgb = pio_claim_unused_sm(pio, true);
 	//must be started in this order so they stay synchronized
 	rgb_program_init(pio, sm_rgb, offset_rgb, 0, div);
-	sync_program_init(pio, sm_sync, offset_sync, 9, div);
+	sync_program_init(pio, sm_sync, offset_sync, 8, div);
 	//make sure fifos have something in them
 	uint32_t blank = 0;
 	uint8_t blank8 = 0;
@@ -304,7 +304,7 @@ int main(){
 		}
 		else {
 			scanline =0;
-			continue;
+			//continue;
 		}
 		//we could alternate buffers, assign blocks, etc. 
 		dma_channel_set_read_addr(rgb_dma_chan, rgb, true);
