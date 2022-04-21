@@ -35,9 +35,9 @@ from rp2 import PIO, StateMachine, asm_pio
 #Since the octal bus buffer goes high Z when the IO device isn't selected, I do not see a need to clear the output 
 #pins after access.
 
-WAIT_PIN = Pin(12, Pin.OUT )
-DATA_BUS_BASE = Pin(14, Pin.OUT)
-CS_PIN = Pin(13, Pin.IN)
+WAIT_PIN = Pin(10, Pin.OUT )
+DATA_BUS_BASE = Pin(13, Pin.OUT)
+CS_PIN = Pin(12, Pin.IN)
 READ_PIN = Pin(11)
     
 WAIT_PIN.value(1) #disable blocking on iorequest until ready. 
@@ -63,7 +63,7 @@ WAIT_PIN.value(1) #disable blocking on iorequest until ready.
 @asm_pio(sideset_init=PIO.OUT_LOW,  autopull=True, pull_thresh=8, out_shiftdir = PIO.SHIFT_RIGHT, out_init=(PIO.OUT_HIGH,PIO.OUT_HIGH,PIO.OUT_HIGH,PIO.OUT_HIGH,PIO.OUT_HIGH,PIO.OUT_HIGH,PIO.OUT_HIGH,PIO.OUT_HIGH))
 def z80_io():
     nop().side(0)        
-    wait(0,gpio,13) #GPIO ignores pin mappings and uses global.
+    wait(0,gpio,12) #GPIO ignores pin mappings and uses global.
     jmp(pin,"rcv") #NOTE THE DIFFERENCE ON JMP BETWEEN PIN and PINS - you want pin.           
     mov(osr,invert(null))
     out(pindirs,8)
@@ -79,7 +79,7 @@ def z80_io():
     push()   
     label("exit")
     nop().side(1)      #de-assert wait
-    wait(1,gpio,13)    #Wait for z80 to finish
+    wait(1,gpio,12)    #Wait for z80 to finish
   
     
 
@@ -103,8 +103,9 @@ WAIT_PIN.value(0) # enable blocking
 j = 1
 while True:
     j=j+1    
-    #sm2.put(j)    
+        
     if sm2.rx_fifo()>0:
         print(sm2.get()) 
-    
+    if sm2.tx_fifo()< 3:
+        sm2.put(j)
     

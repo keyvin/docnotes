@@ -1,0 +1,2 @@
+altered pin out, schematic no longer correct
+

@@ -1,0 +1,13 @@
+Side set pins:
+
+Needs to be added to the pio_gpio mux. Also should be set as "output" by the PIO SM. Otherwise does nothing.
+
+JMP pin must added to the GPIO mux
+
+mov - null, ~null, !null - all different things.
+
+Two scratch registers - x and y.
+
+Set - can only operate on immediate values
+
+
