@@ -11,7 +11,7 @@
 
 int main() {
 	stdio_init_all();
-	float freq = 100000000.0;
+	float freq = 10000000.0;
 	float div = (float)clock_get_hz(clk_sys) / freq;
 	PIO pio = pio1;
 	uint offset_z80io = pio_add_program(pio, &z80io_program);
@@ -34,36 +34,31 @@ int main() {
 	uint position = 0;
 	printf("entering loop\n");
 	unsigned int loop =0;
-	uint32_t a;
+
 	uint32_t o = 0;
-	uint32_t f =0;
+	uint32_t r1,r2,r3,r4;
 	uint32_t count = 0;
-	uint32_t r1;
-	uint32_t r2;
-	uint32_t r3=0;
-	uint32_t r4=0;
-	uint8_t sob=0;
+	uint8_t regs[4] = {0,0,0,0};
+	uint8_t base = 0;
 	while (1) {
 		if(pio_interrupt_get(pio, 5)){
 
-		     r1 = pio_sm_get(pio,sm_z80io);
-		     //         printf("(out) %u, %d\r\n", r1, r4++);
-				pio_interrupt_clear(pio, 5);
+		  r1 = pio_sm_get(pio,sm_z80io);
+		  base = (uint8_t)((r1 & 0x0000FF00) >> 8);
+		  regs[base] = (uint8_t) r1 & 0x000000FF; 
+		  printf("(out) %d, base - %d, val - %d, count - %d\r\n", r1, base, regs[base],r4++ );
+		  pio_interrupt_clear(pio, 5);
 				
 		}
 		if(pio_interrupt_get(pio, 6)) {	
-
-		  //r1=r1+5;
-		  //if (r1>255)r1 = 0;
-		  pio_sm_get(pio,sm_z80io);
-				o = pio_sm_get_tx_fifo_level(pio, sm_z80io);
-				//printf("fifo at %d\r\n", o);
-				//pio_sm_clear_fifos(pio,sm_z80io);
-				//printf("(inp) %d %d\r\n",r1, r3++);
-				r2 = r1 << 24 | r1 << 16 | r1 <<8 | r1;
-				//printf("r2 - %#x\r\n", r2);
-				pio_sm_put(pio, sm_z80io, r2);
-				pio_interrupt_clear(pio,6);				
+		  pio_sm_get(pio,sm_z80io);		  
+		  r1 = pio_sm_get(pio,sm_z80io);
+		  base = (uint8_t)((r1 & 0x0000FF00) >> 8);		  
+		  printf("(in) %d, base - %d, val - %d, count - %d\r\n", r1, base, regs[base],r4++ );
+		  r1 = regs[base];
+		  r2 = r1 << 24 | r1 << 16 | r1 <<8 | r1;		  
+		  pio_sm_put(pio, sm_z80io, r2);
+		  pio_interrupt_clear(pio,6);				
 		}
 	}
 
