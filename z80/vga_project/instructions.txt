@@ -1,0 +1,1 @@
+xxd --include file.bin -- thanks stack overflow

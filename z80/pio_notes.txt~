@@ -1,5 +1,0 @@
-Side set pins:
-
-Needs to be added to the pio_gpio mux. Also should be set as "output". Otherwise does nothing.
-
-mov - null, ~null, !null - all different things. 
