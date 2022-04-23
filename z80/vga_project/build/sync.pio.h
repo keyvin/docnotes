@@ -13,22 +13,20 @@
 // ---- //
 
 #define sync_wrap_target 2
-#define sync_wrap 4
+#define sync_wrap 2
 
 static const uint16_t sync_program_instructions[] = {
     0xc047, //  0: irq    clear 7                    
     0xa042, //  1: nop                               
             //     .wrap_target
     0x6002, //  2: out    pins, 2                    
-    0xa042, //  3: nop                               
-    0xa042, //  4: nop                               
             //     .wrap
 };
 
 #if !PICO_NO_HARDWARE
 static const struct pio_program sync_program = {
     .instructions = sync_program_instructions,
-    .length = 5,
+    .length = 3,
     .origin = -1,
 };
 

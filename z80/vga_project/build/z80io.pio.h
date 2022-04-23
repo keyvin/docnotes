@@ -13,23 +13,36 @@
 // ----- //
 
 #define z80io_wrap_target 0
-#define z80io_wrap 5
+#define z80io_wrap 18
 
 static const uint16_t z80io_program_instructions[] = {
             //     .wrap_target
-    0xa442, //  0: nop                    side 0 [4] 
-    0x220d, //  1: wait   0 gpio, 13      side 0 [2] 
-    0x400e, //  2: in     pins, 14        side 0     
-    0x9020, //  3: push   block           side 1     
-    0xb042, //  4: nop                    side 1     
-    0x328d, //  5: wait   1 gpio, 13      side 1 [2] 
+    0xa242, //  0: nop                    side 0 [2] 
+    0x200c, //  1: wait   0 gpio, 12      side 0     
+    0xa242, //  2: nop                    side 0 [2] 
+    0xa0e3, //  3: mov    osr, null       side 0     
+    0x608a, //  4: out    pindirs, 10     side 0     
+    0xa042, //  5: nop                    side 0     
+    0x400a, //  6: in     pins, 10        side 0     
+    0x8000, //  7: push   noblock         side 0     
+    0x00cf, //  8: jmp    pin, 15         side 0     
+    0xa0eb, //  9: mov    osr, !null      side 0     
+    0x608b, // 10: out    pindirs, 11     side 0     
+    0xc026, // 11: irq    wait 6          side 0     
+    0x8080, // 12: pull   noblock         side 0     
+    0x6008, // 13: out    pins, 8         side 0     
+    0x0010, // 14: jmp    16              side 0     
+    0xc025, // 15: irq    wait 5          side 0     
+    0xb042, // 16: nop                    side 1     
+    0x308c, // 17: wait   1 gpio, 12      side 1     
+    0xb042, // 18: nop                    side 1     
             //     .wrap
 };
 
 #if !PICO_NO_HARDWARE
 static const struct pio_program z80io_program = {
     .instructions = z80io_program_instructions,
-    .length = 6,
+    .length = 19,
     .origin = -1,
 };
 
@@ -42,16 +55,18 @@ static inline pio_sm_config z80io_program_get_default_config(uint offset) {
 
 static inline void z80io_init(PIO pio, uint sm, uint offset, float freq) {
 	pio_sm_config c = z80io_program_get_default_config(offset);
-	for (int i=0;i<10;i++) pio_gpio_init(pio, 14+i);
-	pio_gpio_init(pio, 26);
-	pio_sm_set_consecutive_pindirs(pio, sm, 14, 10, false);
-	sm_config_set_out_pins(&c, 14, 8);
+	for (int i=0;i<11;i++) pio_gpio_init(pio, 13+i);
+	pio_gpio_init(pio,10);
+	pio_gpio_init(pio,11);
+	pio_gpio_init(pio,12);
+	pio_sm_set_consecutive_pindirs(pio, sm, 10, 1, true);
+	sm_config_set_out_pins(&c, 13, 10);
 	sm_config_set_clkdiv(&c, freq);
-	sm_config_set_out_shift(&c, true, true, 8);
-	sm_config_set_in_shift(&c, false, true, 32);
-	sm_config_set_sideset_pins(&c, 12);
+	sm_config_set_out_shift(&c, false, true, 32);
+	sm_config_set_in_shift(&c, false, false, 32);
+	sm_config_set_sideset_pins(&c, 10);
 	sm_config_set_sideset(&c, 1, false, false);
-	sm_config_set_in_pins(&c, 14);
+	sm_config_set_in_pins(&c, 13);
 	sm_config_set_jmp_pin(&c, 11);
 	pio_sm_init(pio, sm, offset, &c);
 }

@@ -4,10 +4,13 @@
 #include "hardware/clocks.h"
 #include "hardware/dma.h"
 #include "hardware/structs/bus_ctrl.h"
+#include "pico/multicore.h"
 #include "rgb.pio.h"
 #include "sync.pio.h"
 #include "font.h"
-
+#include <stdio.h>
+#include <string.h>
+#include "z80io.pio.h"
 //Goal is to create functions that 
 //create buffers with the timing pixels
 //embedded. 
@@ -53,19 +56,44 @@ uint8_t RGB_buffer[4][800]; //8bpp
 uint8_t Vblank[800];   //8bpp, 0s
 uint8_t Hsync_buffer[200]; //2bpp(HVHVHVHV)
 uint8_t Vsync_buffer[200]; //2bpp 
+//uint8_t background[19200];
+uint32_t unpacked_font[8400];
 
-uint8_t background[19200];
-
+char sbuffer[2048];
 void generate_rgb_scan(uint8_t *);
 void generate_vblank_rgb(uint8_t *);
 void generate_hsync_scan(uint8_t *);
 void generate_vsync_scan(uint8_t *);
 
 void fill_background() {
-	for (int i =0; i < 120; i++)
-		for (int j = 0;  j < 160; j++) {
-			background[(i*160)+j] = j;
-		}
+  for (int i =0; i < 25; i++)
+    for (int j = 0;  j < 80; j++) {
+      sbuffer[(i*j)+i] =' ' ;
+    }
+  //static string.
+  strcpy(sbuffer, "Initial buffer - IO 39-10 to reset");
+}
+
+void unpack_font() {
+  uint8_t buffer[8];
+  uint8_t offs;
+  for (int i = 0; i < 256; i++) {
+    for (int l = 0;l< 16;l++) {      
+      offs = VGA8_F16[(i*16)+l];
+      buffer[7] = offs & 0x01 ? 255: 0;
+      buffer[6] = offs & 0x02 ? 255: 0;
+      buffer[5] = offs & 0x04 ? 255: 0;
+      buffer[4] = offs & 0x08 ? 255: 0;
+      buffer[3] = offs & 0x10 ? 255: 0;
+      buffer[2] = offs & 0x20 ? 255: 0;
+      buffer[1] = offs & 0x40 ? 255: 0;
+      buffer[0] = offs & 0x80 ? 255: 0;
+      unpacked_font[((i*2)*16)+(l*2)] = *((uint32_t *) buffer);
+      unpacked_font[((i*2)*16)+(l*2)+1] = *((uint32_t *) (buffer+4));
+    }
+  }
+
+
 }
 
 //string must be 80 characters...
@@ -81,47 +109,112 @@ void fill_scan(uint8_t *buffer, char *string, int line) {
   //	}
 
   //80*8 = 640px
+  
   unsigned int p;
-  uint8_t offs;
+  uint32_t *b= (uint32_t *) buffer;
+  uint32_t offs;
   for (int i =0; i < 80; i++) {
-    p = 8*i;
-    offs = VGA8_F16[(string[i]*16)+line];
-    buffer[p+7] = offs & 0x01 ? 255: 0;
-    buffer[p+6] = offs & 0x02 ? 255: 0;
-    buffer[p+5] = offs & 0x04 ? 255: 0;
-    buffer[p+4] = offs & 0x08 ? 255: 0;
-    buffer[p+3] = offs & 0x10 ? 255: 0;
-    buffer[p+2] = offs & 0x20 ? 255: 0;
-    buffer[p+1] = offs & 0x40 ? 255: 0;
-    buffer[p] = offs & 0x80 ? 255: 0;
+    p = 2*i;
+    offs = ((string[i]*2)*16)+(2*line);
+    b[p] = unpacked_font[offs];
+    b[p+1] = unpacked_font[offs+1];
   }
 }
+
+//uses pio1
+
+PIO p1;
+uint offset_z80io;
+uint sm_z80io;	  
+
+
+void z80io_setup() {
+  //  stdio_init_all();
+  float freq = 40000000.0;
+  float div = (float)clock_get_hz(clk_sys) / freq;
+  //gpio_set_dir(13,0);
+  p1 = pio1;
+  offset_z80io = pio_add_program(p1, &z80io_program);
+  sm_z80io = pio_claim_unused_sm(p1, true);	  
+
+  gpio_init(12);
+  gpio_init(11);
+  gpio_init(10);
+  gpio_set_dir(10,GPIO_OUT);	
+  gpio_set_dir(11,GPIO_IN);
+  gpio_put(10,1);
+  gpio_set_dir(12,GPIO_IN);
+  gpio_pull_up(11);
+  gpio_pull_down(12);
+  //for (int i = 0; i < 8; i++) gpio_set_dir(14+i,0);
+  z80io_init(p1, sm_z80io, offset_z80io, div);
+  pio_sm_set_enabled(p1, sm_z80io, true);
+
+    
+}
+uint cursor;
+void bus_read() {
+  uint32_t r1,r2,r3,r4;
+  uint8_t base;
+  uint8_t regs[4];
+  if(pio_interrupt_get(p1, 5)){      
+    r1 = pio_sm_get(p1,sm_z80io);
+    base = (uint8_t)((r1 & 0x0000FF00) >> 8);
+    regs[base] = (uint8_t) r1 & 0x000000FF; 
+    //      printf("(out) %d, base - %d, val - %d, count - %d\r\n", r1, base, regs[base],r4++ );
+    if (base==0){
+      sbuffer[cursor++]=regs[base];
+      if (cursor > 2000) cursor = 0;
+    }
+    if (base==3){
+      if (regs[base]==10)
+	cursor=0;
+    }
+    pio_interrupt_clear(p1, 5);      
+  }
+  if(pio_interrupt_get(p1, 6)) {	
+    //pio_sm_get(p1,sm_z80io);		  
+    r1 = pio_sm_get(p1,sm_z80io);
+    base = (uint8_t)((r1 & 0x0000FF00) >> 8);		  
+    //	printf("(in) %d, base - %d, val - %d, count - %d\r\n", r1, base, regs[base],r4++ );
+    r1 = regs[base];
+    r2 = r1 << 24 | r1 << 16 | r1 <<8 | r1;		  
+    pio_sm_put(p1, sm_z80io, r2);
+      pio_interrupt_clear(p1,6);				
+  }
+}
+
+
+//uses pio1
 
 int main(){
 //our output is 480 lines of rgb and hsync.
 //10 lines of vblank and hsync
 //2 lines of vblank and vsync
 //33 lines of vblank and hsync
-  char th[] = "This is the message I'd like to repeat. 1234567890\xb0\xb1\xBB";
-	set_sys_clock_khz(131000, true);
-	generate_rgb_scan(RGB_buffer[0]);
+//  char th[] = "This is the message I'd like to repeat. 1234567890\xb0\xb1\xBB";
+
+//  set_sys_clock_khz(130000, true);
+  unpack_font();
+  generate_rgb_scan(RGB_buffer[0]);
 	generate_rgb_scan(RGB_buffer[1]);
 	generate_vblank_rgb(Vblank);
 	generate_hsync_scan(Hsync_buffer);
 	generate_vsync_scan(Vsync_buffer);	
 	fill_background();
-	fill_scan(RGB_buffer[0],th,0);
-	fill_scan(RGB_buffer[1],th,0);
+	fill_scan(RGB_buffer[0],sbuffer,0);
+	fill_scan(RGB_buffer[1],sbuffer,0);
 	PIO pio = pio0;
-	float freq = 75525000.0;
-	float div = (float)clock_get_hz(clk_sys) / freq;
+	float freq = 25000000.0;
+	float div1 = ((float)clock_get_hz(clk_sys)) / freq;
+	float div2 = ((float)clock_get_hz(clk_sys)) / freq;
 	uint offset_rgb = pio_add_program(pio, &rgb_program);
 	uint offset_sync = pio_add_program(pio, &sync_program);
 	uint sm_sync = pio_claim_unused_sm(pio, true);
 	uint sm_rgb = pio_claim_unused_sm(pio, true);
 	//must be started in this order
-	rgb_program_init(pio, sm_rgb, offset_rgb, 0, div);
-	sync_program_init(pio, sm_sync, offset_sync, 8, div);
+	rgb_program_init(pio, sm_rgb, offset_rgb, 0, div2);
+	sync_program_init(pio, sm_sync, offset_sync, 8, div1);
 	//make sure fifos have something in them
 	uint32_t blank = 0;
 	uint8_t blank8 = 0;
@@ -148,7 +241,7 @@ int main(){
 	        &dcrgb,
 	        &pio0_hw->txf[sm_rgb], // Write address (only need to set this once)
 	        NULL,             // Don't provide a read address yet
-	        200,              //count
+	        190,              //count
 	        false             // Don't start yet
 	);
 	//same for sync
@@ -178,53 +271,71 @@ int main(){
 	uint32_t *rgb;
 	uint8_t *sync;	
 	uint32_t flip = 0;
-
+	//	multicore_launch_core1(z80io_core_entry);
+	z80io_setup();
 	pio_sm_set_enabled(pio, sm_rgb, true);
 	pio_sm_set_enabled(pio, sm_sync, true);
-	fill_scan((uint8_t *)RGB_buffer[0], th, 0);
-	fill_scan((uint8_t *)RGB_buffer[1], th, 0);
+	fill_scan((uint8_t *)RGB_buffer[0], sbuffer, 0);
+	fill_scan((uint8_t *)RGB_buffer[1], sbuffer, 0);
 
+	uint32_t bstart = 0;
+	uint32_t bold =0;
+	uint32_t vb;
 	while (1) {
-		if (scanline <  480) {
-			if (flip==1)flip=0;
-			else if (flip==0)flip=1;
-			rgb = (uint32_t *) RGB_buffer[flip];
-			
-			sync = Hsync_buffer;
-		}
-
-		else if (scanline  < 490) {
-			rgb = (uint32_t *) Vblank;
-			sync = Hsync_buffer;
+	 
+	  if (scanline <  480) {
+	    vb=0;
+	    bstart = (scanline / 16)*80;
+	    if (flip==1)flip=0;
+	    else if (flip==0)flip=1;
+	    rgb = (uint32_t *) RGB_buffer[flip];	    
+	    sync = Hsync_buffer;
+	  }
+	  
+	  else if (scanline  < 490) {
+	    vb=1;
+	    rgb = (uint32_t *) Vblank;
+	    sync = Hsync_buffer;
 		
-		}
-		else if (scanline < 492) {
-			rgb = (uint32_t *) Vblank;
-			sync = Vsync_buffer;
-		}
-		
-		else if (scanline < 525) {
-			rgb = (uint32_t *) Vblank;
-			sync = Hsync_buffer;
+	  }
+	  else if (scanline < 492) {
 
-		}
-		else {
-			scanline =0;
-			//continue;
-		}
-		//we could alternate buffers, assign blocks, etc. 
-		dma_channel_set_read_addr(rgb_dma_chan, rgb, true);
-		dma_channel_set_read_addr(sync_dma_chan, sync, true);
-		//fill the buffer for the flip
-		scanline++;
-		fill_scan(RGB_buffer[((flip+1)%2)], th, scanline%16);
-		dma_channel_wait_for_finish_blocking(rgb_dma_chan);
-		dma_channel_wait_for_finish_blocking(sync_dma_chan);
+	    rgb = (uint32_t *) Vblank;
+	    sync = Vsync_buffer;
+	  }
+	  
+	  else if (scanline < 525) {
 
-	}
+	    rgb = (uint32_t *) Vblank;
+	    sync = Hsync_buffer;
+	    
+	  }
+	  else {
+	    scanline =0;
+	    vb=0;
+	    //continue;
+	  }
+	  //we could alternate buffers, assign blocks, etc. 
+	  dma_channel_set_read_addr(rgb_dma_chan, rgb, true);
+	  dma_channel_set_read_addr(sync_dma_chan, sync, true);
+	  //fill the buffer for the flip
+	  scanline++;
+	  if (!vb){
+	    fill_scan(RGB_buffer[((flip+1)%2)], (char *)(sbuffer+bstart), scanline%16);
+	    if(dma_channel_is_busy(rgb_dma_chan))
+	      bus_read();
+	  }
+	  else{
+	    while(dma_channel_is_busy(rgb_dma_chan))
+	      bus_read();
+	  }
+	  dma_channel_wait_for_finish_blocking(rgb_dma_chan);
+	  dma_channel_wait_for_finish_blocking(sync_dma_chan);
+	  // dma_channel_wait_for_finish_blocking(rgb_dma_chan);
+	  
 	
+	}
 }
-
 //we  use the same buffer for 
 //hysnc and vsync
 //656 high, 96 low, 48 high

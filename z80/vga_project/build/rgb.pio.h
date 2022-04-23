@@ -13,21 +13,22 @@
 // --- //
 
 #define rgb_wrap_target 1
-#define rgb_wrap 3
+#define rgb_wrap 4
 
 static const uint16_t rgb_program_instructions[] = {
     0xc027, //  0: irq    wait 7                     
             //     .wrap_target
     0x6008, //  1: out    pins, 8                    
-    0xa042, //  2: nop                               
-    0xa042, //  3: nop                               
+    0x6008, //  2: out    pins, 8                    
+    0x6008, //  3: out    pins, 8                    
+    0x6008, //  4: out    pins, 8                    
             //     .wrap
 };
 
 #if !PICO_NO_HARDWARE
 static const struct pio_program rgb_program = {
     .instructions = rgb_program_instructions,
-    .length = 4,
+    .length = 5,
     .origin = -1,
 };
 

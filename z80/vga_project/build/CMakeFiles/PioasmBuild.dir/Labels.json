@@ -2,34 +2,34 @@
 	"sources" : 
 	[
 		{
-			"file" : "/home/keyvin/vga_project/build/CMakeFiles/PioasmBuild"
+			"file" : "/home/keyvin/docnotes/z80/vga_project/build/CMakeFiles/PioasmBuild"
 		},
 		{
-			"file" : "/home/keyvin/vga_project/build/CMakeFiles/PioasmBuild.rule"
+			"file" : "/home/keyvin/docnotes/z80/vga_project/build/CMakeFiles/PioasmBuild.rule"
 		},
 		{
-			"file" : "/home/keyvin/vga_project/build/CMakeFiles/PioasmBuild-complete.rule"
+			"file" : "/home/keyvin/docnotes/z80/vga_project/build/CMakeFiles/PioasmBuild-complete.rule"
 		},
 		{
-			"file" : "/home/keyvin/vga_project/build/pioasm/src/PioasmBuild-stamp/PioasmBuild-install.rule"
+			"file" : "/home/keyvin/docnotes/z80/vga_project/build/pioasm/src/PioasmBuild-stamp/PioasmBuild-install.rule"
 		},
 		{
-			"file" : "/home/keyvin/vga_project/build/pioasm/src/PioasmBuild-stamp/PioasmBuild-mkdir.rule"
+			"file" : "/home/keyvin/docnotes/z80/vga_project/build/pioasm/src/PioasmBuild-stamp/PioasmBuild-mkdir.rule"
 		},
 		{
-			"file" : "/home/keyvin/vga_project/build/pioasm/src/PioasmBuild-stamp/PioasmBuild-download.rule"
+			"file" : "/home/keyvin/docnotes/z80/vga_project/build/pioasm/src/PioasmBuild-stamp/PioasmBuild-download.rule"
 		},
 		{
-			"file" : "/home/keyvin/vga_project/build/pioasm/src/PioasmBuild-stamp/PioasmBuild-update.rule"
+			"file" : "/home/keyvin/docnotes/z80/vga_project/build/pioasm/src/PioasmBuild-stamp/PioasmBuild-update.rule"
 		},
 		{
-			"file" : "/home/keyvin/vga_project/build/pioasm/src/PioasmBuild-stamp/PioasmBuild-patch.rule"
+			"file" : "/home/keyvin/docnotes/z80/vga_project/build/pioasm/src/PioasmBuild-stamp/PioasmBuild-patch.rule"
 		},
 		{
-			"file" : "/home/keyvin/vga_project/build/pioasm/src/PioasmBuild-stamp/PioasmBuild-configure.rule"
+			"file" : "/home/keyvin/docnotes/z80/vga_project/build/pioasm/src/PioasmBuild-stamp/PioasmBuild-configure.rule"
 		},
 		{
-			"file" : "/home/keyvin/vga_project/build/pioasm/src/PioasmBuild-stamp/PioasmBuild-build.rule"
+			"file" : "/home/keyvin/docnotes/z80/vga_project/build/pioasm/src/PioasmBuild-stamp/PioasmBuild-build.rule"
 		}
 	],
 	"target" : 

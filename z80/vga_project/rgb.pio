@@ -4,9 +4,10 @@
 start:
 	irq wait 7
 	.wrap_target
+	out pins,8 
 	out pins,8
-	nop
-	nop
+	out pins,8
+	out pins,8
 	.wrap
 
 % c-sdk {

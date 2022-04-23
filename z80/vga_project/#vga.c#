@@ -1,12 +1,18 @@
+#include <stdio.h>
 #include  "pico/stdlib.h"
 #include "hardware/pio.h"
 #include "hardware/gpio.h"
 #include "hardware/clocks.h"
 #include "hardware/dma.h"
 #include "hardware/structs/bus_ctrl.h"
+#include "pico/multicore.h"
 #include "rgb.pio.h"
 #include "sync.pio.h"
-#include "font.h"
+#include "z80io.pio.h"
+
+//for legibility
+#define X_RES 160
+#define Y_RES 120
 
 //Goal is to create functions that 
 //create buffers with the timing pixels
@@ -33,11 +39,10 @@
 //until we've done enough lines it's time
 //for a vsync
 
-//My first mode will use 160x120 upscaled to 
-//640x480 as my monitors do not aspect correct
-//lower. Each pixel from the z80 will be x4
-//and every scanline will repeat 4x. The pico
-//only has 240k RAM. 
+//Mode is 160x120, 2x to 640x480 
+//Each pixel from the z80 will be x4
+//so every scanline will repeat 4x. 
+//The pico only has 240k RAM. 
 
 //Our Dma buffers Will take ~1kb per line. 
 
@@ -48,19 +53,21 @@
 //2 lines of vsync buffer
 //33 back porch  - normal hsync lines
 
-//need to be divisible by 4 for simplest possible pio. 
+//modes need to be divisible by 4
+//2 dma buffers for RGB so we can flip flop
 uint8_t RGB_buffer[2][800]; //8bpp
 uint8_t Vblank[800];   //8bpp, 0s
 uint8_t Hsync_buffer[200]; //2bpp(HVHVHVHV)
 uint8_t Vsync_buffer[200]; //2bpp 
 
+//frame buffer
 uint8_t background[19200];
-
 void generate_rgb_scan(uint8_t *);
 void generate_vblank_rgb(uint8_t *);
 void generate_hsync_scan(uint8_t *);
 void generate_vsync_scan(uint8_t *);
 
+//initial screen
 void fill_background() {
 	for (int i =0; i < 120; i++)
 		for (int j = 0;  j < 160; j++) {
@@ -68,6 +75,7 @@ void fill_background() {
 		}
 }
 
+//generates scanline from buffer
 void fill_scan(uint8_t *buffer, int line) {
 	int start = line*160;
 	int s = 0;
@@ -80,12 +88,118 @@ void fill_scan(uint8_t *buffer, int line) {
 	}
 }
 
+//second core handles z80
+void z80io_core_entry() {
+	float freq = 50000000.0;
+	float div = (float)clock_get_hz(clk_sys) / freq;
+	PIO pio = pio1;
+	uint offset_z80io = pio_add_program(pio, &z80io_program);
+	uint sm_z80io = pio_claim_unused_sm(pio, true);	
+	z80io_init(pio, sm_z80io, offset_z80io, div);
+	pio_sm_set_enabled(pio, sm_z80io, true);
+	gpio_init(11);
+	gpio_init(12);
+	gpio_init(13);
+	gpio_set_dir(11,GPIO_IN);
+	gpio_set_dir(13,GPIO_IN);
+	gpio_set_dir(12,GPIO_OUT);
+	gpio_put(12,1);
+	//gpio_pull_up(13);
+	//gpio_put(12,1);
+	//gpio_set_dir(11,0);
+
+	uint32_t position = 0;
+	uint32_t io = 0;
+	uint16_t regs = 0;
+	uint8_t row = X_RES;
+	uint8_t col = Y_RES;
+	uint8_t extent = 0;
+	uint8_t x = 0;
+	uint8_t y = 0;
+	uint8_t old =0;
+	uint8_t new = 0;
+	//bit fields for the registers are due to
+	//3 pin gap on pi pico (rp2040) - 
+	while (1) {
+		if(!pio_sm_is_rx_fifo_empty(pio, sm_z80io)){
+			io = pio_sm_get(pio, sm_z80io) &0x0000011FF;
+			//are register pins set?
+			regs = (uint16_t) io &0x1100;
+			if (regs == 0) {
+				if ((((uint8_t) io)) != old){
+						printf("new %d\n", (uint8_t) io);
+						old = (uint8_t) io;
+				}
+				if (extent != 0x00) { // if zero, whole screen fills
+				 background[ (y*X_RES)+x] = (uint8_t)io;
+				 x++;
+				 if (x  >= col+extent){
+					x =col;
+					y++;
+				 }
+				 if (y >= row+extent) {
+					y = row;
+				 }
+			    }
+				else {				
+				 background[position] = (uint8_t)io;	
+				 position++;
+				 if (position == 19200){position=0 ;}				 
+				}
+			}
+			//row address set
+			else if (regs ==  0x0100){
+				//row start
+				//printf ("setting x,col: %d\r\n", io&0x000000ff);
+				x = col = (uint8_t) (io) ;
+				y = row;
+				if (col >= X_RES)
+					x =col =0;
+					
+
+			}
+			//column address set
+			else if (regs == 0x1000) {
+				//printf ("setting y,row: %d\r\n", io&0x000000ff);
+				y = row = (uint8_t) (io) ;
+				x = col;
+				if (row >= Y_RES)
+					y = row =0;
+			}
+			//width (square for now)
+			else if (regs == 0x01100) {
+				uint8_t ox = extent;
+				extent = ((uint8_t) io);
+		//		printf ("setting extent: %d\r\n", io&0x000000ff);
+				if (col + extent > X_RES)
+					extent = 0;
+				if (row + extent > Y_RES)
+					extent = 0;
+				if (extent ==0)	{ //switch to absolute 
+					for (uint i = 0; i < 19200/4; i++) *(((uint32_t *) background) +i) = 0;
+					position =  0;
+				}
+				x = col;
+				y = row;
+			}
+		}
+
+		
+		
+	}
+
+		
+	
+	
+}
+
 int main(){
 //our output is 480 lines of rgb and hsync.
 //10 lines of vblank and hsync
 //2 lines of vblank and vsync
 //33 lines of vblank and hsync 
-	set_sys_clock_khz(131000, true);
+	//stdio_init_all();
+	set_sys_clock_khz(130000, true);
 	generate_rgb_scan(RGB_buffer[0]);
 	generate_rgb_scan(RGB_buffer[1]);
 	generate_vblank_rgb(Vblank);
@@ -94,16 +208,17 @@ int main(){
 	fill_background();
 	fill_scan(RGB_buffer[0],0);
 	fill_scan(RGB_buffer[1],0);
+	//configure pio0 for video output
 	PIO pio = pio0;
-	float freq = 75525000.0;
+	float freq = 25175000.0;
 	float div = (float)clock_get_hz(clk_sys) / freq;
 	uint offset_rgb = pio_add_program(pio, &rgb_program);
 	uint offset_sync = pio_add_program(pio, &sync_program);
 	uint sm_sync = pio_claim_unused_sm(pio, true);
 	uint sm_rgb = pio_claim_unused_sm(pio, true);
-	//must be started in this order
+	//must be started in this order so they stay synchronized
 	rgb_program_init(pio, sm_rgb, offset_rgb, 0, div);
-	sync_program_init(pio, sm_sync, offset_sync, 8, div);
+	sync_program_init(pio, sm_sync, offset_sync, 9, div);
 	//make sure fifos have something in them
 	uint32_t blank = 0;
 	uint8_t blank8 = 0;
@@ -163,6 +278,7 @@ int main(){
 	pio_sm_set_enabled(pio, sm_rgb, true);
 	pio_sm_set_enabled(pio, sm_sync, true);
 
+//mode is hard coded
 	while (1) {
 		if (scanline <  480) {
 			if (flip==1)flip=0;
@@ -174,8 +290,7 @@ int main(){
 
 		else if (scanline  < 490) {
 			rgb = (uint32_t *) Vblank;
-			sync = Hsync_buffer;
-		
+			sync = Hsync_buffer;		
 		}
 		else if (scanline < 492) {
 			rgb = (uint32_t *) Vblank;
@@ -189,14 +304,13 @@ int main(){
 		}
 		else {
 			scanline =0;
-			//continue;
+			continue;
 		}
 		//we could alternate buffers, assign blocks, etc. 
 		dma_channel_set_read_addr(rgb_dma_chan, rgb, true);
 		dma_channel_set_read_addr(sync_dma_chan, sync, true);
 		//fill the buffer for the flip
 		fill_scan(RGB_buffer[((flip+1)%2)], (int)scanline/4);
-		dma_channel_wait_for_finish_blocking(rgb_dma_chan);
 		dma_channel_wait_for_finish_blocking(sync_dma_chan);
 		scanline++;
 

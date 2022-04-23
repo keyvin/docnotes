@@ -6,6 +6,36 @@
 
 #IncludeRegexTransform: 
 
+/home/keyvin/docnotes/z80/vga_project/font.h
+
+/home/keyvin/docnotes/z80/vga_project/vga_charrom.c
+pico/stdlib.h
+/home/keyvin/docnotes/z80/vga_project/pico/stdlib.h
+hardware/pio.h
+/home/keyvin/docnotes/z80/vga_project/hardware/pio.h
+hardware/gpio.h
+/home/keyvin/docnotes/z80/vga_project/hardware/gpio.h
+hardware/clocks.h
+/home/keyvin/docnotes/z80/vga_project/hardware/clocks.h
+hardware/dma.h
+/home/keyvin/docnotes/z80/vga_project/hardware/dma.h
+hardware/structs/bus_ctrl.h
+/home/keyvin/docnotes/z80/vga_project/hardware/structs/bus_ctrl.h
+pico/multicore.h
+/home/keyvin/docnotes/z80/vga_project/pico/multicore.h
+rgb.pio.h
+/home/keyvin/docnotes/z80/vga_project/rgb.pio.h
+sync.pio.h
+/home/keyvin/docnotes/z80/vga_project/sync.pio.h
+font.h
+/home/keyvin/docnotes/z80/vga_project/font.h
+stdio.h
+-
+string.h
+-
+z80io.pio.h
+/home/keyvin/docnotes/z80/vga_project/z80io.pio.h
+
 /home/keyvin/pico-sdk/src/boards/include/boards/pico.h
 
 /home/keyvin/pico-sdk/src/common/pico_base/include/pico.h
@@ -61,6 +91,34 @@ pico/stdio_usb.h
 /home/keyvin/pico-sdk/src/common/pico_stdlib/include/pico/pico/stdio_usb.h
 pico/stdio_semihosting.h
 /home/keyvin/pico-sdk/src/common/pico_stdlib/include/pico/pico/stdio_semihosting.h
+
+/home/keyvin/pico-sdk/src/common/pico_sync/include/pico/critical_section.h
+pico/lock_core.h
+/home/keyvin/pico-sdk/src/common/pico_sync/include/pico/pico/lock_core.h
+
+/home/keyvin/pico-sdk/src/common/pico_sync/include/pico/lock_core.h
+pico.h
+/home/keyvin/pico-sdk/src/common/pico_sync/include/pico/pico.h
+pico/time.h
+/home/keyvin/pico-sdk/src/common/pico_sync/include/pico/pico/time.h
+hardware/sync.h
+/home/keyvin/pico-sdk/src/common/pico_sync/include/pico/hardware/sync.h
+
+/home/keyvin/pico-sdk/src/common/pico_sync/include/pico/mutex.h
+pico/lock_core.h
+/home/keyvin/pico-sdk/src/common/pico_sync/include/pico/pico/lock_core.h
+
+/home/keyvin/pico-sdk/src/common/pico_sync/include/pico/sem.h
+pico/lock_core.h
+/home/keyvin/pico-sdk/src/common/pico_sync/include/pico/pico/lock_core.h
+
+/home/keyvin/pico-sdk/src/common/pico_sync/include/pico/sync.h
+pico/sem.h
+/home/keyvin/pico-sdk/src/common/pico_sync/include/pico/pico/sem.h
+pico/mutex.h
+/home/keyvin/pico-sdk/src/common/pico_sync/include/pico/pico/mutex.h
+pico/critical_section.h
+/home/keyvin/pico-sdk/src/common/pico_sync/include/pico/pico/critical_section.h
 
 /home/keyvin/pico-sdk/src/common/pico_time/include/pico/time.h
 pico.h
@@ -198,6 +256,14 @@ hardware/pio_instructions.h
 pico.h
 /home/keyvin/pico-sdk/src/rp2_common/hardware_pio/include/hardware/pico.h
 
+/home/keyvin/pico-sdk/src/rp2_common/hardware_sync/include/hardware/sync.h
+pico.h
+/home/keyvin/pico-sdk/src/rp2_common/hardware_sync/include/hardware/pico.h
+hardware/address_mapped.h
+/home/keyvin/pico-sdk/src/rp2_common/hardware_sync/include/hardware/hardware/address_mapped.h
+hardware/regs/sio.h
+/home/keyvin/pico-sdk/src/rp2_common/hardware_sync/include/hardware/hardware/regs/sio.h
+
 /home/keyvin/pico-sdk/src/rp2_common/hardware_timer/include/hardware/timer.h
 pico.h
 /home/keyvin/pico-sdk/src/rp2_common/hardware_timer/include/hardware/pico.h
@@ -212,6 +278,14 @@ hardware/structs/uart.h
 hardware/regs/dreq.h
 /home/keyvin/pico-sdk/src/rp2_common/hardware_uart/include/hardware/hardware/regs/dreq.h
 
+/home/keyvin/pico-sdk/src/rp2_common/pico_multicore/include/pico/multicore.h
+pico/types.h
+/home/keyvin/pico-sdk/src/rp2_common/pico_multicore/include/pico/pico/types.h
+pico/sync.h
+/home/keyvin/pico-sdk/src/rp2_common/pico_multicore/include/pico/pico/sync.h
+hardware/structs/sio.h
+/home/keyvin/pico-sdk/src/rp2_common/pico_multicore/include/pico/hardware/structs/sio.h
+
 /home/keyvin/pico-sdk/src/rp2_common/pico_platform/include/pico/platform.h
 hardware/platform_defs.h
 /home/keyvin/pico-sdk/src/rp2_common/pico_platform/include/pico/hardware/platform_defs.h
@@ -223,28 +297,6 @@ pico/types.h
 /home/keyvin/pico-sdk/src/rp2_common/pico_stdio/include/pico/stdio.h
 pico.h
 /home/keyvin/pico-sdk/src/rp2_common/pico_stdio/include/pico/pico.h
-
-/home/keyvin/vga_project/font.h
-
-/home/keyvin/vga_project/vga_charrom.c
-pico/stdlib.h
-/home/keyvin/vga_project/pico/stdlib.h
-hardware/pio.h
-/home/keyvin/vga_project/hardware/pio.h
-hardware/gpio.h
-/home/keyvin/vga_project/hardware/gpio.h
-hardware/clocks.h
-/home/keyvin/vga_project/hardware/clocks.h
-hardware/dma.h
-/home/keyvin/vga_project/hardware/dma.h
-hardware/structs/bus_ctrl.h
-/home/keyvin/vga_project/hardware/structs/bus_ctrl.h
-rgb.pio.h
-/home/keyvin/vga_project/rgb.pio.h
-sync.pio.h
-/home/keyvin/vga_project/sync.pio.h
-font.h
-/home/keyvin/vga_project/font.h
 
 generated/pico_base/pico/config_autogen.h
 /home/keyvin/pico-sdk/src/boards/include/boards/pico.h
@@ -259,6 +311,10 @@ hardware/pio.h
 hardware/pio.h
 
 sync.pio.h
+hardware/pio.h
+hardware/pio.h
+
+z80io.pio.h
 hardware/pio.h
 hardware/pio.h
 
