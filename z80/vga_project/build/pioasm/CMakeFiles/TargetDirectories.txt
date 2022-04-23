@@ -1,3 +1,0 @@
-/home/keyvin/docnotes/z80/vga_project/build/pioasm/CMakeFiles/rebuild_cache.dir
-/home/keyvin/docnotes/z80/vga_project/build/pioasm/CMakeFiles/edit_cache.dir
-/home/keyvin/docnotes/z80/vga_project/build/pioasm/CMakeFiles/pioasm.dir
