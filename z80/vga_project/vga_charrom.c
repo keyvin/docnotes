@@ -52,18 +52,68 @@
 //33 back porch  - normal hsync lines
 
 //need to be divisible by 4 for simplest possible pio. 
-uint8_t RGB_buffer[4][800]; //8bpp
+//dma buffers
+uint32_t t_color[] = { 0x00000000,
+			 0xC0C0C0C0,
+			 0x38383838,
+			 0x02020202,
+			 0xC0C0C0C0,
+			 0x38383838,
+			 0x02020202,
+			 0xC0C0C0C0,
+			 0x38383838,
+			 0x02020202,
+			 0xC0C0C0C0,
+			 0x38383838,
+			 0x02020202,
+			 0xC0C0C0C0,
+			 0x38383838,
+			 0xFFFFFFFF
+};
+
+uint32_t bt_color[] = { 0x00000000,
+			 0xC0C0C0C0,
+			 0x38383838,
+			 0x02020202,
+			 0xC0C0C0C0,
+			 0x38383838,
+			 0x02020202,
+			 0xC0C0C0C0,
+			 0x38383838,
+			 0x02020202,
+			 0xC0C0C0C0,
+			 0x38383838,
+			 0x02020202,
+			 0xC0C0C0C0,
+			 0x38383838,
+			 0xFFFFFFFF
+};
+			
+
+uint8_t RGB_buffer[2][800]; //8bpp
 uint8_t Vblank[800];   //8bpp, 0s
 uint8_t Hsync_buffer[200]; //2bpp(HVHVHVHV)
 uint8_t Vsync_buffer[200]; //2bpp 
-//uint8_t background[19200];
-uint32_t unpacked_font[8400];
 
-char sbuffer[2048];
+
+uint32_t unpacked_font[8400];
+uint32_t unpacked_mask[8400];
+//character buffer
+char sbuffer[2401];
+//attribute buffer
+char abuffer[2401];
+//cursor
+uint cursor;
+uint mode;
+
+#define T_MONOCHROME 0;
+#define T_64C_80x30 1;  //2grb, 2status
+
 void generate_rgb_scan(uint8_t *);
 void generate_vblank_rgb(uint8_t *);
 void generate_hsync_scan(uint8_t *);
 void generate_vsync_scan(uint8_t *);
+
 
 void fill_background() {
   for (int i =0; i < 25; i++)
@@ -76,40 +126,37 @@ void fill_background() {
 
 void unpack_font() {
   uint8_t buffer[8];
+  uint8_t mask[8];
   uint8_t offs;
   for (int i = 0; i < 256; i++) {
     for (int l = 0;l< 16;l++) {      
       offs = VGA8_F16[(i*16)+l];
       buffer[7] = offs & 0x01 ? 255: 0;
+      mask[7] = offs & 0x01 ? 0: 255;
       buffer[6] = offs & 0x02 ? 255: 0;
+      mask[6] = offs & 0x02 ? 0:255;
       buffer[5] = offs & 0x04 ? 255: 0;
+      mask[5] = offs & 0x02 ? 0:255;
       buffer[4] = offs & 0x08 ? 255: 0;
+      mask[4] = offs & 0x02 ? 0:255;
       buffer[3] = offs & 0x10 ? 255: 0;
+      mask[3] = offs & 0x02 ? 0:255;
       buffer[2] = offs & 0x20 ? 255: 0;
+      mask[2] = offs & 0x02 ? 0:255;
       buffer[1] = offs & 0x40 ? 255: 0;
+      mask[1] = offs & 0x02 ? 0:255;
       buffer[0] = offs & 0x80 ? 255: 0;
+      mask[0] = offs & 0x02 ? 0:255;
       unpacked_font[((i*2)*16)+(l*2)] = *((uint32_t *) buffer);
       unpacked_font[((i*2)*16)+(l*2)+1] = *((uint32_t *) (buffer+4));
+      unpacked_mask[((i*2)*16)+(l*2)] = *((uint32_t *) mask);
+      unpacked_mask[((i*2)*16)+(l*2)+1] = *((uint32_t *) (mask+4));
     }
   }
-
-
 }
 
-//string must be 80 characters...
-void fill_scan(uint8_t *buffer, char *string, int line) {
-  //	int start = line*160;
-  //	int s = 0;
-  //	for (int sweep = 0; sweep < 160; sweep++) {
-  //		s = sweep*4;	
-  //		buffer[s] = background[start+sweep];	
-  //		buffer[s+1] = background[start+sweep];	
-  //		buffer[s+2] = background[start+sweep];	
-  //		buffer[s+3] = background[start+sweep];	
-  //	}
-
-  //80*8 = 640px
-  
+//fill DMA buffer at current scanline
+void fill_scan_m(uint8_t *buffer, char *string, int line) {
   unsigned int p;
   uint32_t *b= (uint32_t *) buffer;
   uint32_t offs;
@@ -117,16 +164,43 @@ void fill_scan(uint8_t *buffer, char *string, int line) {
     p = 2*i;
     offs = ((string[i]*2)*16)+(2*line);
     b[p] = unpacked_font[offs];
-    b[p+1] = unpacked_font[offs+1];
+    b[p+1] = unpacked_font[offs+1];    
   }
 }
 
-//uses pio1
 
+void fill_scan(uint8_t *buffer, char *string, char*attr, int line) {
+  unsigned int p;
+
+  uint32_t *b= (uint32_t *) buffer;
+  uint8_t stats;
+  uint32_t offs;
+  uint32_t foreground =  0xC0C0C0C0;
+  uint32_t background =  0x02020202;
+  for (int i =0; i < 80; i++) {
+    p = 2*i;    
+    offs = ((string[i]*2)*16)+(2*line);
+    stats = attr[i];
+    if (stats){
+      foreground = t_color[stats & 0x0F];
+      background = bt_color[(stats & 0xF0) >> 4];
+    }
+    else {
+      foreground = 0xFFFFFFFF;
+      background = 0x00000000;
+	
+    }
+      
+    b[p] = unpacked_font[offs] & foreground | (unpacked_mask[offs] & background);  
+    b[p+1] = unpacked_font[offs+1] & foreground | (unpacked_mask[offs+1] & background);         
+  }
+}
+
+
+//bus protocol uses pio1
 PIO p1;
 uint offset_z80io;
 uint sm_z80io;	  
-
 
 void z80io_setup() {
   //  stdio_init_all();
@@ -148,11 +222,11 @@ void z80io_setup() {
   gpio_pull_down(12);
   //for (int i = 0; i < 8; i++) gpio_set_dir(14+i,0);
   z80io_init(p1, sm_z80io, offset_z80io, div);
-  pio_sm_set_enabled(p1, sm_z80io, true);
-
-    
+  pio_sm_set_enabled(p1, sm_z80io, true);    
 }
-uint cursor;
+
+
+
 void bus_read() {
   uint32_t r1,r2,r3,r4;
   uint8_t base;
@@ -160,11 +234,16 @@ void bus_read() {
   if(pio_interrupt_get(p1, 5)){      
     r1 = pio_sm_get(p1,sm_z80io);
     base = (uint8_t)((r1 & 0x0000FF00) >> 8);
-    regs[base] = (uint8_t) r1 & 0x000000FF; 
-    //      printf("(out) %d, base - %d, val - %d, count - %d\r\n", r1, base, regs[base],r4++ );
+    regs[base] = (uint8_t) r1 & 0x000000FF;     
     if (base==0){
       sbuffer[cursor++]=regs[base];
-      if (cursor > 2000) cursor = 0;
+      if (cursor >= 2400) cursor = 0;
+    }
+    if (base==1){
+      if (cursor!=0)
+	abuffer[cursor-1]=regs[base];
+      else
+	abuffer[2400]=regs[base];
     }
     if (base==3){
       if (regs[base]==10)
@@ -173,14 +252,13 @@ void bus_read() {
     pio_interrupt_clear(p1, 5);      
   }
   if(pio_interrupt_get(p1, 6)) {	
-    //pio_sm_get(p1,sm_z80io);		  
     r1 = pio_sm_get(p1,sm_z80io);
     base = (uint8_t)((r1 & 0x0000FF00) >> 8);		  
     //	printf("(in) %d, base - %d, val - %d, count - %d\r\n", r1, base, regs[base],r4++ );
     r1 = regs[base];
     r2 = r1 << 24 | r1 << 16 | r1 <<8 | r1;		  
     pio_sm_put(p1, sm_z80io, r2);
-      pio_interrupt_clear(p1,6);				
+    pio_interrupt_clear(p1,6);				
   }
 }
 
@@ -194,7 +272,7 @@ int main(){
 //33 lines of vblank and hsync
 //  char th[] = "This is the message I'd like to repeat. 1234567890\xb0\xb1\xBB";
 
-//  set_sys_clock_khz(130000, true);
+  set_sys_clock_khz(220000, true);
   unpack_font();
   generate_rgb_scan(RGB_buffer[0]);
 	generate_rgb_scan(RGB_buffer[1]);
@@ -202,8 +280,8 @@ int main(){
 	generate_hsync_scan(Hsync_buffer);
 	generate_vsync_scan(Vsync_buffer);	
 	fill_background();
-	fill_scan(RGB_buffer[0],sbuffer,0);
-	fill_scan(RGB_buffer[1],sbuffer,0);
+	fill_scan(RGB_buffer[0],sbuffer,abuffer,0);
+	fill_scan(RGB_buffer[1],sbuffer,abuffer,0);
 	PIO pio = pio0;
 	float freq = 25000000.0;
 	float div1 = ((float)clock_get_hz(clk_sys)) / freq;
@@ -241,7 +319,7 @@ int main(){
 	        &dcrgb,
 	        &pio0_hw->txf[sm_rgb], // Write address (only need to set this once)
 	        NULL,             // Don't provide a read address yet
-	        190,              //count
+	        200,              //count
 	        false             // Don't start yet
 	);
 	//same for sync
@@ -275,8 +353,8 @@ int main(){
 	z80io_setup();
 	pio_sm_set_enabled(pio, sm_rgb, true);
 	pio_sm_set_enabled(pio, sm_sync, true);
-	fill_scan((uint8_t *)RGB_buffer[0], sbuffer, 0);
-	fill_scan((uint8_t *)RGB_buffer[1], sbuffer, 0);
+	fill_scan((uint8_t *)RGB_buffer[0], sbuffer, abuffer, 0);
+	fill_scan((uint8_t *)RGB_buffer[1], sbuffer, abuffer, 0);
 
 	uint32_t bstart = 0;
 	uint32_t bold =0;
@@ -321,19 +399,20 @@ int main(){
 	  //fill the buffer for the flip
 	  scanline++;
 	  if (!vb){
-	    fill_scan(RGB_buffer[((flip+1)%2)], (char *)(sbuffer+bstart), scanline%16);
-	    if(dma_channel_is_busy(rgb_dma_chan))
+	    fill_scan(RGB_buffer[((flip+1)%2)], (char *)(sbuffer+bstart),
+		      (char *)(abuffer+bstart),scanline%16);
+	    while(dma_channel_is_busy(rgb_dma_chan)){
 	      bus_read();
+	    }
 	  }
 	  else{
 	    while(dma_channel_is_busy(rgb_dma_chan))
 	      bus_read();
 	  }
-	  dma_channel_wait_for_finish_blocking(rgb_dma_chan);
+	  //dma_channel_wait_for_finish_blocking(rgb_dma_chan);
 	  dma_channel_wait_for_finish_blocking(sync_dma_chan);
-	  // dma_channel_wait_for_finish_blocking(rgb_dma_chan);
 	  
-	
+	  
 	}
 }
 //we  use the same buffer for 
